@@ -921,22 +921,38 @@ function renderHome() {
   typeset($('#view'));
   startHeroVideo();
 }
-/* видео на обложке: файлы hero-1.mp4 … hero-4.mp4 лежат рядом с index.html */
-const HERO_VIDEOS = ['hero-1.mp4', 'hero-2.mp4', 'hero-3.mp4', 'hero-4.mp4'];
+/* видео на обложке. У каждого ролика несколько адресов, пробуются по очереди:
+   файл в Claude → файл рядом с index.html → копия на GitHub Pages (если index.html открыт с компьютера) */
+const GH_SITE = 'https://phoenixxxxxxx-lab.github.io/FORMULAPOLETA/';
+const HERO_VIDEOS = [
+  ['hero-1.mp4', GH_SITE + 'hero-1.mp4'],
+  ['hero-2.mp4', GH_SITE + 'hero-2.mp4'],
+  ['hero-3.mp4', GH_SITE + 'hero-3.mp4'],
+  ['hero-4.mp4', GH_SITE + 'hero-4.mp4'],
+];
+const heroSrcOK = {};  // какой адрес сработал для каждого ролика
 function startHeroVideo() {
   const v = $('#heroVideo'), hero = $('#vhero'), btn = $('#heroPlay');
   if (!v) return;
   v.muted = true; v.defaultMuted = true; v.playsInline = true;
   v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
-  let i = 0, ok = 0, tried = 0;
-  const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => { if (!ok) btn.hidden = false; }); };
+  let clip = 0, cand = 0, ok = 0, failedClips = 0;
+  const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(e => { if (e && e.name === 'NotAllowedError' && !ok) btn.hidden = false; }); };
   const load = () => {
-    if (tried >= HERO_VIDEOS.length && !ok) { btn.hidden = true; return; }
-    v.classList.remove('on'); v.src = HERO_VIDEOS[i % HERO_VIDEOS.length]; tried++; tryPlay();
+    if (failedClips >= HERO_VIDEOS.length) { btn.hidden = true; return; }
+    const list = HERO_VIDEOS[clip % HERO_VIDEOS.length];
+    const k = clip % HERO_VIDEOS.length, src = heroSrcOK[k] || list[cand];
+    v.classList.remove('on'); v.src = src; tryPlay();
   };
-  v.addEventListener('playing', () => { ok++; btn.hidden = true; v.classList.add('on'); hero.classList.add('playing'); });
-  v.addEventListener('ended', () => { i++; tried = 0; load(); });
-  v.addEventListener('error', () => { i++; load(); });
+  const nextClip = () => { clip++; cand = 0; load(); };
+  v.addEventListener('playing', () => { ok++; failedClips = 0; heroSrcOK[clip % HERO_VIDEOS.length] = v.getAttribute('src'); btn.hidden = true; v.classList.add('on'); hero.classList.add('playing'); });
+  v.addEventListener('ended', nextClip);
+  v.addEventListener('error', () => {
+    const k = clip % HERO_VIDEOS.length;
+    if (heroSrcOK[k]) delete heroSrcOK[k];
+    cand++;
+    if (cand < HERO_VIDEOS[k].length) load(); else { failedClips++; nextClip(); }
+  });
   btn.onclick = () => { btn.hidden = true; if (!v.getAttribute('src')) load(); else tryPlay(); };
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { btn.hidden = false; return; }
   load();
