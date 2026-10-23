@@ -264,7 +264,14 @@ window.__fpShowError = function (msg) {
   d.textContent = 'Ошибка на странице. Пришлите скриншот этого сообщения:\n' + msg;
   if (v.prepend) v.prepend(d); else v.appendChild(d);
 };
-window.addEventListener('error', function (e) { if (e && e.message) window.__fpShowError(e.message + ' (строка ' + (e.lineno || '?') + ')'); });
+window.__fpShown = {};
+window.addEventListener('error', function (e) {
+  if (!e || !e.message) return;
+  if (/ResizeObserver loop/i.test(e.message)) { if (e.stopImmediatePropagation) e.stopImmediatePropagation(); return; }
+  var msg = e.message + ' (строка ' + (e.lineno || '?') + ')';
+  if (window.__fpShown[msg]) return; window.__fpShown[msg] = 1;
+  window.__fpShowError(msg);
+});
 </script>
 <div class="app">
   <aside class="side" aria-label="Разделы">
@@ -843,7 +850,8 @@ CONTENT.coord = {
       try {
         const d = f.contentDocument, th = document.documentElement.dataset.theme;
         if (th) d.documentElement.dataset.theme = th;
-        const fit = () => { f.style.height = (d.documentElement.scrollHeight + 4) + 'px'; };
+        let raf = 0, last = 0;
+        const fit = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { const h = Math.ceil(d.body.getBoundingClientRect().height) + 8; if (Math.abs(h - last) > 2) { last = h; f.style.height = h + 'px'; } }); };
         fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(d.body);
       } catch (e) {}
     });
