@@ -170,7 +170,8 @@ input[type="range"] { width: 100%; accent-color: var(--cyan); }
 .alpha-badge { position: fixed; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); right: 14px; z-index: 40; display: grid; gap: 1px; font-family: var(--mono); color: #F2B33D; background: rgba(5, 11, 16, .82); border: 1px solid rgba(242, 179, 61, .6); border-radius: 4px; padding: 6px 11px; pointer-events: none; text-align: right; box-shadow: 0 4px 18px rgba(0, 0, 0, .35); }
 .alpha-badge b { font-weight: 600; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
 .alpha-badge span { font-weight: 500; font-size: .7rem; opacity: .8; letter-spacing: .03em; }
-.credits { display: flex; justify-content: center; gap: clamp(28px, 5vw, 90px); margin: 44px auto 0; padding-top: 26px; border-top: 1px solid rgba(255, 255, 255, .22); max-width: 980px; }
+.credits { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px clamp(28px, 5vw, 90px); margin: 44px auto 0; padding-top: 26px; border-top: 1px solid rgba(255, 255, 255, .22); max-width: 980px; }
+.credits-label { flex-basis: 100%; margin: 0; text-align: center; font-family: var(--mono); font-weight: 600; font-size: .85rem; letter-spacing: .22em; text-transform: uppercase; color: rgba(242, 246, 248, .6); }
 .credit { display: grid; gap: 10px; justify-items: center; max-width: 380px; }
 .credit .cname { font-family: var(--head); font-weight: 700; font-size: clamp(1.25rem, 1.9vw, 1.9rem); line-height: 1.15; letter-spacing: -0.01em; color: #FFFFFF; }
 .credit .crole { font-size: .92rem; line-height: 1.4; color: rgba(242, 246, 248, .72); }
@@ -911,6 +912,7 @@ function renderHome() {
 <p class="lead">Компьютерный тренажёр по дисциплине «Аэродинамика и динамика полёта». Он построен на данных рабочей программы дисциплины: направление 25.03.03 «Аэронавигация», профиль «Лётная эксплуатация гражданских воздушных судов» (ЛЭГВС), СПбГУ ГА.</p>
 <a class="rpd-link" id="rpdLink" href="${RPD_URL}" data-rpd-page="1" target="_blank" rel="noopener">Рабочая программа дисциплины <small>PDF · 30 страниц</small></a>
 <div class="credits" aria-label="Авторы">
+<p class="credits-label">Авторы</p>
 <div class="credit"><span class="cname">Пуминов<br>Илья Ярославович</span><span class="crole">Старший преподаватель кафедры № 14 «Аэродинамики и динамики полёта»</span></div>
 <div class="credit"><span class="cname">Назаркин<br>Максим Дмитриевич</span><span class="crole">Студент 2 курса, группа ЛЭГВС-25-01</span></div>
 </div>
