@@ -947,10 +947,7 @@ function renderHome() {
    файл в Claude → файл рядом с index.html → копия на GitHub Pages (если index.html открыт с компьютера) */
 const GH_SITE = 'https://phoenixxxxxxx-lab.github.io/FORMULAPOLETA/';
 const HERO_VIDEOS = [
-  ['hero-1.mp4', GH_SITE + 'hero-1.mp4'],
-  ['hero-2.mp4', GH_SITE + 'hero-2.mp4'],
-  ['hero-3.mp4', GH_SITE + 'hero-3.mp4'],
-  ['hero-4.mp4', GH_SITE + 'hero-4.mp4'],
+  ['hero.mp4', GH_SITE + 'hero.mp4'],
 ];
 const heroSrcOK = {};  // какой адрес сработал для каждого ролика
 function startHeroVideo() {
@@ -958,6 +955,7 @@ function startHeroVideo() {
   if (!v) return;
   v.muted = true; v.defaultMuted = true; v.playsInline = true;
   v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+  v.loop = HERO_VIDEOS.length === 1;  // один ролик — крутится по кругу без паузы
   let clip = 0, cand = 0, ok = 0, failedClips = 0;
   const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(e => { if (e && e.name === 'NotAllowedError' && !ok) btn.hidden = false; }); };
   const load = () => {
