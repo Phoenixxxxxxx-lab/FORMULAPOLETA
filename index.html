@@ -243,6 +243,8 @@ input[type="range"] { width: 100%; accent-color: var(--cyan); }
 .topic .soon { margin-top: auto; font-family: var(--head); font-weight: 500; font-size: 1.05rem; color: var(--amber); }
 .draft-flag { display: inline-block; font-size: .8rem; color: var(--amber); border: 1px solid var(--amber); border-radius: 4px; padding: 1px 8px; margin-bottom: 14px; }
 
+.tab-reset { margin-left: auto; font-size: .85rem; font-weight: 500; color: var(--ink-2); border: 1px dashed var(--line) !important; }
+.tab-reset:hover { color: var(--cyan) !important; border-color: var(--cyan) !important; }
 .nav-group { font-size: .8rem; color: var(--ink-2); padding: 16px 8px 6px; border-top: 1px solid var(--line); margin-top: 10px; }
 .coord-frame { width: 100%; border: 0; display: block; min-height: 640px; background: transparent; }
 .site-foot { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-2); opacity: .72; font-size: .8rem; line-height: 1.55; max-width: 120ch; }
@@ -567,8 +569,8 @@ CONTENT.cont = {
     let mode = 'inc', raf, parts = [];
     const c = $('#tube');
     for (let i = 0; i < 90; i++) parts.push({ x: Math.random(), y: Math.random() * 2 - 1 });
-    document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
-      mode = b.dataset.m; document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    curPanel.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+      mode = b.dataset.m; b.parentNode.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
       $('#cV1').hidden = mode !== 'inc'; $('#cM1').hidden = mode === 'inc'; calc();
     }));
     let state = {};
@@ -600,6 +602,8 @@ CONTENT.cont = {
       }
     }
     function frame() {
+      if (!c.isConnected) return;
+      if (c.offsetParent === null) { raf = requestAnimationFrame(frame); return; }
       const { g, w, h } = setupCanvas(c, 260), mid = h / 2, half = x => 90 * Math.sqrt(area(x, state.r)) / Math.sqrt(Math.max(1, state.r));
       g.clearRect(0, 0, w, h);
       g.fillStyle = '#18293A'; g.beginPath(); g.moveTo(0, mid - half(0));
@@ -754,8 +758,8 @@ CONTENT.sound = {
   </div></div>`,
   mountModel() {
     let mode = 'des';
-    document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
-      mode = b.dataset.m; document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b)); $('#cMt').hidden = mode !== 'sub'; draw();
+    curPanel.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+      mode = b.dataset.m; b.parentNode.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); $('#cMt').hidden = mode !== 'sub'; draw();
     }));
     const xt = 0.35, Ain = 2.2;
     const A = (x, Ae) => x <= xt ? 1 + (Ain - 1) * (1 + Math.cos(Math.PI * x / xt)) / 2 : 1 + (Ae - 1) * (1 - Math.cos(Math.PI * (x - xt) / (1 - xt))) / 2;
@@ -884,6 +888,8 @@ CONTENT.coord = {
         let raf = 0, last = 0;
         const fit = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { const h = Math.ceil(d.body.getBoundingClientRect().height) + 8; if (Math.abs(h - last) > 2) { last = h; f.style.height = h + 'px'; } }); };
         fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(d.body);
+        restoreFrame('coord', f);
+        ['input', 'change', 'click'].forEach(t => d.addEventListener(t, () => scheduleSave('coord')));
       } catch (e) {}
     });
     f.srcdoc = new TextDecoder('utf-8').decode(bytes);
@@ -906,7 +912,6 @@ CONTENT.coord = {
 };
 
 /* ───────── отрисовка ───────── */
-let cleanup = null, currentTab = 'theory';
 function progress(id) {
   const st = store('fp-quiz-' + id); const n = (CONTENT[id]?.quiz || []).length;
   if (!st || !n) return ''; const ok = Object.values(st).filter(Boolean).length; return ok === n ? 'done' : 'part';
@@ -916,9 +921,9 @@ function renderNav(active) {
     SECTIONS.map(s => `${s.n === '2.1' ? '<li class="nav-group">Тема 2 · Аэродинамика несущих поверхностей</li>' : ''}<li><a href="#${s.id}" ${active === s.id ? 'aria-current="page"' : ''}><span class="num">${s.n}</span><span class="${s.ready ? '' : 'soon'}">${s.title}</span><span class="dot ${progress(s.id)}"></span></a></li>`).join('');
   $('#mnav').innerHTML = `<option value="home">О тренажёре</option>` + SECTIONS.map(s => `<option value="${s.id}" ${active === s.id ? 'selected' : ''}>${s.n} ${s.title}</option>`).join('');
 }
-function renderHome() {
+function renderHome(el) {
   const t1 = SECTIONS.filter(x => x.n.startsWith('1.')).map(x => `<li><a href="#${x.id}">${x.n} ${x.title.split(/[.,]/)[0]}</a></li>`).join('');
-  $('#view').innerHTML = `<section class="video-hero" id="vhero">
+  el.innerHTML = `<section class="video-hero" id="vhero">
 <video id="heroVideo" muted playsinline preload="auto" aria-hidden="true"></video>
 <button class="hero-play" id="heroPlay" type="button" hidden>▶ Включить видео</button>
 <div class="fallback"><div class="plane da40" role="img" aria-label="Рисунок учебного самолёта DA 40 NG"></div></div>
@@ -959,7 +964,7 @@ function renderHome() {
 <div class="topic"><div class="tnum">2</div><span class="tf">\\(Y = C_y \\dfrac{\\rho V^2}{2} S\\)</span><h3>Аэродинамика несущих поверхностей</h3><ul><li><a href="#coord">2.1 Системы координат и углы</a></li><li><span>Профиль крыла</span></li><li><span>Крыло конечного размаха</span></li><li><span>Индуктивное сопротивление</span></li><li><span>Критическое число М</span></li><li><span>Волновой кризис</span></li><li><span>Воздушный винт</span></li></ul><a class="go" href="#coord">Открыть раздел 2.1</a></div>
 <div class="topic off"><div class="tnum">3</div><span class="tf">\\(K = \\dfrac{C_y}{C_x}\\)</span><h3>Аэродинамические характеристики современных ВС</h3><ul><li><span>Поляра самолёта</span></li><li><span>Аэродинамическое качество</span></li><li><span>Интерференция</span></li><li><span>Влияние земли</span></li><li><span>Механизация крыла</span></li></ul><p class="soon">Скоро всё будет)</p></div>
 </div>`;
-  typeset($('#view'));
+  typeset(el);
   startHeroVideo();
 }
 /* видео на обложке. У каждого ролика несколько адресов, пробуются по очереди:
@@ -996,38 +1001,104 @@ function startHeroVideo() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { btn.hidden = false; return; }
   load();
 }
-function renderSection(id) {
-  const s = SECTIONS.find(x => x.id === id), c = CONTENT[id];
+/* Состояние: разделы и вкладки не пересоздаются, а скрываются, поэтому ползунки и режимы сохраняются.
+   Значения ещё и записываются в браузер — они остаются после перезагрузки страницы. */
+const VIEWS = {};
+const STATE_KEY = 'fp-state-v1';
+const SAVED = store(STATE_KEY) || {};
+let curPanel = null, activeId = null, redraw = null;
+const saveTimers = {};
+function scheduleSave(id) { clearTimeout(saveTimers[id]); saveTimers[id] = setTimeout(() => saveSection(id), 250); }
+function snapshot(id) {
+  const v = VIEWS[id]; if (!v) return null;
+  const old = SAVED[id] || {}, st = { tab: v.tab, inputs: Object.assign({}, old.inputs), segs: Object.assign({}, old.segs), steps: old.steps, frame: old.frame };
+  Object.entries(v.panels).forEach(([tab, panel]) => {
+    panel.querySelectorAll('input[id]').forEach(inp => { st.inputs[inp.id] = inp.type === 'checkbox' ? inp.checked : inp.value; });
+    panel.querySelectorAll('.seg').forEach((seg, i) => { const on = seg.querySelector('button[aria-pressed="true"]'); if (on) st.segs[tab + ':' + i] = on.dataset.m; });
+    const steps = panel.querySelectorAll('#steps li'); if (steps.length) st.steps = [...steps].filter(li => !li.hidden).length;
+    const f = panel.querySelector('iframe.coord-frame');
+    if (f) { try { const d = f.contentDocument, sel = d.querySelector('.tabs button[aria-selected="true"]');
+      const vals = {}; d.querySelectorAll('input[type=range][data-key]').forEach(r => { vals[r.dataset.key] = r.value; });
+      const checks = {}; d.querySelectorAll('input[type=checkbox][id]').forEach(c => { checks[c.id] = c.checked; });
+      if (sel) st.frame = { mode: sel.dataset.mode, vals: Object.assign({}, (old.frame || {}).vals, vals), checks }; } catch (e) {} }
+  });
+  return st;
+}
+function saveSection(id) { const st = snapshot(id); if (!st) return; SAVED[id] = st; store(STATE_KEY, SAVED); }
+function restoreInputs(id, panel) {
+  const st = SAVED[id]; if (!st || !st.inputs) return;
+  panel.querySelectorAll('input[id]').forEach(inp => { const val = st.inputs[inp.id]; if (val === undefined) return; if (inp.type === 'checkbox') inp.checked = !!val; else inp.value = val; });
+}
+function restoreAfterMount(id, tab, panel) {
+  const st = SAVED[id]; if (!st) return;
+  panel.querySelectorAll('.seg').forEach((seg, i) => { const m = st.segs && st.segs[tab + ':' + i]; if (!m) return;
+    const b = seg.querySelector('button[data-m="' + m + '"]'); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); });
+  const items = panel.querySelectorAll('#steps li');
+  if (items.length && st.steps > 1) { items.forEach((li, k) => { li.hidden = k >= st.steps; }); const nx = panel.querySelector('#stepNext'); if (nx) nx.disabled = st.steps >= items.length; }
+}
+function restoreFrame(id, f) {
+  const fr = SAVED[id] && SAVED[id].frame; if (!fr) return;
+  try {
+    const d = f.contentDocument, tb = d.querySelector('.tabs button[data-mode="' + fr.mode + '"]');
+    if (tb && tb.getAttribute('aria-selected') !== 'true') tb.click();
+    setTimeout(() => {
+      d.querySelectorAll('input[type=range][data-key]').forEach(r => { const val = fr.vals && fr.vals[r.dataset.key]; if (val !== undefined) { r.value = val; r.dispatchEvent(new Event('input', { bubbles: true })); } });
+      Object.entries(fr.checks || {}).forEach(([cid, on]) => { const c = d.getElementById(cid); if (c && c.checked !== on) { c.checked = on; c.dispatchEvent(new Event('change', { bubbles: true })); } });
+    }, 30);
+  } catch (e) {}
+}
+function buildSection(id, el) {
+  const s = SECTIONS.find(x => x.id === id);
   let body;
-  if (!s.ready) {
-    body = `<div class="prose"><span class="draft-flag">Раздел в разработке</span><p>Что здесь будет:</p><ul>${s.plan.map(p => `<li>${p}</li>`).join('')}</ul></div>`;
-  } else {
-    body = `<div class="tabs" role="tablist">${TABS.map(([k, l]) => `<button class="tab" role="tab" type="button" data-tab="${k}" aria-selected="${k === currentTab}">${l}</button>`).join('')}</div><div id="tabBody" role="tabpanel"></div>`;
-  }
-  $('#view').innerHTML = `<header class="hero"><div><p class="meta">Раздел ${s.n}</p><p class="rpd-src">Основа в РПД: ${s.rpd.map(([t, pg]) => `${t} — <a href="${RPD_URL}#page=${pg}" data-rpd-page="${pg}" target="_blank" rel="noopener">с. ${pg}</a>`).join(' · ')}</p><h1>${s.title}</h1></div><div class="hero-formula">\\[${s.f}\\]</div></header>${body}`;
-  typeset($('.hero'));
+  if (!s.ready) body = `<div class="prose"><span class="draft-flag">Раздел в разработке</span><p>Что здесь будет:</p><ul>${s.plan.map(p => `<li>${p}</li>`).join('')}</ul></div>`;
+  else body = `<div class="tabs" role="tablist">${TABS.map(([k, l]) => `<button class="tab" role="tab" type="button" data-tab="${k}" aria-selected="false">${l}</button>`).join('')}<button class="tab tab-reset" type="button" title="Вернуть все ползунки и режимы этого раздела к начальным значениям">Сбросить параметры</button></div><div class="tab-body"></div>`;
+  el.innerHTML = `<header class="hero"><div><p class="meta">Раздел ${s.n}</p><p class="rpd-src">Основа в РПД: ${s.rpd.map(([t, pg]) => `${t} — <a href="${RPD_URL}#page=${pg}" data-rpd-page="${pg}" target="_blank" rel="noopener">с. ${pg}</a>`).join(' · ')}</p><h1>${s.title}</h1></div><div class="hero-formula">\\[${s.f}\\]</div></header>${body}`;
+  typeset(el.querySelector('.hero'));
+  const v = VIEWS[id];
   if (s.ready) {
-    document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => { currentTab = b.dataset.tab; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === b)); renderTab(id); }));
-    renderTab(id);
+    el.querySelectorAll('.tab[data-tab]').forEach(b => b.addEventListener('click', () => showTab(id, b.dataset.tab)));
+    el.querySelector('.tab-reset').addEventListener('click', () => resetSection(id));
+    ['input', 'change', 'click'].forEach(t => el.addEventListener(t, () => scheduleSave(id)));
+    showTab(id, (SAVED[id] && SAVED[id].tab) || 'theory');
   }
 }
-let redraw = null;
-function renderTab(id) {
-  if (cleanup) { cleanup(); cleanup = null; } redraw = null;
-  const c = CONTENT[id], el = $('#tabBody');
-  if (currentTab === 'quiz') { el.innerHTML = quizHTML(id); mountQuiz(id); }
-  else {
-    el.innerHTML = c[currentTab]();
-    const mount = c['mount' + currentTab[0].toUpperCase() + currentTab.slice(1)];
-    if (mount) { const r = mount(); if (typeof r === 'function') { if (id === 'cont' && currentTab === 'model') cleanup = r; else redraw = r; } }
+function showTab(id, tab) {
+  const v = VIEWS[id], c = CONTENT[id];
+  v.tab = tab;
+  v.el.querySelectorAll('.tab[data-tab]').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === tab));
+  Object.values(v.panels).forEach(p => { p.hidden = true; });
+  let panel = v.panels[tab];
+  if (!panel) {
+    panel = document.createElement('div'); panel.className = 'tabpanel'; panel.setAttribute('role', 'tabpanel');
+    v.el.querySelector('.tab-body').appendChild(panel); v.panels[tab] = panel; curPanel = panel;
+    if (tab === 'quiz') { panel.innerHTML = quizHTML(id); mountQuiz(id, panel); }
+    else {
+      panel.innerHTML = c[tab]();
+      restoreInputs(id, panel);
+      const mount = c['mount' + tab[0].toUpperCase() + tab.slice(1)];
+      if (mount) { const r = mount(); if (typeof r === 'function') { if (id === 'cont' && tab === 'model') v.cleanup.push(r); else v.redraw[tab] = r; } }
+      restoreAfterMount(id, tab, panel);
+    }
+    typeset(panel);
+  } else {
+    panel.hidden = false;
   }
-  typeset(el);
+  redraw = v.redraw[tab] || null;
+  if (redraw) requestAnimationFrame(() => redraw && redraw());
+  scheduleSave(id);
+}
+function resetSection(id) {
+  const v = VIEWS[id]; if (!v) return;
+  v.cleanup.forEach(f => { try { f(); } catch (e) {} });
+  delete SAVED[id]; store(STATE_KEY, SAVED);
+  const keepTab = v.tab; v.el.remove(); delete VIEWS[id];
+  SAVED[id] = { tab: keepTab }; route();
 }
 function quizHTML(id) {
   return `<div class="quiz">${CONTENT[id].quiz.map((q, i) => `<div class="q" data-i="${i}"><p>${i + 1}. ${q.q}</p><div class="opts">${q.o.map((o, j) => `<button class="opt" type="button" data-j="${j}">${o}</button>`).join('')}</div><div class="expl" hidden></div></div>`).join('')}
-<button class="btn" id="qReset" type="button">Пройти заново</button></div>`;
+<button class="btn q-reset" type="button">Пройти заново</button></div>`;
 }
-function mountQuiz(id) {
+function mountQuiz(id, panel) {
   const key = 'fp-quiz-' + id, st = store(key) || {};
   const answer = (qEl, j, save) => {
     const i = +qEl.dataset.i, q = CONTENT[id].quiz[i];
@@ -1035,19 +1106,29 @@ function mountQuiz(id) {
     const ex = qEl.querySelector('.expl'); ex.hidden = false; ex.textContent = (j === q.a ? 'Верно. ' : 'Неверно. ') + q.e;
     if (save) { st[i] = j === q.a; store(key, st); renderNav(id); }
   };
-  document.querySelectorAll('.q').forEach(qEl => {
-    qEl.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => answer(qEl, +b.dataset.j, true)));
-  });
-  $('#qReset').onclick = () => { store(key, {}); renderNav(id); renderTab(id); };
+  panel.querySelectorAll('.q').forEach(qEl => { qEl.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => answer(qEl, +b.dataset.j, true))); });
+  panel.querySelector('.q-reset').onclick = () => { store(key, {}); renderNav(id); panel.innerHTML = quizHTML(id); mountQuiz(id, panel); typeset(panel); };
 }
 function route() {
-  const id = (location.hash || '#home').slice(1);
-  if (cleanup) { cleanup(); cleanup = null; }
-  const valid = SECTIONS.some(s => s.id === id);
-  currentTab = 'theory';
-  renderNav(valid ? id : 'home');
-  valid ? renderSection(id) : renderHome();
-  window.scrollTo(0, 0);
+  const hash = (location.hash || '#home').slice(1);
+  const id = SECTIONS.some(s => s.id === hash) ? hash : 'home';
+  if (activeId && VIEWS[activeId]) { VIEWS[activeId].scroll = window.scrollY; VIEWS[activeId].el.hidden = true; if (activeId !== 'home') saveSection(activeId); }
+  const hv = $('#heroVideo'); if (hv && id !== 'home') hv.pause();
+  renderNav(id);
+  const loading = $('#view > p.note'); if (loading) loading.remove();
+  let v = VIEWS[id];
+  if (!v) {
+    const el = document.createElement('div'); el.className = 'section-view'; $('#view').appendChild(el);
+    v = VIEWS[id] = { el, tab: 'theory', panels: {}, redraw: {}, cleanup: [], scroll: 0 };
+    if (id === 'home') renderHome(el); else buildSection(id, el);
+  } else {
+    v.el.hidden = false;
+    if (id === 'home') { if (hv && hv.getAttribute('src')) { const p = hv.play(); if (p && p.catch) p.catch(() => {}); } }
+    else { redraw = v.redraw[v.tab] || null; if (redraw) requestAnimationFrame(() => redraw && redraw()); }
+  }
+  if (id === 'home') redraw = null;
+  activeId = id;
+  window.scrollTo(0, v.scroll || 0);
 }
 window.addEventListener('hashchange', route);
 document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a[data-rpd-page]'); if (!a) return; e.preventDefault(); openRpd(+a.dataset.rpdPage); });
