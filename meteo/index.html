@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Формула полёта. Метеорология</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/meteo.css">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'},startup:{ready(){MathJax.startup.defaultReady();MathJax.startup.promise.then(()=>{if(window.FP)FP.typeset(document.body)})}}};</script>
+<script src="assets/tex-svg.js" async></script>
+<script src="assets/meteo.js"></script>
+<style>
+.gut{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1240px;margin:0 auto}
+.hero{position:relative;overflow:hidden;isolation:isolate;padding-bottom:40px}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.nav-top{display:flex;align-items:center;gap:22px;padding-block:18px;padding-right:120px}
+.nav-top .back{font-size:.8rem;color:var(--ink-2);text-decoration:none}
+.nav-top .back:hover{color:var(--lime-ink)}
+.hero-in{display:grid;grid-template-columns:190px minmax(0,1fr) 190px;gap:24px;align-items:center;padding-block:clamp(40px,7vh,80px) 30px}
+.stats{display:flex;flex-direction:column;gap:36px}
+.stats.r{text-align:right}
+.stat b{display:block;font-family:var(--f-serif);font-weight:500;font-size:clamp(2rem,3vw,2.7rem);line-height:1;font-variant-numeric:lining-nums}
+.stat span{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.hero-c{text-align:center}
+.brandline{font-family:var(--f-brand);font-weight:700;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--lime-ink);margin-bottom:18px}
+.hero h1{font-family:var(--f-serif);font-weight:500;font-size:clamp(3rem,7vw,6.2rem);line-height:.98;letter-spacing:-.02em}
+.hero h1 em{color:var(--lime-ink);font-style:italic}
+.hero h1 .w{display:inline-block}
+@media (prefers-reduced-motion:no-preference){.hero h1 .w{animation:wIn .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(.15s + var(--i)*90ms)}@keyframes wIn{from{opacity:0;transform:translateY(.35em);filter:blur(8px)}}}
+.sub{font-family:var(--f-mono);font-size:.82rem;color:var(--ink-2);max-width:58ch;margin:22px auto 26px;line-height:1.7}
+.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.credits{display:flex;justify-content:center;gap:16px 60px;flex-wrap:wrap;margin-top:34px}
+.credit{text-align:center}
+.credit b{display:block;font-family:var(--f-serif);font-size:1.45rem;font-weight:600;line-height:1.1}
+.credit span{font-size:.8rem;color:var(--ink-2)}
+.hcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:40px}
+.hcard{padding:18px 20px}
+.hcard .big{font-family:var(--f-serif);font-size:3.2rem;line-height:1;margin-top:10px;font-variant-numeric:lining-nums}
+.hcard .big small{font-family:var(--f-body);font-size:.8rem;color:var(--ink-2);margin-left:6px}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+.hcard svg{width:100%;height:auto;display:block;margin-top:6px}
+.hcard svg text{fill:var(--ink-2);font-family:var(--f-mono);font-size:9px}
+.sec{padding-block:clamp(60px,8vw,110px)}
+.sec h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.3rem,4.4vw,3.8rem);line-height:1.02;letter-spacing:-.015em;margin-top:14px;max-width:20ch}
+.sec h2 em{font-style:italic;color:var(--lime-ink)}
+.sec .lead{color:var(--ink-2);margin-top:18px;max-width:64ch}
+.feats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:40px}
+.feat{padding:22px;display:flex;flex-direction:column;gap:12px;transition:transform .3s}
+.feat:hover{transform:translateY(-4px)}
+.feat .n{font-family:var(--f-mono);color:var(--lime-ink);font-size:.8rem}
+.feat h3{font-family:var(--f-serif);font-weight:600;font-size:1.7rem;line-height:1.1}
+.feat h3 em{color:var(--lime-ink)}
+.feat p{margin:0;color:var(--ink-2)}
+.feat .vis{margin-top:auto;border-top:1px dashed var(--line);padding-top:14px;font-family:var(--f-mono);font-size:.76rem;color:var(--ink-2);display:grid;gap:6px}
+.feat .vis b{color:var(--lime-ink);font-weight:500}
+.chain{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:center;margin-top:40px}
+.cflow{display:grid;gap:12px}
+.ccard{padding:16px 20px;display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px;align-items:center;border-radius:20px}
+.ccard .lbl{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lime-ink)}
+.ccard small{display:block;color:var(--ink-2);font-size:.85rem;margin-top:4px}
+.gauge{padding:22px;display:grid;gap:14px}
+.gauge svg{width:min(100%,300px);margin:0 auto;display:block}
+.topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
+.tcard{padding:24px;display:flex;flex-direction:column;gap:10px;min-height:280px}
+.tcard .tn{font-family:var(--f-serif);font-size:4.2rem;line-height:.9;color:var(--lime-ink)}
+.tcard.off .tn{color:var(--ink-2);opacity:.55}
+.tcard h3{font-family:var(--f-body);font-weight:600;font-size:1.04rem;line-height:1.3}
+.tcard ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.tcard li a,.tcard li span{display:inline-block;font-size:.76rem;padding:3px 10px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink-2);text-decoration:none}
+.tcard li a{color:var(--ink)} .tcard li a:hover{box-shadow:inset 0 0 0 1px var(--lime);color:var(--lime-ink)}
+.tcard .go{margin-top:auto;align-self:flex-start}
+.tcard .soon{margin-top:auto;font-family:var(--f-mono);font-size:.74rem;color:var(--ink-2)}
+.tcard.on{box-shadow:var(--shadow),inset 0 0 0 1px var(--lime-line)}
+.finale{text-align:center;padding:clamp(50px,7vw,90px) 24px;margin-bottom:20px;overflow:hidden}
+.finale h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4.4rem);line-height:1}
+.finale h2 em{color:var(--lime-ink)}
+.finale p{color:var(--ink-2);max-width:56ch;margin:18px auto 26px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <canvas id="glow" aria-hidden="true"></canvas>
+  <div class="gut"><div class="wrap">
+    <div class="nav-top"><span id="brand"></span><a class="back" href="../">← Формула полёта</a></div>
+    <div class="hero-in">
+      <div class="stats rv" style="--d:.9s"><div class="stat"><b>11 000 м</b><span>тропопауза СА</span></div><div class="stat"><b>8,3 м</b><span>на 1 гПа у земли</span></div></div>
+      <div class="hero-c">
+        <div class="brandline">Авиационная метеорология</div>
+        <h1 aria-label="Атмосфера, которую видит пилот"><span class="w" style="--i:0">Атмосфера,</span> <em class="w" style="--i:1">которую</em><br><span class="w" style="--i:2">видит</span> <span class="w" style="--i:3">пилот.</span></h1>
+        <p class="sub rv" style="--d:.6s">Компьютерный тренажёр по дисциплине «Авиационная метеорология». Выводы формул по шагам, интерактивные модели и примеры в полёте на DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p>
+        <div class="cta rv" style="--d:.75s"><a class="btn lime" href="t1.html">Начать с раздела 1</a><a class="btn" href="#topics">Темы семестра</a></div>
+        <div class="credits rv" style="--d:.9s"><div class="credit"><b>Назаркин<br>Максим Дмитриевич</b><span>руководитель проекта</span></div><div class="credit"><b>[ФИО]</b><span>научное содержание</span></div></div>
+      </div>
+      <div class="stats r rv" style="--d:1s"><div class="stat"><b>1013,25</b><span>гПа на уровне моря</span></div><div class="stat"><b>−56,5°</b><span>над тропопаузой</span></div></div>
+    </div>
+    <div class="hcards">
+      <div class="hcard glass rv" style="--d:.1s"><div class="kick">Высота полёта</div><div class="big" id="hcH"></div><input type="range" id="hcRange" min="0" max="15000" step="100" value="3000" aria-label="Высота" style="margin-top:14px"><div class="hrow"><span class="mono note" id="hcFL"></span><span class="chip o">Двигайте</span></div></div>
+      <div class="hcard glass rv" style="--d:.2s"><div class="kick">Давление по СА</div><div class="big" id="hcP"></div><div class="hrow"><span class="mono note" id="hcR"></span><span class="chip" id="hcPct"></span></div></div>
+      <div class="hcard glass rv" style="--d:.3s"><div class="kick">Профиль температуры</div><svg id="hcT" viewBox="0 0 260 96" aria-label="Профиль температуры СА"></svg><div class="hrow"><span class="mono note" id="hcTt"></span><span class="chip o" id="hcLayer"></span></div></div>
+    </div>
+  </div></div>
+</div>
+
+<div class="gut"><div class="wrap">
+  <section class="sec">
+    <div class="kick rv">Зачем пилоту метеорология</div>
+    <h2 class="rv" style="--d:.1s">Формула на доске и шкала в кабине – <em>одно знание</em></h2>
+    <p class="lead rv" style="--d:.2s">Высотомер, указатель скорости и датчик наружной температуры тарированы по стандартной атмосфере. Если Вы понимаете формулы, Вы понимаете и то, когда прибор ошибается: в мороз, при низком давлении, в жару на взлёте.</p>
+    <div class="feats">
+      <div class="feat glass rv"><span class="n">01</span><h3>Теория <em>по шагам</em></h3><p>Формулы выводятся на глазах: от уравнения статики до барической ступени.</p><div class="vis"><span>1. dp = −ρg dH</span><span>2. ρ = p / RT</span><b>3. p = p₀(1 − βH/T₀)^5,256</b></div></div>
+      <div class="feat glass rv" style="--d:.08s"><span class="n">02</span><h3>Модели <em>с ползунками</em></h3><p>Меняйте высоту, температуру и давление и сразу смотрите на результат.</p><div class="vis"><span>H = 3000 м, ΔT = +15 °C</span><b>плотностная высота +600 м</b></div></div>
+      <div class="feat glass rv" style="--d:.16s"><span class="n">03</span><h3>Два <em>самолёта</em></h3><p>Каждая тема доведена до кабины: учебный DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p><div class="vis"><span>DA 40 NG: плотностная высота</span><span>SSJ 100: число M и эшелон</span></div></div>
+      <div class="feat glass rv" style="--d:.24s"><span class="n">04</span><h3>Проверьте <em>себя</em></h3><p>Вопросы в конце каждого раздела с объяснением каждого ответа.</p><div class="vis"><span>QNH 1000, на шкале 1013</span><b>высотомер покажет ≈ +110 м</b></div></div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="kick rv">Пример</div>
+    <h2 class="rv">От лекции – <em>до кабины</em></h2>
+    <div class="chain">
+      <div class="cflow">
+        <div class="ccard glass rv"><span class="lbl">на лекции</span><div>\(p = p_0\left(1 - \dfrac{\beta H}{T_0}\right)^{5{,}256}\)<small>Барометрическая формула: давление падает с высотой по закону СА.</small></div></div>
+        <div class="ccard glass rv" style="--d:.1s"><span class="lbl">в модели</span><div>\(h = \dfrac{RT}{g\,p} \approx 8{,}3\ \text{м/гПа}\)<small>Барическая ступень: сколько метров приходится на 1 гПа у земли.</small></div></div>
+        <div class="ccard glass rv" style="--d:.2s"><span class="lbl">в кабине</span><div>\(\Delta H \approx 8{,}3\,(p_{шк} - p_{факт})\)<small>Высотомер на стоянке. Поверните кремальеру и посмотрите на показание.</small></div></div>
+      </div>
+      <div class="gauge glass rv" style="--d:.15s">
+        <svg id="altG" viewBox="0 0 220 220" aria-label="Барометрический высотомер"></svg>
+        <div class="ctl"><div class="top"><label for="gQNH">Давление на шкале</label><output id="gOut"></output></div><input type="range" id="gQNH" min="980" max="1040" step="1" value="1013"></div>
+        <p class="note" id="gTxt" style="margin:0"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="topics" style="padding-top:0">
+    <div class="kick rv">Темы семестра</div>
+    <h2 class="rv">Шесть разделов – <em>одна атмосфера</em></h2>
+    <p class="lead rv">Темы следуют рабочей программе дисциплины «Авиационная метеорология» и курсу лекций.</p>
+    <div class="topics" id="tcards"></div>
+  </section>
+
+  <section class="finale glass rv">
+    <div class="kick">Добро пожаловать в проект</div>
+    <h2 style="margin-top:14px">Погода – это <em>язык,</em><br>на котором говорит небо.</h2>
+    <p>Давайте учиться его понимать. Первый раздел: состав и строение атмосферы, стандартная атмосфера.</p>
+    <a class="btn lime" href="t1.html">Приступить к занятиям →</a>
+  </section>
+  <div id="foot"></div>
+</div></div>
+
+<script>
+(function(){
+const {f,ISA}=FP;
+FP.chrome();
+document.getElementById('brand').innerHTML=FP.brand('index.html');
+document.getElementById('foot').innerHTML=FP.footer();
+
+/* темы по курсу лекций */
+const T=[[1,'Состав и строение атмосферы','t1.html',[['1.1 Общие сведения','#s11'],['1.2 Газовый состав','#s12'],['1.3 Строение атмосферы','#s13'],['1.4 Стандартная атмосфера','#s14'],['1.5 Реальная атмосфера','#s15']]],
+ [2,'Физические характеристики атмосферы','t2.html',[['2.1 Параметры атмосферы','#s21'],['2.2 Практика 01','#s22'],['2.3 Измерения','#s23'],['2.4 Влияние на полёт','#s24'],['2.5 Барометрическая высота','#s25'],['2.6 Барическое поле','#s26'],['2.7 Практика 02','#s27']]],
+ [3,'Динамика атмосферы. Ветер и его влияние на полёт',null,['характеристики ветра','измерение ветра','ветер на картах погоды','ветер в барических системах','влияние на ВС и аэродромы']],
+ [4,'Элементы термодинамики атмосферы',null,['вертикальные движения','адиабатические процессы','устойчивость, уровень конвекции']],
+ [5,'Облака, осадки, туманы. Видимость',null,['облака','осадки','туманы','виды видимости','METAR, TAF, GAMET']],
+ [6,'Синоптические процессы. Карты погоды. Прогноз погоды',null,['карты топографии','воздушные массы','фронты','циклоны и антициклоны','Практика 03','гроза, обледенение, турбулентность']]];
+document.getElementById('tcards').innerHTML=T.map((t,i)=>`<div class="tcard glass rv ${t[2]?'on':'off'}" style="--d:${i%3*.08}s"><div class="tn">${t[0]}</div><h3>${t[1]}</h3><ul>${t[3].map(x=>Array.isArray(x)?`<li><a href="${t[2]}${x[1]}">${x[0]}</a></li>`:`<li><span>${x}</span></li>`).join('')}</ul>${t[2]?`<a class="btn lime go" href="${t[2]}">Открыть раздел ${t[0]}</a>`:'<span class="soon">в разработке</span>'}</div>`).join('');
+FP.reveal(document);
+
+/* карточки шапки */
+const r=document.getElementById('hcRange');
+function cards(){const H=+r.value,p=ISA.P(H),T=ISA.T(H);
+ document.getElementById('hcH').innerHTML=`${f(H)}<small>м</small>`;document.getElementById('hcFL').textContent=`${FP.fl(H)}, ${f(H/ISA.FT)} ft`;
+ document.getElementById('hcP').innerHTML=`${f(p/100)}<small>/ 1013 гПа</small>`;document.getElementById('hcR').textContent=`ρ = ${f(ISA.RHO(H),3)} кг/м³`;document.getElementById('hcPct').textContent=`${f(p/ISA.P0*100)} %`;
+ document.getElementById('hcTt').textContent=`t = ${f(T-273.15,1)} °C`;document.getElementById('hcLayer').textContent=H<=11000?'тропосфера':'стратосфера';
+ const X=h=>10+h/15000*240,Y=t=>8+(15-t)/75*76;let d='';for(let h=0;h<=15000;h+=250)d+=(h?'L':'M')+X(h).toFixed(1)+' '+Y(ISA.T(h)-273.15).toFixed(1);
+ document.getElementById('hcT').innerHTML=`<line x1="${X(11000)}" x2="${X(11000)}" y1="6" y2="90" stroke="var(--line)"/><text x="${X(11000)+4}" y="16">11 км</text><text x="10" y="94">0</text><text x="226" y="94">15 км</text><path d="${d}" fill="none" stroke="var(--lime-line)" stroke-width="2"/><circle cx="${X(H)}" cy="${Y(T-273.15)}" r="5" fill="var(--lime-line)" stroke="var(--bg)" stroke-width="2"/>`}
+r.addEventListener('input',cards);cards();
+
+/* высотомер */
+const g=document.getElementById('gQNH');
+function gauge(){const q=+g.value,rd=(ISA.Hp(101300)-ISA.Hp(q*100))/ISA.FT;
+ document.getElementById('gOut').textContent=`${q} гПа`;
+ document.getElementById('gTxt').textContent=`Фактическое давление на стоянке 1013 гПа, аэродром на уровне моря. Высотомер покажет ${FP.sg(rd)} ft (${FP.sg(rd*ISA.FT)} м).`;
+ const ang=v=>(v/1000*360-90)*Math.PI/180;let s='<circle cx="110" cy="110" r="104" fill="#0E0F11" stroke="#2A2B2F" stroke-width="2"/>';
+ for(let i=0;i<50;i++){const a=(i/50*360-90)*Math.PI/180,r1=i%5?92:86;s+=`<line x1="${110+Math.cos(a)*r1}" y1="${110+Math.sin(a)*r1}" x2="${110+Math.cos(a)*98}" y2="${110+Math.sin(a)*98}" stroke="#E8EAEE" stroke-width="${i%5?1:2}"/>`;if(i%5===0)s+=`<text x="${110+Math.cos(a)*74}" y="${110+Math.sin(a)*74+6}" text-anchor="middle" fill="#FFFFFF" style="font:600 17px var(--f-mono)">${i/5}</text>`}
+ s+=`<rect x="138" y="100" width="44" height="20" rx="3" fill="#000" stroke="#3A3B40"/><text x="160" y="114" text-anchor="middle" fill="#C6F432" style="font:500 11px var(--f-mono)">${q}</text><text x="110" y="150" text-anchor="middle" fill="#8C8F98" style="font:9px var(--f-mono)">ALT 100 FT</text>`;
+ const a1=ang(((rd%1000)+1000)%1000),a2=ang(((rd/10)%1000+1000)%1000);
+ s+=`<line x1="110" y1="110" x2="${110+Math.cos(a2)*50}" y2="${110+Math.sin(a2)*50}" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/><line x1="110" y1="110" x2="${110+Math.cos(a1)*84}" y2="${110+Math.sin(a1)*84}" stroke="#C6F432" stroke-width="3.5" stroke-linecap="round" style="filter:drop-shadow(0 0 4px rgba(198,244,50,.7))"/><circle cx="110" cy="110" r="7" fill="#0B0B0C" stroke="#C6F432" stroke-width="2"/>`;
+ document.getElementById('altG').innerHTML=s}
+g.addEventListener('input',gauge);gauge();
+
+/* свечение шапки: лаймовый градиент и лучи, следуют за курсором */
+const cv=document.getElementById('glow'),cx=cv.getContext('2d'),hero=document.querySelector('.hero');let mx=.5,my=.6,t0=performance.now(),raf=0;
+const red=matchMedia('(prefers-reduced-motion: reduce)').matches,beams=[...Array(50)].map((_,i)=>({x:i/49,s:.3+Math.random()*.7,p:Math.random()*6.28}));
+function draw(now){const b=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),W=b.width,H=b.height;if(!W)return;
+ if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr)}
+ cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);const lt=document.documentElement.dataset.theme==='light',t=(now-t0)/1000,gx=W*(.5+(mx-.5)*.25),gy=H*(.58+(my-.5)*.1);
+ const gr=cx.createRadialGradient(gx,gy,0,gx,gy,Math.max(W,H)*.55);gr.addColorStop(0,lt?'rgba(198,244,50,.55)':'rgba(198,244,50,.36)');gr.addColorStop(.4,lt?'rgba(198,244,50,.18)':'rgba(150,200,30,.12)');gr.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=gr;cx.fillRect(0,0,W,H);
+ beams.forEach(o=>{const x=o.x*W,a=Math.max(0,.55-Math.abs(x-gx)/W*1.6)*(.55+.45*Math.sin(t*o.s+o.p));if(a<=0)return;const lg=cx.createLinearGradient(0,gy-H*.55,0,gy+H*.2);lg.addColorStop(0,'rgba(198,244,50,0)');lg.addColorStop(.75,`rgba(${lt?'110,150,0':'198,244,50'},${a*.5})`);lg.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=lg;cx.fillRect(x,gy-H*.55,1,H*.75)});
+ if(!red)raf=requestAnimationFrame(draw)}
+hero.addEventListener('pointermove',e=>{const b=cv.getBoundingClientRect();mx=(e.clientX-b.left)/b.width;my=(e.clientY-b.top)/b.height;if(red)draw(performance.now())});
+new IntersectionObserver(es=>{cancelAnimationFrame(raf);if(es[0].isIntersecting)raf=requestAnimationFrame(draw)}).observe(hero);
+document.addEventListener('fp-theme',()=>{if(red)draw(performance.now())});
+})();
+</script>
+
+</body>
+</html>

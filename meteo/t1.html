@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Раздел 1. Состав и строение атмосферы</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/meteo.css">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'},startup:{ready(){MathJax.startup.defaultReady();MathJax.startup.promise.then(()=>{if(window.FP)FP.typeset(document.body)})}}};</script>
+<script src="assets/tex-svg.js" async></script>
+<script src="assets/meteo.js"></script>
+<style>
+.col{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:1000px){.col{grid-template-columns:minmax(0,1fr)}}
+.gas{display:grid;gap:10px;margin-top:8px}
+.gas .r{display:grid;grid-template-columns:150px minmax(0,1fr) 80px;gap:12px;align-items:center;font-size:.9rem}
+.gas .bar{height:12px;border-radius:999px;background:var(--line);overflow:hidden}
+.gas .bar i{display:block;height:100%;background:var(--lime);border-radius:999px;transition:width .5s}
+.gas .v{font-family:var(--f-mono);text-align:right;font-size:.82rem}
+.layers{display:flex;flex-direction:column;border-radius:16px;overflow:hidden;margin-top:12px;box-shadow:inset 0 0 0 1px var(--line)}
+.layer{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:10px 14px;border-top:1px solid var(--line);font-size:.88rem}
+.layer:first-child{border-top:0}
+.layer b{font-weight:600;color:var(--lime-ink)}
+.princ{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.princ .glass{padding:16px 18px;border-radius:20px}
+.princ h4{margin:0 0 6px;font-family:var(--f-serif);font-size:1.25rem;font-weight:600}
+.princ p{margin:0;font-size:.88rem;color:var(--ink-2)}
+#colInfo h4{margin:0 0 6px;font-family:var(--f-serif);font-size:1.6rem;font-weight:600;color:var(--lime-ink)}
+</style>
+</head>
+<body>
+<script>
+(function(){
+const {f,sg,ro,ISA,slider,vals,out,bind}=FP; const FT=ISA.FT;
+const hs=[];for(let h=0;h<=20000;h+=250)hs.push(h);
+
+/* ---------- 1.1 ---------- */
+const s11={id:'s11',n:'1.1',title:'Общие сведения об атмосфере',h1:'Атмосфера <em class="acc">как</em> рабочая среда',
+ rpd:'Раздел 1 «Введение. Состав и строение атмосферы»',
+ f:String.raw`\(\Delta m = \dfrac{\Delta p}{g}\)`,
+ tabs:{theory:String.raw`
+ <p class="lead">Атмосфера – воздушная оболочка Земли, которая вращается вместе с планетой. Для авиации это рабочая среда: в ней создаются подъёмная сила и тяга, в ней возникают явления погоды, от которых зависят взлёт, полёт по маршруту и посадка.</p>
+ <div class="cols">
+  <div class="glass pad"><h3 class="h">Авиационная метеорология</h3><div class="prose">
+   <p>Метеорология изучает физические процессы в атмосфере. Авиационная метеорология – прикладная наука: она изучает, как погода влияет на полёты, и как обеспечивать экипажи метеорологической информацией.</p>
+   <p>Задача пилота – по этой информации оценить условия полёта и принять решение: вылетать или нет, какой выбрать эшелон и запасной аэродром.</p></div></div>
+  <div class="glass pad"><h3 class="h">Масса атмосферы распределена неравномерно</h3><div class="prose">
+   <p>Давление у поверхности равно весу столба воздуха над единицей площади. Поэтому доля массы атмосферы ниже высоты \(H\) определяется только давлением:</p>
+   <p>\[\dfrac{m(H)}{m} = 1 - \dfrac{p(H)}{p_0}\]</p>
+   <p>Ниже 5,5 км лежит около половины всей массы атмосферы, ниже 11 км – около трёх четвертей. Проверьте это на вкладке «Модель».</p></div></div>
+ </div>
+ <h3 class="h" style="margin-top:6px">Основные принципы деления атмосферы</h3>
+ <div class="princ">
+  <div class="glass"><h4>По температуре</h4><p>Тропосфера, стратосфера, мезосфера, термосфера. Граница слоя – уровень, где меняется характер изменения температуры с высотой. Это деление главное для авиации.</p></div>
+  <div class="glass"><h4>По составу</h4><p>Гомосфера (примерно до 100 км) – газы хорошо перемешаны, состав сухого воздуха постоянен. Выше – гетеросфера, где газы расслаиваются по массе.</p></div>
+  <div class="glass"><h4>По ионизации</h4><p>Нейтросфера и ионосфера (примерно выше 60 км). Ионосфера отражает радиоволны КВ-диапазона и влияет на дальнюю радиосвязь.</p></div>
+  <div class="glass"><h4>По влиянию поверхности</h4><p>Пограничный слой (слой трения, до 1–1,5 км), где сказывается трение о земную поверхность, и свободная атмосфера над ним.</p></div>
+ </div>`,
+ model:`<div class="glass pad">${slider('m11H','Высота',0,20000,100,5500)}</div><div class="ro-grid" data-ro></div>
+  <div class="glass pad"><h3 class="h">Доля массы атмосферы ниже высоты</h3><svg class="chart" id="ch11" viewBox="0 0 340 270" role="img" aria-label="Доля массы атмосферы ниже высоты"></svg></div>`,
+ quiz:'<div class="quiz quiz-host"></div>'},
+ mount:{model(el){bind(el,()=>{const [H]=vals(el,['m11H']),p=ISA.P(H),m=1-p/ISA.P0;out(el,'m11H',`${f(H)} м`);
+  el.querySelector('[data-ro]').innerHTML=ro('hl','Ниже этой высоты',`${f(m*100,1)} %`,'массы атмосферы')+ro('','Выше этой высоты',`${f(100-m*100,1)} %`,'массы атмосферы')+ro('','Давление',`${f(p/100)} гПа`,`${f(p/ISA.P0*100)} % от уровня моря`);
+  FP.plot(el.querySelector('#ch11'),{x0:0,x1:100,y0:0,y1:20,xt:[0,25,50,75,100],yt:[0,5,10,15,20],xl:'доля массы ниже H, %',fill:1,band:[11,11.3],bandLabel:'тропопауза',
+   series:[{pts:hs.map(h=>[(1-ISA.P(h)/ISA.P0)*100,h/1000]),c:'var(--lime-line)'}],marks:[[m*100,H/1000,'var(--lime-line)']],hline:H/1000})})}},
+ quiz:[['Какая доля массы атмосферы лежит ниже 5,5 км?',['около половины','около 10 %','около 90 %','около четверти'],'p(5,5 км) ≈ 505 гПа, то есть примерно половина от 1013 гПа.'],
+  ['Главный для авиации принцип деления атмосферы на слои:',['по характеру изменения температуры с высотой','по составу газов','по степени ионизации','по плотности воздуха'],'Тропосфера, стратосфера, мезосфера и термосфера выделены по ходу температуры.'],
+  ['Слой трения (пограничный слой) имеет толщину около:',['1–1,5 км','10–12 км','100 м','50 км'],'Выше 1–1,5 км влияние трения о поверхность становится малым – это свободная атмосфера.']]};
+
+/* ---------- 1.2 ---------- */
+const GAS=[['Азот, N₂',78.08],['Кислород, O₂',20.95],['Аргон, Ar',0.93],['Углекислый газ, CO₂',0.04],['Неон, гелий и другие',0.003]];
+const s12={id:'s12',n:'1.2',title:'Газовый состав атмосферы',h1:'Газовый <em class="acc">состав</em> атмосферы',
+ rpd:'Раздел 1 «Введение. Состав и строение атмосферы»',f:String.raw`\(p_{O_2} = 0{,}2095\,p\)`,
+ tabs:{theory:`<p class="lead">Воздух – смесь газов. До высоты около 100 км они хорошо перемешаны, поэтому доли азота, кислорода и аргона в сухом воздухе почти не меняются с высотой. Меняется только общее давление, а вместе с ним и количество кислорода в каждом вдохе.</p>
+ <div class="cols"><div class="glass pad"><h3 class="h">Сухой воздух у поверхности, % по объёму</h3><div class="gas">${GAS.map(g=>`<div class="r"><span>${g[0]}</span><span class="bar"><i style="width:${Math.max(g[1],0.6)}%"></i></span><span class="v">${f(g[1],g[1]<0.1?(g[1]<0.01?3:2):2)}</span></div>`).join('')}</div>
+  <p class="note" style="margin-top:12px">Полоска у малых газов показана с минимальной шириной, чтобы её было видно.</p></div>
+ <div class="glass pad"><h3 class="h">Переменные составляющие</h3><div class="prose">
+  <p><b>Водяной пар</b> – от долей процента в холодном воздухе до 3–4 % у поверхности в тропиках. Почти весь сосредоточен в тропосфере. С ним связаны облака, осадки, туманы и обледенение.</p>
+  <p><b>Озон</b> – наибольшая концентрация на высотах около 20–25 км. Поглощает ультрафиолетовое излучение Солнца и нагревает стратосферу.</p>
+  <p><b>Аэрозоли</b> – пыль, дым, кристаллы солей, вулканический пепел. Ухудшают видимость и служат ядрами конденсации.</p></div></div></div>`,
+ model:`<div class="glass pad">${slider('m12H','Высота (по МСА)',0,12000,100,3000)}</div><div class="ro-grid" data-ro></div>
+  <div class="callout" data-msg></div>`,
+ flight:`<div class="cols"><div class="glass pad case"><h3 class="h">DA 40 NG</h3><div class="prose"><p>Кабина негерметичная. Давление в ней равно наружному, поэтому парциальное давление кислорода падает вместе с высотой. Учебные полёты выполняются в нижней части тропосферы, где этот эффект ещё невелик.</p><p>Проверьте на вкладке «Модель», сколько кислорода остаётся на 3000 м и на 5000 м.</p></div></div>
+  <div class="glass pad case jet"><h3 class="h">SSJ 100</h3><div class="prose"><p>Кабина герметичная. Система наддува поддерживает в ней давление, соответствующее высоте не более 2400 м (8000 ft), даже при полёте на эшелоне около 11–12 км.</p><p>При разгерметизации на эшелоне парциальное давление кислорода падает в несколько раз, и экипаж немедленно надевает кислородные маски и выполняет экстренное снижение.</p></div></div></div>`,
+ quiz:'<div class="quiz quiz-host"></div>'},
+ mount:{model(el){bind(el,()=>{const [H]=vals(el,['m12H']),p=ISA.P(H)/100,po=0.2095*p,po0=0.2095*1013.25;out(el,'m12H',`${f(H)} м / ${f(H/FT)} ft`);
+  el.querySelector('[data-ro]').innerHTML=ro('','Давление воздуха',`${f(p)} гПа`,'по МСА')+ro('hl','Парциальное давление O₂',`${f(po,1)} гПа`,`${f(po/po0*100)} % от уровня моря`)+ro('','Доля O₂ в воздухе',`${f(20.95,2)} %`,'не меняется с высотой');
+  const m=el.querySelector('[data-msg]');m.className='callout'+(po<0.7*po0?' warn':'');
+  m.innerHTML=po<0.7*po0?`<b>Кислорода меньше 70 % от уровня моря.</b> Доля кислорода та же, но воздух разрежен, и в каждом вдохе меньше молекул O₂.`:`<b>Доля кислорода всегда около 21 %.</b> С высотой падает общее давление, а с ним и парциальное давление кислорода.`})}},
+ quiz:[['Доля кислорода в сухом воздухе на высоте 5000 м по сравнению с уровнем моря:',['практически та же, около 21 %','около 10 %','около 30 %','кислорода на этой высоте нет'],'До 100 км газы перемешаны. Меньше становится не доля, а парциальное давление кислорода.'],
+  ['Где сосредоточен почти весь водяной пар?',['в тропосфере','в стратосфере','в мезосфере','равномерно по всей атмосфере'],'С водяным паром связаны облака и осадки, поэтому почти вся погода находится в тропосфере.'],
+  ['Наибольшая концентрация озона наблюдается на высотах около:',['20–25 км','2–3 км','80–85 км','у поверхности Земли'],'Это озоновый слой в стратосфере.']]};
+
+/* ---------- 1.3 ---------- */
+const TP=[[0,15],[11,-56.5],[20,-56.5],[32,-44.5],[47,-2.5],[51,-2.5],[71,-58.5],[85,-86],[100,-78]];
+const tAt=h=>{for(let i=1;i<TP.length;i++)if(h<=TP[i][0]){const a=TP[i-1],b=TP[i];return a[1]+(b[1]-a[1])*(h-a[0])/(b[0]-a[0])}return TP[TP.length-1][1]};
+const LAY=[[0,11,'Тропосфера','Температура падает с высотой в среднем на 0,65 °C на 100 м. Около 80 % массы атмосферы и почти весь водяной пар: облака, осадки, грозы, обледенение, турбулентность. Высота верхней границы – 8–10 км над полюсами, 10–12 км в умеренных широтах, 16–18 км над экватором.'],
+ [11,12,'Тропопауза','Переходный слой, где падение температуры прекращается. Вблизи тропопаузы располагаются струйные течения и наблюдается турбулентность ясного неба. Здесь же летают магистральные ВС.'],
+ [12,50,'Стратосфера','До 20–25 км температура почти постоянна, выше растёт за счёт поглощения ультрафиолета озоном. Водяного пара мало, облачность редкая: перламутровые облака на высотах около 20–30 км. Озоносфера с максимумом на 20–25 км.'],
+ [50,85,'Мезосфера','Температура снова падает и у верхней границы достигает самых низких в атмосфере значений, около −90 °C. На высотах около 80–85 км иногда наблюдаются серебристые облака.'],
+ [85,100,'Термосфера','Температура растёт с высотой. Воздух сильно ионизирован: здесь располагается основная часть ионосферы, отражающей КВ-радиоволны.']];
+const s13={id:'s13',n:'1.3',title:'Строение атмосферы и характеристики слоёв',short:'Строение атмосферы',h1:'Слои <em class="acc">атмосферы</em> по вертикали',
+ rpd:'Раздел 1 «Введение. Состав и строение атмосферы»',f:String.raw`\(\gamma = -\dfrac{dT}{dH}\)`,
+ tabs:{theory:`<p class="lead">Слои атмосферы выделяют по вертикальному градиенту температуры \\(\\gamma\\). В тропосфере он положительный (температура падает), в изотермическом слое равен нулю, в слоях инверсии отрицательный.</p>
+ <div class="layers glass">${LAY.map(l=>`<div class="layer"><b>${l[2]}</b><span>${l[3]}</span></div>`).join('')}</div>
+ <div class="cols"><div class="glass pad"><h3 class="h">Метеоусловия в тропосфере и нижней стратосфере</h3><div class="prose"><p>В тропосфере происходят почти все явления погоды, опасные для полётов. В нижней стратосфере облаков почти нет, видимость хорошая, но возможны турбулентность ясного неба и сильный ветер в струйных течениях у тропопаузы.</p></div></div>
+ <div class="glass pad"><h3 class="h">Озоносфера и ионосфера</h3><div class="prose"><p>Озон защищает поверхность от ультрафиолета. При полётах на больших высотах в высоких широтах концентрация озона в наружном воздухе может быть повышенной, поэтому на магистральных ВС применяют фильтры-нейтрализаторы озона.</p><p>Ионосфера влияет на распространение радиоволн: КВ-связь на большой дальности возможна благодаря отражению от ионизированных слоёв.</p></div></div></div>`,
+ model:`<div class="col"><div class="glass pad"><h3 class="h">Разрез атмосферы 0–100 км</h3><svg class="chart" id="ch13" viewBox="0 0 360 420" role="img" aria-label="Разрез атмосферы"></svg></div>
+  <div style="display:grid;gap:16px"><div class="glass pad">${slider('m13H','Высота',0,100,0.5,11)}</div><div class="glass pad" id="colInfo"></div></div></div>`,
+ flight:`<div class="cols"><div class="glass pad case"><h3 class="h">DA 40 NG</h3><div class="prose"><p>Учебные полёты проходят в нижней части тропосферы, в пределах нескольких километров. Здесь главные метеофакторы: облачность и её нижняя граница, видимость, ветер у земли, турбулентность в пограничном слое и обледенение в облаках.</p></div></div>
+ <div class="glass pad case jet"><h3 class="h">SSJ 100</h3><div class="prose"><p>Крейсерские эшелоны – верхняя тропосфера и район тропопаузы, 10–12 км. Экипаж учитывает высоту тропопаузы, струйные течения (попутный или встречный ветер до 200–300 км/ч и выше), турбулентность ясного неба и вершины кучево-дождевых облаков, которые в тропиках могут подниматься выше 15 км.</p></div></div></div>`,
+ quiz:'<div class="quiz quiz-host"></div>'},
+ mount:{model(el){const svg=el.querySelector('#ch13');
+  bind(el,()=>{const [H]=vals(el,['m13H']);out(el,'m13H',`${f(H,1)} км`);
+   const W=360,Hh=420,ml=40,mr=150,mt=10,mb=30,pw=W-ml-mr,ph=Hh-mt-mb,X=t=>ml+(t+100)/130*pw,Y=h=>mt+ph-h/100*ph;let s='';
+   LAY.forEach((l,i)=>{s+=`<rect x="${ml}" width="${pw}" y="${Y(l[1])}" height="${Y(l[0])-Y(l[1])}" fill="var(--lime)" fill-opacity="${[.16,.28,.08,.04,.12][i]}"/><text x="${ml+pw+8}" y="${(Y(l[0])+Y(l[1]))/2+3}">${l[2]}</text>`});
+   [0,20,40,60,80,100].forEach(h=>{s+=`<text x="${ml-6}" y="${Y(h)+3}" text-anchor="end">${h}</text>`});
+   [-80,-40,0].forEach(t=>{s+=`<line x1="${X(t)}" x2="${X(t)}" y1="${mt}" y2="${mt+ph}" stroke="var(--line)" stroke-dasharray="2 3"/><text x="${X(t)}" y="${mt+ph+14}" text-anchor="middle">${f(t)}</text>`});
+   s+=`<rect x="${ml}" width="${pw}" y="${Y(25)}" height="${Y(20)-Y(25)}" fill="none" stroke="var(--lime-line)" stroke-dasharray="3 3"/><text x="${ml+4}" y="${Y(25)-3}">максимум озона</text>`;
+   s+=`<path d="${TP.map((p,i)=>(i?'L':'M')+X(p[1]).toFixed(1)+' '+Y(p[0]).toFixed(1)).join('')}" fill="none" stroke="var(--chart-2)" stroke-width="2"/>`;
+   s+=`<line x1="${ml}" x2="${ml+pw}" y1="${Y(H)}" y2="${Y(H)}" stroke="var(--lime-line)" stroke-width="1.5"/><circle cx="${X(tAt(H))}" cy="${Y(H)}" r="5" fill="var(--lime-line)" stroke="var(--bg)" stroke-width="2"/>`;
+   s+=`<text x="${ml+pw/2}" y="${Hh-4}" text-anchor="middle">t, °C</text><text x="12" y="${mt+ph/2}" text-anchor="middle" transform="rotate(-90 12 ${mt+ph/2})">H, км</text>`;
+   svg.innerHTML=s;
+   const l=LAY.find(x=>H<x[1])||LAY[LAY.length-1];
+   el.querySelector('#colInfo').innerHTML=`<div class="kick">Слой</div><h4>${l[2]}</h4><p class="mono" style="margin:0 0 8px">t ≈ ${f(tAt(H),1)} °C на высоте ${f(H,1)} км</p><p style="margin:0">${l[3]}</p><p class="note" style="margin-top:10px">Профиль температуры – по стандартной атмосфере, выше 20 км по расширенной модели. Высоты границ слоёв даны для средних широт.</p>`})}},
+ quiz:[['Средняя высота тропопаузы в умеренных широтах:',['10–12 км','16–18 км','5–6 км','50 км'],'Над экватором она выше (16–18 км), над полюсами ниже (8–10 км).'],
+  ['В каком слое температура растёт с высотой из-за поглощения ультрафиолета озоном?',['в стратосфере выше 20–25 км','в тропосфере','в мезосфере','в пограничном слое'],'Нагрев за счёт озона создаёт рост температуры в верхней стратосфере.'],
+  ['Турбулентность ясного неба и струйные течения чаще всего связаны с районом:',['тропопаузы','приземного слоя','мезосферы','ионосферы'],'Струйные течения располагаются у тропопаузы, на эшелонах магистральных ВС.'],
+  ['Ионосфера важна для авиации прежде всего тем, что:',['влияет на дальнюю КВ-радиосвязь','создаёт облака','определяет погоду у земли','поглощает весь ультрафиолет'],'Ионизированные слои отражают КВ-радиоволны.']]};
+
+/* ---------- 1.4 ---------- */
+const s14={id:'s14',n:'1.4',title:'Стандартная атмосфера',h1:'Стандартная <em class="acc">атмосфера</em>',
+ rpd:'Раздел 1 «Введение. Состав и строение атмосферы», практическое занятие № 1',
+ f:String.raw`\(T = T_0 - \beta H\)`,
+ tabs:{theory:String.raw`<p class="lead">Стандартная атмосфера (СА, ISA ИКАО, ГОСТ 4401-81) – условная модель со средними для умеренных широт значениями параметров. По ней тарируют высотомеры и указатели скорости, к ней приводят лётные характеристики в РЛЭ.</p>
+ <div class="cols"><div class="glass pad"><h3 class="h">Исходные условия</h3><div class="prose">
+  <p>Воздух сухой, идеальный газ; \(R = 287{,}05\) Дж/(кг·K), \(g = 9{,}80665\) м/с².</p>
+  <p>На уровне моря: \(t_0 = +15\) °C (\(T_0 = 288{,}15\) K), \(p_0 = 1013{,}25\) гПа (760 мм рт. ст.), \(\rho_0 = 1{,}225\) кг/м³.</p>
+  <p>Вертикальный градиент температуры \(\beta = 0{,}0065\) K/м до 11 000 м. От 11 000 до 20 000 м температура постоянна: −56,5 °C.</p></div></div>
+ <div class="glass pad"><h3 class="h">Основные зависимости</h3><div class="prose">
+  <p>\[T = T_0 - \beta H\]</p><p>\[p = p_0\left(1 - \dfrac{\beta H}{T_0}\right)^{5{,}256}\]</p><p>\[\rho = \dfrac{p}{RT},\qquad a = \sqrt{kRT}\]</p>
+  <p>Вывод барометрической формулы – в разделе 2.5.</p></div></div></div>`,
+ model:`<div class="glass pad">${slider('m14H','Высота',0,20000,50,3000)}</div><div class="ro-grid" data-ro></div>
+  <div class="cols"><div class="glass pad"><h3 class="h">Температура</h3><svg class="chart" id="ch14t" viewBox="0 0 340 270"></svg></div><div class="glass pad"><h3 class="h">Давление и плотность</h3><svg class="chart" id="ch14p" viewBox="0 0 340 270"></svg><div class="legend"><span><i style="border-color:var(--chart-2)"></i>p, гПа</span><span><i style="border-color:var(--lime-line)"></i>ρ, ‰ от ρ₀</span></div></div></div>
+  <div class="glass pad"><h3 class="h">Таблица СА</h3><div class="tbl"><table data-tbl></table></div><p class="note">Строка, ближайшая к заданной высоте, выделена.</p></div>`,
+ quiz:'<div class="quiz quiz-host"></div>'},
+ mount:{model(el){bind(el,()=>{const [H]=vals(el,['m14H']),T=ISA.T(H),p=ISA.P(H),rho=ISA.RHO(H),a=Math.sqrt(ISA.K*ISA.R*T);out(el,'m14H',`${f(H)} м / ${f(H/FT)} ft`);
+  el.querySelector('[data-ro]').innerHTML=ro('hl','Температура',`${f(T-273.15,1)} °C`,`${f(T,2)} K`)+ro('','Давление',`${f(p/100,1)}`,`гПа / ${f(p/133.322,1)} мм рт. ст.`)+ro('','Плотность',f(rho,4),`кг/м³, ρ/ρ₀ = ${f(rho/ISA.RHO0,3)}`)+ro('','Скорость звука',f(a,1),`м/с / ${f(a/ISA.KT)} kt`);
+  FP.plot(el.querySelector('#ch14t'),{x0:-70,x1:20,y0:0,y1:20,xt:[-60,-40,-20,0,20],yt:[0,5,10,15,20],xl:'t, °C',fill:1,band:[11,11.3],bandLabel:'тропопауза',series:[{pts:hs.map(h=>[ISA.T(h)-273.15,h/1000]),c:'var(--lime-line)'}],marks:[[T-273.15,H/1000,'var(--lime-line)']],hline:H/1000});
+  FP.plot(el.querySelector('#ch14p'),{x0:0,x1:1050,y0:0,y1:20,xt:[0,250,500,750,1000],yt:[0,5,10,15,20],xl:'p, гПа; ρ, ‰ от ρ₀',band:[11,11.3],series:[{pts:hs.map(h=>[ISA.P(h)/100,h/1000]),c:'var(--chart-2)'},{pts:hs.map(h=>[ISA.RHO(h)/ISA.RHO0*1000,h/1000]),c:'var(--lime-line)'}],marks:[[p/100,H/1000,'var(--chart-2)'],[rho/ISA.RHO0*1000,H/1000,'var(--lime-line)']],hline:H/1000});
+  const lv=[0,500,1000,1500,2000,3000,4000,5000,6000,8000,9000,10000,11000,12000,15000,20000],near=lv.reduce((a,b)=>Math.abs(b-H)<Math.abs(a-H)?b:a);
+  el.querySelector('[data-tbl]').innerHTML='<thead><tr><th>H, м</th><th>H, ft</th><th>t, °C</th><th>p, гПа</th><th>мм рт. ст.</th><th>ρ, кг/м³</th><th>ρ/ρ₀</th><th>a, м/с</th></tr></thead><tbody>'+lv.map(h=>`<tr class="${h===near?'hl':''}"><td>${f(h)}</td><td>${f(h/FT)}</td><td>${f(ISA.T(h)-273.15,1)}</td><td>${f(ISA.P(h)/100,1)}</td><td>${f(ISA.P(h)/133.322,1)}</td><td>${f(ISA.RHO(h),4)}</td><td>${f(ISA.RHO(h)/ISA.RHO0,3)}</td><td>${f(Math.sqrt(ISA.K*ISA.R*ISA.T(h)),1)}</td></tr>`).join('')+'</tbody>'})}},
+ quiz:[['Температура на уровне моря в СА:',['+15 °C','0 °C','+20 °C','+4 °C'],'T₀ = 288,15 K = +15 °C.'],
+  ['Вертикальный градиент температуры в тропосфере СА:',['0,65 °C на 100 м','1 °C на 100 м','0,5 °C на 1000 м','2 °C на 100 м'],'β = 0,0065 K/м, около 2 °C на 1000 ft. 1 °C на 100 м – сухоадиабатический градиент (раздел 4).'],
+  ['Высота тропопаузы в СА и температура над ней:',['11 000 м, −56,5 °C','9000 м, −45 °C','11 000 м, −50 °C','15 000 м, −56,5 °C'],'От 11 до 20 км температура в СА постоянна.'],
+  ['Давление на уровне моря в СА:',['1013,25 гПа (760 мм рт. ст.)','1000 гПа (750 мм рт. ст.)','1013,25 гПа (750 мм рт. ст.)','980 гПа'],'1 мм рт. ст. = 1,333 гПа, поэтому 760 мм рт. ст. = 1013,25 гПа.']]};
+
+/* ---------- 1.5 ---------- */
+const s15={id:'s15',n:'1.5',title:'Реальная атмосфера',h1:'Реальная атмосфера <em class="acc">и</em> отклонения от СА',
+ rpd:'Раздел 1 «Введение. Состав и строение атмосферы», практическое занятие № 1',f:String.raw`\(T = T_{СА}(H) + \Delta T\)`,
+ tabs:{theory:String.raw`<p class="lead">Реальная атмосфера почти никогда не совпадает со стандартной. Температура, давление и плотность отличаются от табличных, и вместе с ними меняются показания приборов и лётные характеристики ВС.</p>
+ <div class="cols"><div class="glass pad"><h3 class="h">Отклонение от СА</h3><div class="prose"><p>Отклонение температуры \(\Delta T = t - t_{СА}(H)\) записывают как ISA ± ΔT. При одинаковом давлении тёплый воздух менее плотный:</p><p>\[\rho = \dfrac{p}{R\,(T_{СА} + \Delta T)}\]</p><p>Плотностная высота – высота в СА, на которой плотность такая же, как фактическая. Именно по плотности «чувствуют» высоту крыло и винт.</p></div></div>
+ <div class="glass pad"><h3 class="h">Влияние на безопасность полётов</h3><div class="prose"><p><b>Жара и высокогорье.</b> Плотностная высота растёт: длиннее разбег и пробег, хуже скороподъёмность.</p><p><b>Холод.</b> Барометрический высотомер показывает больше истинной высоты: запас над препятствиями меньше расчётного.</p><p><b>Эшелон.</b> От температуры зависят скорость звука, истинная скорость при заданном числе M и потребная тяга.</p></div></div></div>`,
+ model:`<div class="glass pad"><div class="ctrls">${slider('m15H','Барометрическая высота',0,20000,50,3000)}${slider('m15dT','Отклонение ΔT от СА',-30,30,1,15)}</div></div><div class="ro-grid" data-ro></div>
+  <div class="cols"><div class="glass pad"><h3 class="h">Температура</h3><svg class="chart" id="ch15t" viewBox="0 0 340 270"></svg><div class="legend"><span><i style="border-color:var(--lime-line)"></i>СА</span><span><i style="border-color:var(--lime-line);border-top-style:dashed"></i>СА + ΔT</span></div></div>
+  <div class="glass pad"><h3 class="h">Плотность</h3><svg class="chart" id="ch15p" viewBox="0 0 340 270"></svg><div class="legend"><span><i style="border-color:var(--chart-2)"></i>СА</span><span><i style="border-color:var(--chart-2);border-top-style:dashed"></i>при ΔT</span></div></div></div>`,
+ flight:`<div class="glass pad case"><div class="row" style="justify-content:space-between"><h3 class="h">DA 40 NG на взлёте</h3><span class="kick">учебный самолёт, G1000 NXi</span></div>
+  <div class="ctrls" style="margin-top:12px">${slider('d1','Превышение аэродрома, м',0,2500,10,24)}${slider('d2','QNH, гПа',960,1050,1,1009)}${slider('d3','OAT, °C',-30,45,1,32)}${slider('d4','Приборная скорость, kt',50,150,1,73)}</div>
+  <div class="ro-grid" data-da style="margin-top:16px"></div><div class="g1000" data-g style="margin-top:14px"></div>
+  <p class="note" style="margin-top:10px">Двигатель AE300 турбированный: мощность с высотой падает медленнее, чем у атмосферного. Аэродинамика зависит от плотности: при той же приборной скорости больше истинная и путевая скорость на разбеге, дистанции длиннее. Дистанции берутся только из AFM. Истинная скорость здесь – оценка без учёта погрешностей приборов.</p></div>
+  <div class="glass pad case jet"><div class="row" style="justify-content:space-between"><h3 class="h">SSJ 100 на эшелоне</h3><span class="kick">ВС с высокой степенью автоматизации</span></div>
+  <div class="ctrls" style="margin-top:12px">${slider('j1','Эшелон',100,400,10,350)}${slider('j2','ΔT от СА, °C',-20,25,1,0)}${slider('j3','Число M',0.6,0.81,0.01,0.78)}</div>
+  <div class="ro-grid" data-jet style="margin-top:16px"></div>
+  <p class="note" style="margin-top:10px">При одном и том же числе M истинная скорость в тёплом воздухе больше, в холодном меньше: \\(V = M\\,a\\), а скорость звука \\(a = \\sqrt{kRT}\\) зависит только от температуры.</p></div>`,
+ quiz:'<div class="quiz quiz-host"></div>'},
+ mount:{model(el){bind(el,()=>{const [H,dT]=vals(el,['m15H','m15dT']),Ti=ISA.T(H),T=Ti+dT,p=ISA.P(H),rho=p/(ISA.R*T),Hd=ISA.Hdens(rho);out(el,'m15H',`${f(H)} м`);out(el,'m15dT',`${sg(dT)} °C`);
+   el.querySelector('[data-ro]').innerHTML=ro('hl','Температура',`${f(T-273.15,1)} °C`,`в СА ${f(Ti-273.15,1)} °C`)+ro('','Плотность',f(rho,4),`кг/м³, в СА ${f(ISA.RHO(H),4)}`)+ro(Math.abs(Hd-H)>300?'warn':'hl','Плотностная высота',`${f(Hd)} м`,`${sg(Hd-H)} м к барометрической`)+ro('','Скорость звука',f(Math.sqrt(ISA.K*ISA.R*T),1),'м/с');
+   FP.plot(el.querySelector('#ch15t'),{x0:-90,x1:50,y0:0,y1:20,xt:[-80,-40,0,40],yt:[0,5,10,15,20],xl:'t, °C',band:[11,11.3],series:[{pts:hs.map(h=>[ISA.T(h)-273.15,h/1000]),c:'var(--lime-line)'},{pts:hs.map(h=>[ISA.T(h)-273.15+dT,h/1000]),c:'var(--lime-line)',dash:1}],marks:[[T-273.15,H/1000,'var(--lime-line)']],hline:H/1000});
+   FP.plot(el.querySelector('#ch15p'),{x0:0,x1:1.3,y0:0,y1:20,xt:[0,.25,.5,.75,1,1.25],yt:[0,5,10,15,20],xl:'ρ, кг/м³',band:[11,11.3],series:[{pts:hs.map(h=>[ISA.RHO(h),h/1000]),c:'var(--chart-2)'},{pts:hs.map(h=>[ISA.P(h)/(ISA.R*(ISA.T(h)+dT)),h/1000]),c:'var(--chart-2)',dash:1}],marks:[[rho,H/1000,'var(--lime-line)']],hline:H/1000})})},
+  flight(el){bind(el,()=>{const [e,q,oat,ias]=vals(el,['d1','d2','d3','d4']);out(el,'d1',`${f(e)} м`);out(el,'d2',`${f(q)}`);out(el,'d3',sg(oat));out(el,'d4',f(ias));
+   const qfe=ISA.P(ISA.Hp(q*100)+e),hp=ISA.Hp(qfe),dI=oat-(ISA.T(hp)-273.15),rho=qfe/(ISA.R*(oat+273.15)),sig=rho/ISA.RHO0,hd=ISA.Hdens(rho),tas=ias/Math.sqrt(sig),hpR=e/FT+(1013.25-q)*27;
+   el.querySelector('[data-da]').innerHTML=ro('','Барометрическая высота',`${f(hp/FT)} ft`,`правило 27 ft/гПа: ${f(hpR)} ft`)+ro(dI>10?'warn':'','Отклонение от СА',`${sg(dI)} °C`,`в СА ${f(ISA.T(hp)-273.15,1)} °C`)+ro('hl','Плотностная высота',`${f(hd/FT)} ft`,`правило 120 ft/°C: ${f(hpR+120*dI)} ft`)+ro('hl','Истинная скорость',`${f(tas)} kt`,`${sg(tas-ias)} kt к приборной`);
+   el.querySelector('[data-g]').innerHTML=`<div><span>OAT</span><b>${sg(oat)}°C</b></div><div><span>BARO</span><b>${f(q)}HPA</b></div><div><span>ALT</span><b>${f(Math.round(e/FT/10)*10)}FT</b></div><div><span>IAS</span><b>${f(ias)}KT</b></div><div><span>TAS</span><b class="m">${f(tas)}KT</b></div><div><span>ISA</span><b>${sg(dI)}°C</b></div>`;
+   const [fl,dT,M]=vals(el,['j1','j2','j3']),h=fl*100*FT,T=ISA.T(h)+dT,a=Math.sqrt(ISA.K*ISA.R*T),aI=Math.sqrt(ISA.K*ISA.R*ISA.T(h));out(el,'j1',`FL${fl}`);out(el,'j2',sg(dT));out(el,'j3',f(M,2));
+   el.querySelector('[data-jet]').innerHTML=ro('','Температура наружного воздуха',`${f(T-273.15,1)} °C`,`в СА ${f(ISA.T(h)-273.15,1)} °C`)+ro('','Скорость звука',`${f(a/ISA.KT)} kt`,`${f(a,1)} м/с`)+ro('hl','Истинная скорость',`${f(M*a/ISA.KT)} kt`,`${sg((M*a-M*aI)/ISA.KT)} kt к СА`)})}},
+ quiz:[['Жара на аэродроме: ISA +20 °C. Плотностная высота по сравнению с барометрической:',['выше','ниже','равна','ниже на 20 м'],'Тёплый воздух менее плотный. По правилу около 120 ft на градус: примерно +2400 ft.'],
+  ['При полёте в воздухе холоднее СА барометрический высотомер показывает:',['больше истинной высоты','меньше истинной высоты','истинную высоту','нулевую высоту'],'В холодном воздухе изобары лежат ниже, запас над препятствиями меньше расчётного.'],
+  ['При одинаковом числе M в воздухе теплее СА истинная скорость:',['больше','меньше','такая же','равна приборной'],'V = M·a, скорость звука растёт с температурой.']]};
+
+FP.chrome();
+FP.topic({topic:'t1',n:1,title:'Состав и строение атмосферы',sections:[s11,s12,s13,s14,s15],next:['t2.html','Раздел 2. Физические характеристики']});
+})();
+</script>
+</body>
+</html>
