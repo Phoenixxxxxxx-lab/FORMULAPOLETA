@@ -32,8 +32,9 @@
   fpFit(); addEventListener('resize', fpFit);
   /* до первой отрисовки: главная или направление – без бокового меню */
   var h = (location.hash || '#home').slice(1);
-  if (h === 'home' || h === 'meteo' || h === 'anav' || h === '') { root.classList.add('is-home'); }
-  root.dataset.dir = (h === 'meteo' || h === 'anav') ? h : 'aero';
+  if (h === 'meteo') { location.replace('meteo/'); return; } /* метеорология – отдельный сайт в папке meteo/ */
+  if (h === 'home' || h === 'anav' || h === '') { root.classList.add('is-home'); }
+  root.dataset.dir = (h === 'anav') ? h : 'aero';
 })();
 /* масштаб элемента и его прямоугольник в единицах макета */
 function fpK(el) { return (el && el.currentCSSZoom) || 1; }
@@ -42,12 +43,10 @@ function fpR(el) { var r = el.getBoundingClientRect(), k = fpK(el); if (k === 1)
 
 /* ── Направления проекта ── */
 const FP_DIRS = {
-  meteo: { name: 'Авиационная метеорология', short: 'Метеорология',
-    lead: 'Атмосфера, которую видит пилот: МСА, барометрическая высота, высотомер, облака, видимость и опасные явления погоды – с моделями и примерами из кабины.' },
   anav: { name: 'Аэронавигация', short: 'Аэронавигация',
     lead: 'Курс, путевой угол, ветер и навигационный треугольник скоростей, системы координат и карты – от формулы до навигационного дисплея.' },
 };
-function fpIsDir(id) { return id === 'meteo' || id === 'anav'; }
+function fpIsDir(id) { return id === 'anav'; }
 function renderDir(id, el) {
   const d = FP_DIRS[id];
   el.innerHTML = `<section class="dir-page dir-${id}">
@@ -1493,7 +1492,7 @@ html.is-home .hp-in.hs-feat, html.is-home .hp-in.hs-why, html.is-home .hp-in.hs-
     <a class="fh-brand" href="#home" aria-label="Формула полёта – на главную"><span class="logo-slot" data-uid="head"></span><b>Формула полёта</b></a>
     <nav class="fh-dirs" aria-label="Направления">
       <a class="fh-dir" data-dir="aero" href="#home" aria-current="page"><i aria-hidden="true"></i><span>Аэродинамика</span></a>
-      <a class="fh-dir" data-dir="meteo" href="#meteo"><i aria-hidden="true"></i><span>Метеорология</span></a>
+      <a class="fh-dir" data-dir="meteo" href="meteo/"><i aria-hidden="true"></i><span>Метеорология</span></a>
       <a class="fh-dir" data-dir="anav" href="#anav"><i aria-hidden="true"></i><span>Аэронавигация</span></a>
     </nav>
   </div>
