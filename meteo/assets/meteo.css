@@ -35,7 +35,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 
 /* фон: размытые лаймовые пятна и лучи */
 .fp-bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-.fp-bg i{position:absolute;border-radius:50%;filter:blur(10px)}
+.fp-bg i{position:absolute;border-radius:50%;will-change:transform}
 .fp-bg i:nth-child(1){width:90vmax;height:60vmax;left:50%;bottom:-38vmax;transform:translateX(-50%);background:radial-gradient(closest-side,var(--glow-a),transparent);animation:bgA 26s ease-in-out infinite alternate}
 .fp-bg i:nth-child(2){width:50vmax;height:50vmax;left:-18vmax;top:-20vmax;background:radial-gradient(closest-side,var(--glow-c),transparent);animation:bgB 34s ease-in-out infinite alternate}
 .fp-bg i:nth-child(3){width:46vmax;height:46vmax;right:-16vmax;top:30vh;background:radial-gradient(closest-side,var(--glow-b),transparent);animation:bgB 40s ease-in-out infinite alternate-reverse}
@@ -44,7 +44,7 @@ h1,h2,h3{text-wrap:balance;margin:0}
 @keyframes bgB{to{transform:translate(6vmax,4vmax)}}
 
 /* стекло */
-.glass{position:relative;background:linear-gradient(180deg,var(--glass-2),var(--glass));-webkit-backdrop-filter:blur(24px) saturate(170%);backdrop-filter:blur(24px) saturate(170%);border-radius:24px;box-shadow:var(--shadow),inset 0 1px 0 var(--glass-hi);isolation:isolate}
+.glass{position:relative;background:linear-gradient(180deg,var(--glass-2),var(--glass));-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);border-radius:24px;box-shadow:var(--shadow),inset 0 1px 0 var(--glass-hi);isolation:isolate}
 .glass::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(180deg,var(--glass-hi),var(--glass-lo) 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .glass::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(120% 80% at 0% 0%,rgba(255,255,255,.14),transparent 45%);pointer-events:none;z-index:-1}
 .pad{padding:22px}

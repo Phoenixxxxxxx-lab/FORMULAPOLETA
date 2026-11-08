@@ -25,8 +25,8 @@ float field(vec2 s,float py,out float side){
  return smoothstep(1.-reach,1.-reach+.22,e-push)*smoothstep(.4,.5,c);
 }
 float dens(vec3 q,float m){
- vec3 w=q+.35*vec3(noise(q*.9+uTime*.02),noise(q*.9+7.3),0.);
- float b=fbm(w*1.9+vec3(0.,0.,uTime*.035),5);
+ vec3 w=q+.3*vec3(noise(q*.9+uTime*.02),0.,0.);
+ float b=fbm(w*1.9+vec3(0.,0.,uTime*.035),4);
  float d=b*m-abs(q.z-.5)*.7;
  return clamp((d-.27)*5.,0.,1.);
 }
@@ -40,7 +40,7 @@ void main(){
  vec3 amb=mix(vec3(.022,.026,.018),vec3(.86,.89,.82),uLightTh);
  vec3 lime=vec3(.776,.957,.196);
  float acc=0.;vec3 col=vec3(0.);
- const int N=26;float dz=1./float(N);
+ const int N=16;float dz=1./float(N);
  float ign=fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(.06711056,.00583715))));float z=ign*dz;
  for(int i=0;i<N;i++){
   vec3 q=vec3(w.x*1.5+drift,w.y*1.5,z);
@@ -51,7 +51,7 @@ void main(){
    for(int k=0;k<2;k++){
     vec3 l=k==0?uL1:uL2;vec2 dv=l.xy-sp;dv.x*=asp;float dist=length(dv);
     vec3 dir=normalize(vec3(dv.x,dv.y,.55));
-    float dl=dens(q+dir*.06,m)+dens(q+dir*.15,m)*.6;
+    float dl=dens(q+dir*.1,m)*1.5;
     float T=exp(-dl*3.2);if(k==0)sh=T;
     float att=l.z/(1.+dist*dist*2.2);
     float edge=.55+1.6*(1.-d);
@@ -85,14 +85,14 @@ window.FPClouds = function(opts){
   (opts.before?opts.before.parentNode:document.body).insertBefore(cv,opts.before||document.body.firstChild);
 
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const maxScale=Math.min(window.devicePixelRatio||1,2);
-  let scale=Math.min(.75,maxScale), t0=performance.now(), raf=0, frames=[], last=performance.now();
+  const maxScale=.6;
+  let scale=.45, t0=performance.now(), raf=0, frames=[], last=performance.now();
   function size(){const w=Math.max(1,Math.round(innerWidth*scale)),h=Math.max(1,Math.round(innerHeight*scale));if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}gl.viewport(0,0,cv.width,cv.height)}
   function frame(now){
     // подстройка качества: держим примерно 60 кадров в секунду
     const dt=now-last;last=now;frames.push(dt);
     if(frames.length>=30){const avg=frames.reduce((a,b)=>a+b,0)/frames.length;frames=[];
-      if(avg>21&&scale>.3)scale=Math.max(.3,scale*.82);else if(avg<14&&scale<maxScale)scale=Math.min(maxScale,scale*1.12)}
+      if(avg>18&&scale>.22)scale=Math.max(.22,scale*.8);else if(avg<12&&scale<maxScale)scale=Math.min(maxScale,scale*1.08)}
     size();
     const t=(now-t0)/1000, intro=reduce?1:Math.min(1,t/2.4), L=opts.light?opts.light(t):[[.5,.7,1],[.5,1.15,.6]];
     gl.uniform2f(U.uRes,cv.width,cv.height);gl.uniform1f(U.uTime,reduce?20:t);gl.uniform1f(U.uScroll,scrollY/innerHeight);
