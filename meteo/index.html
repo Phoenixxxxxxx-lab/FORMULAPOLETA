@@ -11,59 +11,88 @@
 <script src="assets/meteo.js"></script>
 <script src="assets/motion.js"></script>
 <script src="assets/meteo-clouds.js"></script>
+<script src="assets/meteo-altimeter.js"></script>
 <style>
+html,body{overflow-x:clip}
 .gut{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
 .wrap{max-width:1240px;margin:0 auto}
-.hero{position:relative;overflow:hidden;padding-bottom:40px}
 .page{position:relative;z-index:2}
+/* ---- шапка ---- */
+.hero{position:relative;overflow:hidden;padding-bottom:70px}
 .hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero .gut{position:relative;z-index:2}
 .nav-top{display:flex;align-items:center;gap:22px;padding-block:18px;padding-right:120px}
-.nav-top .back{font-size:.8rem;color:var(--ink-2);text-decoration:none}
-.nav-top .back:hover{color:var(--lime-ink)}
-.hero-in{display:grid;grid-template-columns:190px minmax(0,1fr) 190px;gap:24px;align-items:center;padding-block:clamp(40px,7vh,80px) 30px}
-.stats{display:flex;flex-direction:column;gap:36px}
+.nav-top .back{margin-top:0}
+.hero-in{display:grid;grid-template-columns:220px minmax(0,1fr) 220px;gap:24px;align-items:center;padding-block:clamp(50px,9vh,110px) 20px;min-height:calc(100vh - 120px)}
+.stats{display:flex;flex-direction:column;gap:40px}
 .stats.r{text-align:right}
-.stat b{display:block;font-family:var(--f-serif);font-weight:500;font-size:clamp(2rem,3vw,2.7rem);line-height:1;font-variant-numeric:lining-nums}
-.stat span{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.stat b{display:block;font-family:var(--f-serif);font-weight:600;font-size:clamp(2.6rem,3.8vw,3.4rem);line-height:1;font-variant-numeric:lining-nums}
+.stat span{display:block;margin-top:6px;font-family:var(--f-mono);font-weight:500;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);opacity:.88}
 .hero-c{text-align:center}
-.brandline{font-family:var(--f-brand);font-weight:700;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--lime-ink);margin-bottom:18px}
-.hero h1{font-family:var(--f-serif);font-weight:500;font-size:clamp(3rem,7vw,6.2rem);line-height:.98;letter-spacing:-.02em}
+.brandline{font-family:var(--f-brand);font-weight:700;font-size:.84rem;letter-spacing:.2em;text-transform:uppercase;color:var(--lime-ink);margin-bottom:18px}
+.hero h1{font-family:var(--f-serif);font-weight:500;font-size:clamp(3.2rem,7.4vw,6.6rem);line-height:.98;letter-spacing:-.02em}
 .hero h1 em{color:var(--lime-ink);font-style:italic}
 .hero h1 .w{display:inline-block}
-@media (prefers-reduced-motion:no-preference){.hero h1 .w{animation:wIn .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(.15s + var(--i)*90ms)}@keyframes wIn{from{opacity:0;transform:translateY(.35em);filter:blur(8px)}}}
-.sub{font-family:var(--f-mono);font-size:.82rem;color:var(--ink-2);max-width:58ch;margin:22px auto 26px;line-height:1.7}
-.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.credits{display:flex;justify-content:center;gap:16px 60px;flex-wrap:wrap;margin-top:34px}
+@media (prefers-reduced-motion:no-preference){.hero h1 .w{animation:wIn 1.1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(.15s + var(--i)*110ms)}@keyframes wIn{from{opacity:0;transform:translateY(.35em);filter:blur(10px)}}
+ .hero .fade{animation:fUp 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,.8s)}@keyframes fUp{from{opacity:0;transform:translateY(16px);filter:blur(6px)}}}
+.sub{font-family:var(--f-mono);font-size:.9rem;color:var(--ink);opacity:.86;max-width:58ch;margin:24px auto 28px;line-height:1.7}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta .btn{height:48px;padding:0 26px;font-size:.98rem}
+.credits{display:flex;justify-content:center;gap:16px 64px;flex-wrap:wrap;margin-top:40px}
 .credit{text-align:center}
-.credit b{display:block;font-family:var(--f-serif);font-size:1.45rem;font-weight:600;line-height:1.1}
-.credit span{font-size:.8rem;color:var(--ink-2)}
-.hcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:40px}
-.hcard{padding:18px 20px}
-.hcard .big{font-family:var(--f-serif);font-size:3.2rem;line-height:1;margin-top:10px;font-variant-numeric:lining-nums}
-.hcard .big small{font-family:var(--f-body);font-size:.8rem;color:var(--ink-2);margin-left:6px}
-.hrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
-.hcard svg{width:100%;height:auto;display:block;margin-top:6px}
-.hcard svg text{fill:var(--ink-2);font-family:var(--f-mono);font-size:9px}
-.sec{padding-block:clamp(60px,8vw,110px)}
-.sec h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.3rem,4.4vw,3.8rem);line-height:1.02;letter-spacing:-.015em;margin-top:14px;max-width:20ch}
-.sec h2 em{font-style:italic;color:var(--lime-ink)}
-.sec .lead{color:var(--ink-2);margin-top:18px;max-width:64ch}
-.feats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:40px}
-.feat{padding:22px;display:flex;flex-direction:column;gap:12px;transition:transform .3s}
-.feat:hover{transform:translateY(-4px)}
-.feat .n{font-family:var(--f-mono);color:var(--lime-ink);font-size:.8rem}
-.feat h3{font-family:var(--f-serif);font-weight:600;font-size:1.7rem;line-height:1.1}
-.feat h3 em{color:var(--lime-ink)}
-.feat p{margin:0;color:var(--ink-2)}
-.feat .vis{margin-top:auto;border-top:1px dashed var(--line);padding-top:14px;font-family:var(--f-mono);font-size:.76rem;color:var(--ink-2);display:grid;gap:6px}
-.feat .vis b{color:var(--lime-ink);font-weight:500}
-.chain{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:center;margin-top:40px}
-.cflow{display:grid;gap:12px}
-.ccard{padding:16px 20px;display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px;align-items:center;border-radius:20px}
-.ccard .lbl{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lime-ink)}
-.ccard small{display:block;color:var(--ink-2);font-size:.85rem;margin-top:4px}
-.gauge{padding:22px;display:grid;gap:14px}
-.gauge svg{width:min(100%,300px);margin:0 auto;display:block}
+.credit b{display:block;font-family:var(--f-serif);font-size:1.55rem;font-weight:600;line-height:1.1}
+.credit span{font-size:.82rem;color:var(--ink);opacity:.75}
+/* тени для читаемости поверх облаков в тёмной теме */
+:root:not([data-theme="light"]) :is(.hero h1,.brandline,.sub,.credit,.stat,.sec h2,.sec .lead,.sec .kick,.scene .kick,.scene h2,.scene .lead,.finale h2,.finale p,.alt-read){text-shadow:0 2px 22px rgba(0,0,0,.95),0 1px 3px rgba(0,0,0,.95)}
+.kick{font-size:.76rem;font-weight:500;color:var(--ink);opacity:.9}
+
+/* ---- секции ---- */
+.sec{position:relative;padding-block:clamp(70px,9vw,120px)}
+.sec h2,.scene h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.5rem,4.6vw,4rem);line-height:1.02;letter-spacing:-.015em;margin-top:14px;max-width:20ch}
+.sec h2 em,.scene h2 em{font-style:italic;color:var(--lime-ink)}
+.sec .lead,.scene .lead{color:var(--ink);opacity:.82;margin-top:18px;max-width:62ch;font-size:1.06rem}
+.wd{display:inline-block;will-change:transform,opacity,filter}
+.split .wd{opacity:0}
+
+/* ---- сцена «Что будет в тренажёре»: огромный высотомер и набор высоты ---- */
+.scene{position:relative;height:420vh}
+.stick{position:sticky;top:0;height:100vh;overflow:hidden}
+.sky{position:absolute;inset:0;width:100%;height:100%;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+.planes{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.plane{position:absolute;left:0;top:0;width:34px;color:var(--ink);opacity:.55;offset-rotate:auto}
+.plane svg{display:block;width:100%;height:auto;filter:drop-shadow(0 0 6px rgba(198,244,50,.45))}
+.plane::after{content:"";position:absolute;right:100%;top:50%;width:220px;height:1.5px;transform:translateY(-50%);background:linear-gradient(90deg,transparent,rgba(198,244,50,.55));border-radius:2px}
+.plane.p1{animation:fly1 30s linear infinite}
+.plane.p2{animation:fly2 42s linear infinite;animation-delay:-14s;width:24px;opacity:.38}
+.plane.p3{animation:fly3 36s linear infinite;animation-delay:-25s;width:28px;opacity:.45}
+@keyframes fly1{from{transform:translate(-10vw,78vh) rotate(-14deg)}to{transform:translate(112vw,22vh) rotate(-14deg)}}
+@keyframes fly2{from{transform:translate(112vw,30vh) rotate(188deg)}to{transform:translate(-12vw,52vh) rotate(188deg)}}
+@keyframes fly3{from{transform:translate(-10vw,18vh) rotate(9deg)}to{transform:translate(112vw,48vh) rotate(9deg)}}
+.scene-in{position:relative;height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center}
+.sfs{display:grid;gap:14px;margin-top:26px;max-width:520px}
+.sf{padding:16px 20px;border-radius:22px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px;align-items:start;opacity:.0;transform:translateY(40px) scale(.97);filter:blur(10px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1.1s cubic-bezier(.2,.7,.2,1),filter 1s,box-shadow .6s}
+.sf.on{opacity:1;transform:none;filter:none}
+.sf.cur{box-shadow:var(--shadow),inset 0 0 0 1px var(--lime-line),0 0 40px -12px rgba(198,244,50,.55)}
+.sf .n{grid-row:span 2;font-family:var(--f-serif);font-size:2.3rem;line-height:1;color:var(--lime-ink)}
+.sf h3{font-family:var(--f-serif);font-weight:600;font-size:1.45rem;line-height:1.1}
+.sf h3 em{color:var(--lime-ink)}
+.sf p{margin:0;color:var(--ink);opacity:.78;font-size:.92rem}
+.alt-col{display:grid;justify-items:center;gap:18px}
+.alt3d{width:min(42vw,70vh,600px);aspect-ratio:1;transform-style:preserve-3d;transition:transform .25s ease-out;position:relative}
+.alt3d::before{content:"";position:absolute;inset:-12%;border-radius:50%;background:radial-gradient(closest-side,rgba(198,244,50,.32),transparent 70%);filter:blur(10px);transform:translateZ(-40px)}
+.alt3d::after{content:"";position:absolute;left:8%;right:8%;bottom:-9%;height:14%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.65),transparent);filter:blur(8px)}
+.alt3d canvas{position:relative;width:100%;height:100%;display:block;filter:drop-shadow(0 30px 40px rgba(0,0,0,.6))}
+.alt-read{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.alt-read .back{margin:0;font-family:var(--f-mono);font-size:.78rem;height:36px}
+.alt-read b{color:var(--lime-ink);font-weight:600}
+
+/* ---- цепочка ---- */
+.chain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
+.ccard{padding:22px;display:flex;flex-direction:column;gap:12px;border-radius:24px}
+.ccard .lbl{font-family:var(--f-mono);font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--lime-ink)}
+.ccard .fm{font-size:1.15rem;min-height:56px;display:flex;align-items:center}
+.ccard small{display:block;color:var(--ink);opacity:.75;font-size:.88rem}
+/* ---- темы ---- */
 .topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
 .tcard{padding:24px;display:flex;flex-direction:column;gap:10px;min-height:280px}
 .tcard .tn{font-family:var(--f-serif);font-size:4.2rem;line-height:.9;color:var(--lime-ink)}
@@ -75,32 +104,19 @@
 .tcard .go{margin-top:auto;align-self:flex-start}
 .tcard .soon{margin-top:auto;font-family:var(--f-mono);font-size:.74rem;color:var(--ink-2)}
 .tcard.on{box-shadow:var(--shadow),inset 0 0 0 1px var(--lime-line)}
-.finale{text-align:center;padding:clamp(50px,7vw,90px) 24px;margin-bottom:20px;overflow:hidden}
-.finale h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4.4rem);line-height:1}
+.finale{text-align:center;padding:clamp(60px,8vw,110px) 24px;margin-bottom:20px;overflow:hidden}
+.finale h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.6rem,5.6vw,4.6rem);line-height:1}
 .finale h2 em{color:var(--lime-ink)}
-.finale p{color:var(--ink-2);max-width:56ch;margin:18px auto 26px}
+.finale p{color:var(--ink);opacity:.8;max-width:56ch;margin:18px auto 28px}
+.finale .btn{height:48px;padding:0 26px;font-size:.98rem}
 
-/* ---- облака: тёмные градиентные, контур подсвечен лаймом ---- */
-html,body{overflow-x:clip}
+/* ---- запасные рисованные облака (если нет WebGL) ---- */
 :root{--cl-top:#202812;--cl-bot:#0B0B0C;--cl-op:.92}
 :root[data-theme="light"]{--cl-top:#FFFFFF;--cl-bot:#E6EBD8;--cl-op:.95}
-.hero .gut{position:relative;z-index:2}
-.clouds{position:absolute;inset:0;z-index:0;pointer-events:none}
-.cl{position:absolute;will-change:transform}
-.cl-in{animation:clIn 1.8s cubic-bezier(.16,.8,.24,1) both;animation-delay:var(--d,0s)}
-.cl.r .cl-in{animation-name:clInR}
-.cl svg{display:block;width:100%;height:auto;opacity:var(--cl-op);overflow:visible;animation:clFloat var(--f,9s) ease-in-out infinite alternate;filter:drop-shadow(0 0 6px rgba(198,244,50,.55)) drop-shadow(0 0 22px rgba(198,244,50,.22))}
-@keyframes clIn{from{transform:translateX(-70vw) scale(.85);opacity:0;filter:blur(14px)}}
-@keyframes clInR{from{transform:translateX(70vw) scale(.85);opacity:0;filter:blur(14px)}}
-@keyframes clFloat{from{transform:translate(0,0)}to{transform:translate(var(--fx,14px),var(--fy,-10px))}}
-.sec{position:relative}
-.scl{position:absolute;pointer-events:none;z-index:-1;width:clamp(220px,26vw,420px);transition:transform 1.6s cubic-bezier(.16,.8,.24,1),opacity 1.6s,filter 1.6s}
-.scl.l{left:clamp(-260px,-12vw,-120px)} .scl.r{right:clamp(-260px,-12vw,-120px)}
-.js .scl.l:not(.in){transform:translateX(-50vw);opacity:0;filter:blur(12px)}
-.js .scl.r:not(.in){transform:translateX(50vw);opacity:0;filter:blur(12px)}
-.scl svg{display:block;width:100%;height:auto;opacity:var(--cl-op);overflow:visible;animation:clFloat 11s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px rgba(198,244,50,.5)) drop-shadow(0 0 20px rgba(198,244,50,.2))}
-
-/* ---- больше движущегося зелёного свечения на всей странице ---- */
+.clouds{position:absolute;inset:0;z-index:1;pointer-events:none}
+.cl{position:absolute}
+.cl svg{display:block;width:100%;height:auto;opacity:var(--cl-op);overflow:visible;filter:drop-shadow(0 0 6px rgba(198,244,50,.55)) drop-shadow(0 0 22px rgba(198,244,50,.22))}
+/* ---- движущееся зелёное свечение на всей странице ---- */
 .roam{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .roam i{position:absolute;width:60vmax;height:60vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(198,244,50,.22),transparent);filter:blur(20px)}
 .roam i:nth-child(1){left:-20vmax;top:20vh;animation:roamA 22s ease-in-out infinite alternate}
@@ -109,95 +125,96 @@ html,body{overflow-x:clip}
 @keyframes roamA{to{transform:translate(40vw,-30vh) scale(1.2)}}
 @keyframes roamB{to{transform:translate(-45vw,-40vh) scale(.85)}}
 :root[data-theme="light"] .roam i{background:radial-gradient(closest-side,rgba(198,244,50,.35),transparent)}
-
-/* ---- появление при прокрутке: с разных сторон, с размытием, со «шторкой» ---- */
-.js .rv{transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1),filter .9s,clip-path 1.1s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
-.js .rv.from-l:not(.in){transform:translateX(-80px)}
-.js .rv.from-r:not(.in){transform:translateX(80px)}
-.js .rv.zoom:not(.in){transform:translateY(30px) scale(.9);filter:blur(8px)}
-.js .mask{transition:clip-path 1.1s cubic-bezier(.2,.7,.2,1),transform 1.1s cubic-bezier(.2,.7,.2,1)}
-.js .mask:not(.in){clip-path:inset(0 0 100% 0);transform:translateY(24px)}
-.js .mask.in{clip-path:inset(0)} .js .mask.in.done{clip-path:none}
-@media (prefers-reduced-motion:reduce){.js .rv,.js .scl,.js .mask{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}.roam i{animation:none}}
+@media (prefers-reduced-motion:reduce){.roam i,.plane{animation:none}.plane{display:none}.sf{opacity:1;transform:none;filter:none}.split .wd{opacity:1}}
 </style>
 </head>
 <body>
 <div class="hero">
   <canvas id="glow" aria-hidden="true"></canvas>
-  <div class="clouds" id="clouds" aria-hidden="true"></div>
   <div class="gut"><div class="wrap">
     <div class="nav-top"><span id="brand"></span><a class="back" href="../">← Формула полёта</a></div>
     <div class="hero-in">
-      <div class="stats rv" style="--d:.9s"><div class="stat"><b>11 000 м</b><span>тропопауза СА</span></div><div class="stat"><b>8,3 м</b><span>на 1 гПа у земли</span></div></div>
+      <div class="stats fade" style="--d:1s"><div class="stat"><b>11 000 м</b><span>тропопауза СА</span></div><div class="stat"><b>8,3 м</b><span>на 1 гПа у земли</span></div></div>
       <div class="hero-c">
-        <div class="brandline">Авиационная метеорология</div>
+        <div class="brandline fade" style="--d:.05s">Авиационная метеорология</div>
         <h1 aria-label="Атмосфера, которую видит пилот"><span class="w" style="--i:0">Атмосфера,</span> <em class="w" style="--i:1">которую</em><br><span class="w" style="--i:2">видит</span> <span class="w" style="--i:3">пилот.</span></h1>
-        <p class="sub rv" style="--d:.6s">Компьютерный тренажёр по дисциплине «Авиационная метеорология». Выводы формул по шагам, интерактивные модели и примеры в полёте на DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p>
-        <div class="cta rv" style="--d:.75s"><a class="btn lime" href="t1.html">Начать с раздела 1</a><a class="btn" href="#topics">Темы семестра</a></div>
-        <div class="credits rv" style="--d:.9s"><div class="credit"><b>Назаркин<br>Максим Дмитриевич</b><span>руководитель проекта</span></div><div class="credit"><b>[ФИО]</b><span>научное содержание</span></div></div>
+        <p class="sub fade" style="--d:.7s">Компьютерный тренажёр по дисциплине «Авиационная метеорология». Выводы формул по шагам, интерактивные модели и примеры в полёте на DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p>
+        <div class="cta fade" style="--d:.85s"><a class="btn lime" href="t1.html">Начать с раздела 1</a><a class="btn" href="#topics">Темы семестра</a></div>
+        <div class="credits fade" style="--d:1.05s"><div class="credit"><b>Назаркин<br>Максим Дмитриевич</b><span>руководитель проекта</span></div><div class="credit"><b>Тимофеев<br>Вадим Иванович</b><span>научное содержание</span></div></div>
       </div>
-      <div class="stats r rv" style="--d:1s"><div class="stat"><b>1013,25</b><span>гПа на уровне моря</span></div><div class="stat"><b>−56,5°</b><span>над тропопаузой</span></div></div>
-    </div>
-    <div class="hcards">
-      <div class="hcard glass rv" style="--d:.1s"><div class="kick">Высота полёта</div><div class="big" id="hcH"></div><input type="range" id="hcRange" min="0" max="15000" step="100" value="3000" aria-label="Высота" style="margin-top:14px"><div class="hrow"><span class="mono note" id="hcFL"></span><span class="chip o">Двигайте</span></div></div>
-      <div class="hcard glass rv" style="--d:.2s"><div class="kick">Давление по СА</div><div class="big" id="hcP"></div><div class="hrow"><span class="mono note" id="hcR"></span><span class="chip" id="hcPct"></span></div></div>
-      <div class="hcard glass rv" style="--d:.3s"><div class="kick">Профиль температуры</div><svg id="hcT" viewBox="0 0 260 96" aria-label="Профиль температуры СА"></svg><div class="hrow"><span class="mono note" id="hcTt"></span><span class="chip o" id="hcLayer"></span></div></div>
+      <div class="stats r fade" style="--d:1.1s"><div class="stat"><b>1013,25</b><span>гПа на уровне моря</span></div><div class="stat"><b>−56,5°</b><span>над тропопаузой</span></div></div>
     </div>
   </div></div>
 </div>
 
-<div class="gut page"><div class="wrap">
-  <section class="sec">
-    <div class="kick rv">Зачем пилоту метеорология</div>
-    <h2 class="rv" style="--d:.1s">Формула на доске и шкала в кабине – <em>одно знание</em></h2>
-    <p class="lead rv" style="--d:.2s">Высотомер, указатель скорости и датчик наружной температуры тарированы по стандартной атмосфере. Если Вы понимаете формулы, Вы понимаете и то, когда прибор ошибается: в мороз, при низком давлении, в жару на взлёте.</p>
-    <div class="feats">
-      <div class="feat glass rv"><span class="n">01</span><h3>Теория <em>по шагам</em></h3><p>Формулы выводятся на глазах: от уравнения статики до барической ступени.</p><div class="vis"><span>1. dp = −ρg dH</span><span>2. ρ = p / RT</span><b>3. p = p₀(1 − βH/T₀)^5,256</b></div></div>
-      <div class="feat glass rv" style="--d:.08s"><span class="n">02</span><h3>Модели <em>с ползунками</em></h3><p>Меняйте высоту, температуру и давление и сразу смотрите на результат.</p><div class="vis"><span>H = 3000 м, ΔT = +15 °C</span><b>плотностная высота +600 м</b></div></div>
-      <div class="feat glass rv" style="--d:.16s"><span class="n">03</span><h3>Два <em>самолёта</em></h3><p>Каждая тема доведена до кабины: учебный DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p><div class="vis"><span>DA 40 NG: плотностная высота</span><span>SSJ 100: число M и эшелон</span></div></div>
-      <div class="feat glass rv" style="--d:.24s"><span class="n">04</span><h3>Проверьте <em>себя</em></h3><p>Вопросы в конце каждого раздела с объяснением каждого ответа.</p><div class="vis"><span>QNH 1000, на шкале 1013</span><b>высотомер покажет ≈ +110 м</b></div></div>
+<div class="page">
+  <div class="gut"><div class="wrap">
+    <section class="sec" style="padding-bottom:20px">
+      <div class="kick">Зачем пилоту метеорология</div>
+      <h2>Формула на доске и шкала в кабине – <em>одно знание</em></h2>
+      <p class="lead">Высотомер, указатель скорости и датчик наружной температуры тарированы по стандартной атмосфере. Если Вы понимаете формулы, Вы понимаете и то, когда прибор ошибается: в мороз, при низком давлении, в жару на взлёте.</p>
+    </section>
+  </div></div>
+
+  <section class="scene" id="scene" aria-label="Что будет в тренажёре">
+    <div class="stick">
+      <canvas class="sky" id="sky" aria-hidden="true"></canvas>
+      <div class="planes" aria-hidden="true" id="planes"></div>
+      <div class="gut" style="height:100%"><div class="wrap scene-in">
+        <div>
+          <div class="kick">Что будет в тренажёре</div>
+          <h2>Четыре шага – <em>от формулы к полёту</em></h2>
+          <div class="sfs">
+            <div class="sf glass"><span class="n">01</span><h3>Теория <em>по шагам</em></h3><p>Формулы выводятся на глазах: от уравнения статики до барической ступени.</p></div>
+            <div class="sf glass"><span class="n">02</span><h3>Модели <em>с ползунками</em></h3><p>Меняйте высоту, температуру и давление и сразу смотрите на результат.</p></div>
+            <div class="sf glass"><span class="n">03</span><h3>Два <em>самолёта</em></h3><p>Каждая тема доведена до кабины: учебный DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p></div>
+            <div class="sf glass"><span class="n">04</span><h3>Проверьте <em>себя</em></h3><p>Вопросы в конце каждого раздела с объяснением каждого ответа.</p></div>
+          </div>
+        </div>
+        <div class="alt-col">
+          <div class="alt3d" id="alt3d"><canvas id="altC" role="img" aria-label="Модель барометрического высотомера: при наборе высоты движутся стрелки, давление на шкале остаётся 1013 гПа"></canvas></div>
+          <div class="alt-read"><span class="back">Высота <b id="altFt">0 ft</b></span><span class="back">На шкале <b>1013 гПа</b> – не меняется</span></div>
+        </div>
+      </div></div>
     </div>
   </section>
 
-  <section class="sec" style="padding-top:0">
-    <div class="kick rv">Пример</div>
-    <h2 class="rv">От лекции – <em>до кабины</em></h2>
-    <div class="chain">
-      <div class="cflow">
-        <div class="ccard glass rv"><span class="lbl">на лекции</span><div>\(p = p_0\left(1 - \dfrac{\beta H}{T_0}\right)^{5{,}256}\)<small>Барометрическая формула: давление падает с высотой по закону СА.</small></div></div>
-        <div class="ccard glass rv" style="--d:.1s"><span class="lbl">в модели</span><div>\(h = \dfrac{RT}{g\,p} \approx 8{,}3\ \text{м/гПа}\)<small>Барическая ступень: сколько метров приходится на 1 гПа у земли.</small></div></div>
-        <div class="ccard glass rv" style="--d:.2s"><span class="lbl">в кабине</span><div>\(\Delta H \approx 8{,}3\,(p_{шк} - p_{факт})\)<small>Высотомер на стоянке. Поверните кремальеру и посмотрите на показание.</small></div></div>
+  <div class="gut"><div class="wrap">
+    <section class="sec">
+      <div class="kick">Пример</div>
+      <h2>От лекции – <em>до кабины</em></h2>
+      <div class="chain">
+        <div class="ccard glass"><span class="lbl">на лекции</span><div class="fm">\(p = p_0\left(1 - \dfrac{\beta H}{T_0}\right)^{5{,}256}\)</div><small>Барометрическая формула: давление падает с высотой по закону СА.</small></div>
+        <div class="ccard glass"><span class="lbl">в модели</span><div class="fm">\(h = \dfrac{RT}{g\,p} \approx 8{,}3\ \text{м/гПа}\)</div><small>Барическая ступень: сколько метров высоты приходится на 1 гПа у земли.</small></div>
+        <div class="ccard glass"><span class="lbl">в кабине</span><div class="fm">\(\Delta H \approx 8{,}3\,(p_{шк} - p)\)</div><small>Высотомер показывает, насколько давление за бортом меньше установленного на шкале. Уровень отсчёта задаёт шкала давления.</small></div>
       </div>
-      <div class="gauge glass rv" style="--d:.15s">
-        <svg id="altG" viewBox="0 0 220 220" aria-label="Барометрический высотомер"></svg>
-        <div class="ctl"><div class="top"><label for="gQNH">Давление на шкале</label><output id="gOut"></output></div><input type="range" id="gQNH" min="980" max="1040" step="1" value="1013"></div>
-        <p class="note" id="gTxt" style="margin:0"></p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="sec" id="topics" style="padding-top:0">
-    <div class="kick rv">Темы семестра</div>
-    <h2 class="rv">Шесть разделов – <em>одна атмосфера</em></h2>
-    <p class="lead rv">Темы следуют рабочей программе дисциплины «Авиационная метеорология» и курсу лекций.</p>
-    <div class="topics" id="tcards"></div>
-  </section>
+    <section class="sec" id="topics" style="padding-top:0">
+      <div class="kick">Темы семестра</div>
+      <h2>Шесть разделов – <em>одна атмосфера</em></h2>
+      <p class="lead">Темы следуют рабочей программе дисциплины «Авиационная метеорология» и курсу лекций.</p>
+      <div class="topics" id="tcards"></div>
+    </section>
 
-  <section class="finale glass rv">
-    <div class="kick">Добро пожаловать в проект</div>
-    <h2 style="margin-top:14px">Погода – это <em>язык,</em><br>на котором говорит небо.</h2>
-    <p>Давайте учиться его понимать. Первый раздел: состав и строение атмосферы, стандартная атмосфера.</p>
-    <a class="btn lime" href="t1.html">Приступить к занятиям →</a>
-  </section>
-  <div id="foot"></div>
-</div></div>
+    <section class="finale glass">
+      <div class="kick">Добро пожаловать в проект</div>
+      <h2 style="margin-top:14px">Погода – это <em>язык,</em><br>на котором говорит небо.</h2>
+      <p>Давайте учиться его понимать. Первый раздел: состав и строение атмосферы, стандартная атмосфера.</p>
+      <a class="btn lime" href="t1.html">Приступить к занятиям →</a>
+    </section>
+    <div id="foot"></div>
+  </div></div>
+</div>
 
 <script>
 (function(){
 const {f,ISA}=FP;
+const RED=matchMedia('(prefers-reduced-motion: reduce)').matches;
 FP.chrome();
 document.getElementById('brand').innerHTML=FP.brand('index.html');
 document.getElementById('foot').innerHTML=FP.footer();
+document.body.insertAdjacentHTML('afterbegin','<div class="roam" aria-hidden="true"><i></i><i></i><i></i></div>');
 
 /* темы по курсу лекций */
 const T=[[1,'Состав и строение атмосферы','t1.html',[['1.1 Общие сведения','#s11'],['1.2 Газовый состав','#s12'],['1.3 Строение атмосферы','#s13'],['1.4 Стандартная атмосфера','#s14'],['1.5 Реальная атмосфера','#s15']]],
@@ -206,85 +223,84 @@ const T=[[1,'Состав и строение атмосферы','t1.html',[['1
  [4,'Элементы термодинамики атмосферы',null,['вертикальные движения','адиабатические процессы','устойчивость, уровень конвекции']],
  [5,'Облака, осадки, туманы. Видимость',null,['облака','осадки','туманы','виды видимости','METAR, TAF, GAMET']],
  [6,'Синоптические процессы. Карты погоды. Прогноз погоды',null,['карты топографии','воздушные массы','фронты','циклоны и антициклоны','Практика 03','гроза, обледенение, турбулентность']]];
-document.getElementById('tcards').innerHTML=T.map((t,i)=>`<div class="tcard glass rv ${t[2]?'on':'off'}" style="--d:${i%3*.08}s"><div class="tn">${t[0]}</div><h3>${t[1]}</h3><ul>${t[3].map(x=>Array.isArray(x)?`<li><a href="${t[2]}${x[1]}">${x[0]}</a></li>`:`<li><span>${x}</span></li>`).join('')}</ul>${t[2]?`<a class="btn lime go" href="${t[2]}">Открыть раздел ${t[0]}</a>`:'<span class="soon">в разработке</span>'}</div>`).join('');
-/* облака */
-const CL=['M40 140 C10 140 5 100 35 92 C30 60 70 45 95 62 C105 25 165 20 180 58 C200 35 245 45 245 80 C280 82 290 140 255 140 Z',
- 'M30 130 C5 128 8 95 38 95 C40 70 75 62 92 78 C110 40 170 42 178 75 C205 60 250 75 240 105 C270 110 268 132 245 132 Z',
- 'M55 135 C25 135 20 105 45 98 C45 78 70 70 85 80 C95 55 130 50 145 70 C160 40 215 42 222 78 C250 70 280 95 265 118 C285 125 278 140 255 138 Z'];
-let cn=0;
-const cloud=(s)=>{const i=++cn;return `<svg viewBox="0 0 300 160"><defs><linearGradient id="cf${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--cl-top)"/><stop offset="1" style="stop-color:var(--cl-bot)"/></linearGradient><linearGradient id="cs${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C6F432"/><stop offset=".55" stop-color="#C6F432" stop-opacity=".55"/><stop offset="1" stop-color="#C6F432" stop-opacity=".05"/></linearGradient><radialGradient id="cg${i}" cx=".35" cy=".25" r=".6"><stop offset="0" stop-color="#C6F432" stop-opacity=".22"/><stop offset="1" stop-color="#C6F432" stop-opacity="0"/></radialGradient></defs><path d="${CL[s%CL.length]}" fill="url(#cf${i})"/><path d="${CL[s%CL.length]}" fill="url(#cg${i})" stroke="url(#cs${i})" stroke-width="1.6"/></svg>`};
-const HC=[['l',-6,8,30,.15,.5,0],['l',-10,46,22,.45,.9,1],['l',2,74,15,.75,.3,2],['r',-8,4,26,.3,.7,1],['r',-4,40,20,.6,.4,2],['r',4,70,16,.9,.8,0]];
-const cl=document.getElementById('clouds');
-cl.innerHTML=HC.map((c,i)=>`<div class="cl ${c[0]}" data-z="${c[5]}" style="${c[0]==='l'?'left':'right'}:${c[1]}%;top:${c[2]}%;width:${c[3]}vw;max-width:${c[3]*14}px;--d:${c[4]}s;--f:${8+i*1.5}s;--fx:${c[0]==='l'?14:-14}px"><div class="cl-in">${cloud(c[6])}</div></div>`).join('');
-document.querySelectorAll('.sec').forEach((s,i)=>{const side=i%2?'r':'l';s.insertAdjacentHTML('afterbegin',`<div class="scl ${side}" aria-hidden="true" style="top:${i%2?20:6}%">${cloud(i+1)}</div>`)});
-document.body.insertAdjacentHTML('afterbegin','<div class="roam" aria-hidden="true"><i></i><i></i><i></i></div>');
-/* объёмные облака WebGL; если видеокарта не справляется – остаются рисованные */
+document.getElementById('tcards').innerHTML=T.map(t=>`<div class="tcard glass ${t[2]?'on':'off'}"><div class="tn">${t[0]}</div><h3>${t[1]}</h3><ul>${t[3].map(x=>Array.isArray(x)?`<li><a href="${t[2]}${x[1]}">${x[0]}</a></li>`:`<li><span>${x}</span></li>`).join('')}</ul>${t[2]?`<a class="btn lime go" href="${t[2]}">Открыть раздел ${t[0]}</a>`:'<span class="soon">в разработке</span>'}</div>`).join('');
+
+/* объёмные облака WebGL; если WebGL нет – рисованные облака в шапке */
 let webgl=null;
 try{webgl=window.FPClouds&&FPClouds({before:document.querySelector('.roam').nextSibling,light:t=>{const g=window.__glow,hr=document.querySelector('.hero').getBoundingClientRect(),gy=g?(hr.top+g.hy)/innerHeight:.6;
   const L1=g&&gy>-0.6?[g.x,gy,1.25]:[.5,-1,0];return [L1,[.5+.28*Math.sin(t*.13),1.12,.75]]}})}catch(e){webgl=null}
-if(webgl){document.getElementById('clouds').remove();document.querySelectorAll('.scl').forEach(x=>x.remove())}
-/* разные сценарии появления */
-const add=(sel,c)=>document.querySelectorAll(sel).forEach((e,i)=>e.classList.add(typeof c==='function'?c(i):c));
-add('.sec h2','mask');add('.feat',i=>['from-l','zoom','zoom','from-r'][i%4]);add('.ccard','from-l');add('.gauge','from-r');add('.tcard','zoom');add('.finale','zoom');add('.hcard','zoom');
-/* пружинное появление через Motion; без него работает CSS-вариант */
-if(window.Motion&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const {animate,inView}=Motion;
- const sets=[['.hcard',i=>({y:60,d:.9+i*.12})],['.feat',i=>({x:[-140,-50,50,140][i%4],y:50,s:.9,d:(i%4)*.08})],['.ccard',i=>({x:-110,d:i*.1})],['.gauge',()=>({x:110,r:8,s:.92})],['.tcard',i=>({y:70,s:.88,d:(i%3)*.09})],['.finale',()=>({y:70,s:.94})]];
- sets.forEach(([sel,fr])=>document.querySelectorAll(sel).forEach((el,i)=>{const f=fr(i);el.classList.remove('rv','from-l','from-r','zoom');
-  el.style.opacity=0;el.style.transform=`translate(${f.x||0}px,${f.y||0}px) scale(${f.s||1}) rotate(${f.r||0}deg)`;el.style.filter='blur(12px)';
-  inView(el,()=>{animate(el,{x:[f.x||0,0],y:[f.y||0,0],scale:[f.s||1,1],rotate:[f.r||0,0]},{type:'spring',bounce:.3,duration:1.2,delay:f.d||0});
-   animate(el,{opacity:[0,1],filter:['blur(12px)','blur(0px)']},{duration:.9,ease:'easeOut',delay:f.d||0}).then(()=>{el.style.filter=''})},{amount:.2})}))}
-/* облака секций и заголовки со «шторкой» скрыты сдвигом или маской, поэтому следим за самой секцией */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll(':scope > .scl, :scope > h2.mask').forEach((x,i)=>{x.style.transitionDelay=(i*.15)+'s';x.classList.add('in');if(x.matches('h2'))setTimeout(()=>x.classList.add('done'),1500)});io.unobserve(e.target)}}),{threshold:.08});
-document.querySelectorAll('.sec').forEach(x=>{x.querySelector(':scope > h2')?.classList.remove('rv');io.observe(x)});
-/* облака шапки: параллакс при прокрутке и движении мыши */
-let px=0,py=0;
-const par=()=>{const y=scrollY;cl.querySelectorAll('.cl').forEach(c=>{const z=+c.dataset.z;c.style.transform=`translate(${px*z*30}px,${y*z*-.35+py*z*16}px)`})};
-addEventListener('scroll',par,{passive:true});
-document.querySelector('.hero').addEventListener('pointermove',e=>{px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5;par()});
-FP.reveal(document);
+if(!webgl){const P='M40 140 C10 140 5 100 35 92 C30 60 70 45 95 62 C105 25 165 20 180 58 C200 35 245 45 245 80 C280 82 290 140 255 140 Z';
+  const svg=i=>`<svg viewBox="0 0 300 160"><defs><linearGradient id="cf${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--cl-top)"/><stop offset="1" style="stop-color:var(--cl-bot)"/></linearGradient></defs><path d="${P}" fill="url(#cf${i})" stroke="#C6F432" stroke-opacity=".7" stroke-width="1.6"/></svg>`;
+  document.querySelector('.hero').insertAdjacentHTML('afterbegin',`<div class="clouds" aria-hidden="true">${[['left:-6%;top:10%;width:30vw',0],['left:-8%;top:55%;width:22vw',1],['right:-8%;top:6%;width:26vw',2],['right:-4%;top:52%;width:20vw',3]].map(c=>`<div class="cl" style="${c[0]}">${svg(c[1])}</div>`).join('')}</div>`)}
 
-/* карточки шапки */
-const r=document.getElementById('hcRange');
-function cards(){const H=+r.value,p=ISA.P(H),T=ISA.T(H);
- document.getElementById('hcH').innerHTML=`${f(H)}<small>м</small>`;document.getElementById('hcFL').textContent=`${FP.fl(H)}, ${f(H/ISA.FT)} ft`;
- document.getElementById('hcP').innerHTML=`${f(p/100)}<small>/ 1013 гПа</small>`;document.getElementById('hcR').textContent=`ρ = ${f(ISA.RHO(H),3)} кг/м³`;document.getElementById('hcPct').textContent=`${f(p/ISA.P0*100)} %`;
- document.getElementById('hcTt').textContent=`t = ${f(T-273.15,1)} °C`;document.getElementById('hcLayer').textContent=H<=11000?'тропосфера':'стратосфера';
- const X=h=>10+h/15000*240,Y=t=>8+(15-t)/75*76;let d='';for(let h=0;h<=15000;h+=250)d+=(h?'L':'M')+X(h).toFixed(1)+' '+Y(ISA.T(h)-273.15).toFixed(1);
- document.getElementById('hcT').innerHTML=`<line x1="${X(11000)}" x2="${X(11000)}" y1="6" y2="90" stroke="var(--line)"/><text x="${X(11000)+4}" y="16">11 км</text><text x="10" y="94">0</text><text x="226" y="94">15 км</text><path d="${d}" fill="none" stroke="var(--lime-line)" stroke-width="2"/><circle cx="${X(H)}" cy="${Y(T-273.15)}" r="5" fill="var(--lime-line)" stroke="var(--bg)" stroke-width="2"/>`}
-r.addEventListener('input',cards);cards();
+/* слова появляются плавно, по одному, как на сайтах Apple */
+function split(el){const walk=n=>[...n.childNodes].forEach(ch=>{if(ch.nodeType===3){const fr=document.createDocumentFragment();ch.textContent.split(/(\s+)/).forEach(p=>{if(!p)return;if(/^\s+$/.test(p))fr.appendChild(document.createTextNode(p));else{const s=document.createElement('span');s.className='wd';s.textContent=p;fr.appendChild(s)}});ch.replaceWith(fr)}else if(ch.nodeType===1&&ch.tagName!=='BR'&&!ch.matches('mjx-container,svg,.wd'))walk(ch)});walk(el);el.classList.add('split');return el.querySelectorAll('.wd')}
+const M=window.Motion&&!RED?window.Motion:null;
+if(M){const {animate,inView,stagger}=M;
+  document.querySelectorAll('.sec .kick,.sec h2,.sec .lead,.scene .kick,.scene h2,.finale .kick,.finale h2,.finale p').forEach(el=>{const w=split(el);
+    inView(el,()=>{animate(w,{opacity:[0,1],y:['0.55em','0em'],filter:['blur(12px)','blur(0px)']},{duration:1,delay:stagger(.05),ease:[.22,.8,.24,1]})},{amount:.4})});
+  /* карточки: пружина и проявление из размытия */
+  const sets=[['.ccard',i=>({y:70,s:.94,d:i*.12})],['.tcard',i=>({y:70,s:.9,d:(i%3)*.1})],['.finale',()=>({y:70,s:.95})]];
+  sets.forEach(([sel,fr])=>document.querySelectorAll(sel).forEach((el,i)=>{const o=fr(i);el.style.opacity=0;el.style.transform=`translateY(${o.y}px) scale(${o.s})`;el.style.filter='blur(12px)';
+    inView(el,()=>{animate(el,{y:[o.y,0],scale:[o.s,1]},{type:'spring',bounce:.28,duration:1.2,delay:o.d||0});animate(el,{opacity:[0,1],filter:['blur(12px)','blur(0px)']},{duration:1,ease:'easeOut',delay:o.d||0}).then(()=>{el.style.filter=''})},{amount:.2})}))}
 
-/* высотомер */
-const g=document.getElementById('gQNH');
-function gauge(){const q=+g.value,rd=(ISA.Hp(101300)-ISA.Hp(q*100))/ISA.FT;
- document.getElementById('gOut').textContent=`${q} гПа`;
- document.getElementById('gTxt').textContent=`Фактическое давление на стоянке 1013 гПа, аэродром на уровне моря. Высотомер покажет ${FP.sg(rd)} ft (${FP.sg(rd*ISA.FT)} м).`;
- const ang=v=>(v/1000*360-90)*Math.PI/180;let s='<circle cx="110" cy="110" r="104" fill="#0E0F11" stroke="#2A2B2F" stroke-width="2"/>';
- for(let i=0;i<50;i++){const a=(i/50*360-90)*Math.PI/180,r1=i%5?92:86;s+=`<line x1="${110+Math.cos(a)*r1}" y1="${110+Math.sin(a)*r1}" x2="${110+Math.cos(a)*98}" y2="${110+Math.sin(a)*98}" stroke="#E8EAEE" stroke-width="${i%5?1:2}"/>`;if(i%5===0)s+=`<text x="${110+Math.cos(a)*74}" y="${110+Math.sin(a)*74+6}" text-anchor="middle" fill="#FFFFFF" style="font:600 17px var(--f-mono)">${i/5}</text>`}
- s+=`<rect x="138" y="100" width="44" height="20" rx="3" fill="#000" stroke="#3A3B40"/><text x="160" y="114" text-anchor="middle" fill="#C6F432" style="font:500 11px var(--f-mono)">${q}</text><text x="110" y="150" text-anchor="middle" fill="#8C8F98" style="font:9px var(--f-mono)">ALT 100 FT</text>`;
- const a1=ang(((rd%1000)+1000)%1000),a2=ang(((rd/10)%1000+1000)%1000);
- s+=`<line x1="110" y1="110" x2="${110+Math.cos(a2)*50}" y2="${110+Math.sin(a2)*50}" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/><line x1="110" y1="110" x2="${110+Math.cos(a1)*84}" y2="${110+Math.sin(a1)*84}" stroke="#C6F432" stroke-width="3.5" stroke-linecap="round" style="filter:drop-shadow(0 0 4px rgba(198,244,50,.7))"/><circle cx="110" cy="110" r="7" fill="#0B0B0C" stroke="#C6F432" stroke-width="2"/>`;
- document.getElementById('altG').innerHTML=s}
-g.addEventListener('input',gauge);gauge();
+/* ---- сцена: высотомер, набор высоты, самолёты ---- */
+const scene=document.getElementById('scene'),sky=document.getElementById('sky'),sx=sky.getContext('2d'),alt=FPAltimeter(document.getElementById('altC'),{baro:1013});
+const box=document.getElementById('alt3d'),sfs=[...document.querySelectorAll('.sf')],altFt=document.getElementById('altFt');
+const PLANE='<svg viewBox="0 0 64 64"><path fill="currentColor" d="M62 32c0-1.6-1.6-2.6-3.6-2.6H40L27 8h-5l7 21.4H15.5L10 22H6l3.4 10L6 42h4l5.5-7.4H29L22 56h5l13-21.4h18.4c2 0 3.6-1 3.6-2.6z"/></svg>';
+document.getElementById('planes').innerHTML=['p1','p2','p3'].map(c=>`<div class="plane ${c}">${PLANE}</div>`).join('');
+let shown=0,cur=0,tgt=0,last=performance.now(),tx=0,ty=0,puffs=[];
+for(let i=0;i<12;i++)puffs.push({x:Math.random(),y:Math.random()*1.4-.2,r:.07+Math.random()*.1,z:.3+Math.random()*.7,s:Math.random()*6.28});
+function prog(){const r=scene.getBoundingClientRect();return Math.min(1,Math.max(0,-r.top/(r.height-innerHeight)))}
+function drawSky(dy,t){const r=sky.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1),W=r.width,H=r.height;
+  if(sky.width!==Math.round(W*d)||sky.height!==Math.round(H*d)){sky.width=Math.round(W*d);sky.height=Math.round(H*d)}
+  sx.setTransform(d,0,0,d,0,0);sx.clearRect(0,0,W,H);const lt=document.documentElement.dataset.theme==='light',k=Math.min(1,cur/12000);
+  /* чем выше, тем темнее небо сверху */
+  let g=sx.createLinearGradient(0,0,0,H);g.addColorStop(0,lt?`rgba(225,232,210,${.2+.4*k})`:`rgba(4,5,4,${.35+.4*k})`);g.addColorStop(1,lt?'rgba(198,244,50,.18)':'rgba(70,95,10,.22)');sx.fillStyle=g;sx.fillRect(0,0,W,H);
+  /* шкала высоты по краю: уходит вниз при наборе */
+  const step=170,off=(cur/1000*step)%step;sx.font='500 11px "JetBrains Mono",monospace';
+  for(let y=-step;y<H+step;y+=step){const yy=y+off,lvl=Math.round((cur/1000)-(yy-H*.5)/step)*1000+0;sx.strokeStyle=lt?'rgba(11,11,12,.18)':'rgba(255,255,255,.14)';sx.lineWidth=1;sx.beginPath();sx.moveTo(W-90,yy);sx.lineTo(W-40,yy);sx.stroke();
+    if(lvl>0||(lvl===0&&yy>0)){sx.fillStyle=lt?'rgba(11,11,12,.45)':'rgba(255,255,255,.4)';sx.textAlign='right';sx.fillText(f(lvl)+' ft',W-96,yy+4)}}
+  /* облака проносятся вниз */
+  puffs.forEach(p=>{p.y+=(dy*.00009+.00025)*p.z;if(p.y>1.25){p.y=-.25;p.x=Math.random()}
+    const x=p.x*W,y=p.y*H,R=p.r*Math.max(W,H)*(.6+p.z*.6);
+    for(let j=0;j<7;j++){const ox=Math.cos(p.s+j*1.9)*R*.7,oy=Math.sin(p.s+j*2.3)*R*.18-(j%3)*R*.08,rr=R*(.42+.09*(j%4));
+      const gg=sx.createRadialGradient(x+ox,y+oy-rr*.2,0,x+ox,y+oy,rr);
+      if(lt){gg.addColorStop(0,`rgba(255,255,255,${.5*p.z})`);gg.addColorStop(.7,`rgba(232,238,220,${.25*p.z})`);gg.addColorStop(1,'rgba(232,238,220,0)')}
+      else{gg.addColorStop(0,`rgba(26,30,20,${.32*p.z})`);gg.addColorStop(.55,`rgba(70,95,20,${.14*p.z})`);gg.addColorStop(1,'rgba(120,160,30,0)')}
+      sx.fillStyle=gg;sx.beginPath();sx.arc(x+ox,y+oy,rr,0,6.283);sx.fill()}})}
+function loop(now){const dt=Math.min(64,now-last);last=now;const p=prog(),t=now/1000;
+  const e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;tgt=e*12000+(RED?0:Math.sin(t*.7)*18);
+  const prev=cur;cur+=(tgt-cur)*Math.min(1,dt/260);const dy=Math.max(0,cur-prev)*60/Math.max(dt,1)+30;
+  alt.draw(Math.max(0,cur));altFt.textContent=`${f(Math.max(0,cur))} ft (${f(Math.max(0,cur)*ISA.FT)} м)`;
+  drawSky(dy,t);
+  const n=Math.min(4,Math.floor((p+.04)/.18));sfs.forEach((el,i)=>{el.classList.toggle('on',i<n||RED);el.classList.toggle('cur',i===n-1)});
+  box.style.transform=`perspective(1400px) rotateX(${8-ty*10}deg) rotateY(${-14+tx*16}deg) translateZ(0)`;
+  if(!RED)raf2=requestAnimationFrame(loop)}
+let raf2=0;
+new IntersectionObserver(es=>{cancelAnimationFrame(raf2);if(es[0].isIntersecting){last=performance.now();raf2=requestAnimationFrame(loop)}}).observe(scene);
+scene.addEventListener('pointermove',e=>{const r=box.getBoundingClientRect();tx=Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/r.width));ty=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/r.height))});
+if(RED){addEventListener('scroll',()=>requestAnimationFrame(loop),{passive:true});loop(performance.now())}
+document.fonts&&document.fonts.ready.then(()=>{alt.draw(Math.max(0,cur))});
 
-/* свечение шапки: лаймовый градиент и лучи, следуют за курсором */
+/* свечение шапки: лаймовый градиент и лучи, сами плавают и следуют за курсором */
 const cv=document.getElementById('glow'),cx=cv.getContext('2d'),hero=document.querySelector('.hero');let mx=.5,my=.6,t0=performance.now(),raf=0;
-const red=matchMedia('(prefers-reduced-motion: reduce)').matches,beams=[...Array(50)].map((_,i)=>({x:i/49,s:.3+Math.random()*.7,p:Math.random()*6.28}));
+const beams=[...Array(50)].map((_,i)=>({x:i/49,s:.3+Math.random()*.7,p:Math.random()*6.28}));
 function draw(now){const b=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),W=b.width,H=b.height;if(!W)return;
  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr)}
  cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);const lt=document.documentElement.dataset.theme==='light',t=(now-t0)/1000;
- /* центр свечения сам плавает по шапке и смещается за курсором */
  const gx=W*(.5+.2*Math.sin(t*.21)+(mx-.5)*.25),gy=H*(.6+.1*Math.sin(t*.33+1)+(my-.5)*.1);
  window.__glow={x:gx/innerWidth,hy:gy};
  const orb=(x,y,r,a0,a1)=>{const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(198,244,50,${a0})`);g.addColorStop(.45,`rgba(150,200,30,${a1})`);g.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=g;cx.fillRect(0,0,W,H)};
- const M=Math.max(W,H),k=lt?1.2:1,pulse=.85+.15*Math.sin(t*.9);
- orb(gx,gy,M*.6,.5*k*pulse,.17*k);
- orb(W*(.18+.12*Math.sin(t*.17+2)),H*(.35+.2*Math.cos(t*.23)),M*.32,.26*k,.08*k);
- orb(W*(.82+.12*Math.cos(t*.19)),H*(.42+.2*Math.sin(t*.27+3)),M*.3,.24*k,.07*k);
+ const Mx=Math.max(W,H),k=lt?1.2:1,pulse=.85+.15*Math.sin(t*.9);
+ orb(gx,gy,Mx*.6,.5*k*pulse,.17*k);
+ orb(W*(.18+.12*Math.sin(t*.17+2)),H*(.35+.2*Math.cos(t*.23)),Mx*.32,.26*k,.08*k);
+ orb(W*(.82+.12*Math.cos(t*.19)),H*(.42+.2*Math.sin(t*.27+3)),Mx*.3,.24*k,.07*k);
  beams.forEach(o=>{const x=o.x*W,a=Math.max(0,.55-Math.abs(x-gx)/W*1.6)*(.55+.45*Math.sin(t*o.s+o.p));if(a<=0)return;const lg=cx.createLinearGradient(0,gy-H*.55,0,gy+H*.2);lg.addColorStop(0,'rgba(198,244,50,0)');lg.addColorStop(.75,`rgba(${lt?'110,150,0':'198,244,50'},${a*.5})`);lg.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=lg;cx.fillRect(x,gy-H*.55,1,H*.75)});
- if(!red)raf=requestAnimationFrame(draw)}
-hero.addEventListener('pointermove',e=>{const b=cv.getBoundingClientRect();mx=(e.clientX-b.left)/b.width;my=(e.clientY-b.top)/b.height;if(red)draw(performance.now())});
+ if(!RED)raf=requestAnimationFrame(draw)}
+hero.addEventListener('pointermove',e=>{const b=cv.getBoundingClientRect();mx=(e.clientX-b.left)/b.width;my=(e.clientY-b.top)/b.height;if(RED)draw(performance.now())});
 new IntersectionObserver(es=>{cancelAnimationFrame(raf);if(es[0].isIntersecting)raf=requestAnimationFrame(draw)}).observe(hero);
-document.addEventListener('fp-theme',()=>{if(red)draw(performance.now())});
+document.addEventListener('fp-theme',()=>{if(RED)draw(performance.now())});
 })();
 </script>
 
