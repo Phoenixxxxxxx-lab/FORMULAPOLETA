@@ -51,7 +51,7 @@ html,body{overflow-x:clip}
 .sec h2,.scene h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.5rem,4.6vw,4rem);line-height:1.02;letter-spacing:-.015em;margin-top:14px;max-width:20ch}
 .sec h2 em,.scene h2 em{font-style:italic;color:var(--lime-ink)}
 .sec .lead,.scene .lead{color:var(--ink);opacity:.82;margin-top:18px;max-width:62ch;font-size:1.06rem}
-.wd{display:inline-block;will-change:transform,opacity,filter}
+.wd{display:inline-block}
 .split .wd{opacity:0}
 
 /* ---- сцена «Что будет в тренажёре»: огромный высотомер и набор высоты ---- */
@@ -59,8 +59,11 @@ html,body{overflow-x:clip}
 .stick{position:sticky;top:0;height:100vh;overflow:hidden}
 .sky{position:absolute;inset:0;width:100%;height:100%;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
 .planes{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.plane{position:absolute;left:0;top:0;width:34px;color:var(--ink);opacity:.55;offset-rotate:auto}
-.plane svg{display:block;width:100%;height:auto;filter:drop-shadow(0 0 6px rgba(198,244,50,.45))}
+.ladder{position:absolute;right:10px;top:0;bottom:0;width:150px;pointer-events:none;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 15%,#000 85%,transparent);mask-image:linear-gradient(transparent,#000 15%,#000 85%,transparent)}
+.ladder div{position:absolute;right:0;height:0;display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:11px;color:var(--ink);opacity:.42;will-change:transform}
+.ladder div::after{content:"";width:50px;border-top:1px solid currentColor;opacity:.5}
+.plane{position:absolute;left:0;top:0;width:34px;color:var(--ink);opacity:.55;will-change:transform}
+.plane svg{display:block;width:100%;height:auto}
 .plane::after{content:"";position:absolute;right:100%;top:50%;width:220px;height:1.5px;transform:translateY(-50%);background:linear-gradient(90deg,transparent,rgba(198,244,50,.55));border-radius:2px}
 .plane.p1{animation:fly1 30s linear infinite}
 .plane.p2{animation:fly2 42s linear infinite;animation-delay:-14s;width:24px;opacity:.38}
@@ -70,18 +73,18 @@ html,body{overflow-x:clip}
 @keyframes fly3{from{transform:translate(-10vw,18vh) rotate(9deg)}to{transform:translate(112vw,48vh) rotate(9deg)}}
 .scene-in{position:relative;height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center}
 .sfs{display:grid;gap:14px;margin-top:26px;max-width:520px}
-.sf{padding:16px 20px;border-radius:22px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px;align-items:start;opacity:.0;transform:translateY(40px) scale(.97);filter:blur(10px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1.1s cubic-bezier(.2,.7,.2,1),filter 1s,box-shadow .6s}
-.sf.on{opacity:1;transform:none;filter:none}
+.sf{padding:16px 20px;border-radius:22px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px;align-items:start;opacity:0;transform:translate3d(0,40px,0) scale(.97);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1),box-shadow .6s;will-change:transform,opacity}
+.sf.on{opacity:1;transform:none}
 .sf.cur{box-shadow:var(--shadow),inset 0 0 0 1px var(--lime-line),0 0 40px -12px rgba(198,244,50,.55)}
 .sf .n{grid-row:span 2;font-family:var(--f-serif);font-size:2.3rem;line-height:1;color:var(--lime-ink)}
 .sf h3{font-family:var(--f-serif);font-weight:600;font-size:1.45rem;line-height:1.1}
 .sf h3 em{color:var(--lime-ink)}
 .sf p{margin:0;color:var(--ink);opacity:.78;font-size:.92rem}
 .alt-col{display:grid;justify-items:center;gap:18px}
-.alt3d{width:min(42vw,70vh,600px);aspect-ratio:1;transform-style:preserve-3d;transition:transform .25s ease-out;position:relative}
-.alt3d::before{content:"";position:absolute;inset:-12%;border-radius:50%;background:radial-gradient(closest-side,rgba(198,244,50,.32),transparent 70%);filter:blur(10px);transform:translateZ(-40px)}
-.alt3d::after{content:"";position:absolute;left:8%;right:8%;bottom:-9%;height:14%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.65),transparent);filter:blur(8px)}
-.alt3d canvas{position:relative;width:100%;height:100%;display:block;filter:drop-shadow(0 30px 40px rgba(0,0,0,.6))}
+.alt3d{width:min(42vw,70vh,600px);aspect-ratio:1;transition:transform .5s cubic-bezier(.2,.7,.2,1);position:relative;will-change:transform}
+.alt3d::before{content:"";position:absolute;inset:-14%;border-radius:50%;background:radial-gradient(closest-side,rgba(198,244,50,.3),rgba(198,244,50,.08) 55%,transparent 72%)}
+.alt3d::after{content:"";position:absolute;left:4%;right:4%;bottom:-11%;height:20%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.6),rgba(0,0,0,.25) 50%,transparent)}
+.alt3d canvas{position:relative;width:100%;height:100%;display:block}
 .alt-read{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .alt-read .back{margin:0;font-family:var(--f-mono);font-size:.78rem;height:36px}
 .alt-read b{color:var(--lime-ink);font-weight:600}
@@ -118,13 +121,18 @@ html,body{overflow-x:clip}
 .cl svg{display:block;width:100%;height:auto;opacity:var(--cl-op);overflow:visible;filter:drop-shadow(0 0 6px rgba(198,244,50,.55)) drop-shadow(0 0 22px rgba(198,244,50,.22))}
 /* ---- движущееся зелёное свечение на всей странице ---- */
 .roam{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.roam i{position:absolute;width:60vmax;height:60vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(198,244,50,.22),transparent);filter:blur(20px)}
+.roam i{position:absolute;width:60vmax;height:60vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(198,244,50,.22),transparent);will-change:transform}
 .roam i:nth-child(1){left:-20vmax;top:20vh;animation:roamA 22s ease-in-out infinite alternate}
 .roam i:nth-child(2){right:-25vmax;top:60vh;animation:roamB 27s ease-in-out infinite alternate}
 .roam i:nth-child(3){left:30vw;top:120vh;width:45vmax;height:45vmax;animation:roamA 31s ease-in-out infinite alternate-reverse}
 @keyframes roamA{to{transform:translate(40vw,-30vh) scale(1.2)}}
 @keyframes roamB{to{transform:translate(-45vw,-40vh) scale(.85)}}
 :root[data-theme="light"] .roam i{background:radial-gradient(closest-side,rgba(198,244,50,.35),transparent)}
+/* облегчённый режим: включается сам, если компьютер не успевает рисовать 40+ кадров в секунду */
+html.fp-lite .glass,html.fp-lite .btn,html.fp-lite .back,html.fp-lite .pill{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html.fp-lite .glass{background:linear-gradient(180deg,rgba(28,30,26,.9),rgba(16,17,15,.9))}
+:root[data-theme="light"].fp-lite .glass{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(246,247,242,.9))}
+html.fp-lite .roam,html.fp-lite .planes{display:none}
 @media (prefers-reduced-motion:reduce){.roam i,.plane{animation:none}.plane{display:none}.sf{opacity:1;transform:none;filter:none}.split .wd{opacity:1}}
 </style>
 </head>
@@ -160,6 +168,7 @@ html,body{overflow-x:clip}
     <div class="stick">
       <canvas class="sky" id="sky" aria-hidden="true"></canvas>
       <div class="planes" aria-hidden="true" id="planes"></div>
+      <div class="ladder" aria-hidden="true" id="ladder"></div>
       <div class="gut" style="height:100%"><div class="wrap scene-in">
         <div>
           <div class="kick">Что будет в тренажёре</div>
@@ -238,55 +247,66 @@ function split(el){const walk=n=>[...n.childNodes].forEach(ch=>{if(ch.nodeType==
 const M=window.Motion&&!RED?window.Motion:null;
 if(M){const {animate,inView,stagger}=M;
   document.querySelectorAll('.sec .kick,.sec h2,.sec .lead,.scene .kick,.scene h2,.finale .kick,.finale h2,.finale p').forEach(el=>{const w=split(el);
-    inView(el,()=>{animate(w,{opacity:[0,1],y:['0.55em','0em'],filter:['blur(12px)','blur(0px)']},{duration:1,delay:stagger(.05),ease:[.22,.8,.24,1]})},{amount:.4})});
+    inView(el,()=>{animate(w,{opacity:[0,1],y:['0.6em','0em']},{duration:.9,delay:stagger(.045),ease:[.22,.8,.24,1]})},{amount:.4})});
   /* карточки: пружина и проявление из размытия */
   const sets=[['.ccard',i=>({y:70,s:.94,d:i*.12})],['.tcard',i=>({y:70,s:.9,d:(i%3)*.1})],['.finale',()=>({y:70,s:.95})]];
-  sets.forEach(([sel,fr])=>document.querySelectorAll(sel).forEach((el,i)=>{const o=fr(i);el.style.opacity=0;el.style.transform=`translateY(${o.y}px) scale(${o.s})`;el.style.filter='blur(12px)';
-    inView(el,()=>{animate(el,{y:[o.y,0],scale:[o.s,1]},{type:'spring',bounce:.28,duration:1.2,delay:o.d||0});animate(el,{opacity:[0,1],filter:['blur(12px)','blur(0px)']},{duration:1,ease:'easeOut',delay:o.d||0}).then(()=>{el.style.filter=''})},{amount:.2})}))}
+  sets.forEach(([sel,fr])=>document.querySelectorAll(sel).forEach((el,i)=>{const o=fr(i);el.style.opacity=0;el.style.transform=`translateY(${o.y}px) scale(${o.s})`;
+    inView(el,()=>{animate(el,{y:[o.y,0],scale:[o.s,1]},{type:'spring',bounce:.28,duration:1.2,delay:o.d||0});animate(el,{opacity:[0,1]},{duration:.8,ease:'easeOut',delay:o.d||0})},{amount:.2})}))}
 
 /* ---- сцена: высотомер, набор высоты, самолёты ---- */
 const scene=document.getElementById('scene'),sky=document.getElementById('sky'),sx=sky.getContext('2d'),alt=FPAltimeter(document.getElementById('altC'),{baro:1013});
+const ladder=document.getElementById('ladder'),ladderEls=[];
 const box=document.getElementById('alt3d'),sfs=[...document.querySelectorAll('.sf')],altFt=document.getElementById('altFt');
 const PLANE='<svg viewBox="0 0 64 64"><path fill="currentColor" d="M62 32c0-1.6-1.6-2.6-3.6-2.6H40L27 8h-5l7 21.4H15.5L10 22H6l3.4 10L6 42h4l5.5-7.4H29L22 56h5l13-21.4h18.4c2 0 3.6-1 3.6-2.6z"/></svg>';
 document.getElementById('planes').innerHTML=['p1','p2','p3'].map(c=>`<div class="plane ${c}">${PLANE}</div>`).join('');
-let shown=0,cur=0,tgt=0,last=performance.now(),tx=0,ty=0,puffs=[];
-for(let i=0;i<12;i++)puffs.push({x:Math.random(),y:Math.random()*1.4-.2,r:.07+Math.random()*.1,z:.3+Math.random()*.7,s:Math.random()*6.28});
+let drawn=-1,shown=0,cur=0,tgt=0,last=performance.now(),tx=0,ty=0,puffs=[];
+for(let i=0;i<12;i++)puffs.push({x:Math.random(),y:Math.random()*1.4-.2,r:.07+Math.random()*.1,z:.3+Math.random()*.7,i:i%3});
 function prog(){const r=scene.getBoundingClientRect();return Math.min(1,Math.max(0,-r.top/(r.height-innerHeight)))}
-function drawSky(dy,t){const r=sky.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1),W=r.width,H=r.height;
-  if(sky.width!==Math.round(W*d)||sky.height!==Math.round(H*d)){sky.width=Math.round(W*d);sky.height=Math.round(H*d)}
-  sx.setTransform(d,0,0,d,0,0);sx.clearRect(0,0,W,H);const lt=document.documentElement.dataset.theme==='light',k=Math.min(1,cur/12000);
+/* облако-спрайт рисуется один раз, потом только переносится: так дешевле для видеокарты */
+let sprites=null,spriteTheme='';
+function makeSprites(lt){sprites=[];for(let n=0;n<3;n++){const c=document.createElement('canvas');c.width=512;c.height=256;const g2=c.getContext('2d'),s=n*2.1+.4;
+  for(let j=0;j<8;j++){const ox=256+Math.cos(s+j*1.9)*150,oy=150+Math.sin(s+j*2.3)*30-(j%3)*18,rr=70+18*(j%4);
+    const gg=g2.createRadialGradient(ox,oy-rr*.2,0,ox,oy,rr);
+    if(lt){gg.addColorStop(0,'rgba(255,255,255,.55)');gg.addColorStop(.7,'rgba(232,238,220,.25)');gg.addColorStop(1,'rgba(232,238,220,0)')}
+    else{gg.addColorStop(0,'rgba(26,30,20,.38)');gg.addColorStop(.55,'rgba(70,95,20,.16)');gg.addColorStop(1,'rgba(120,160,30,0)')}
+    g2.fillStyle=gg;g2.beginPath();g2.arc(ox,oy,rr,0,6.283);g2.fill()}sprites.push(c)}}
+const SK=.5;
+function drawSky(vy,dt){const r=sky.getBoundingClientRect(),W=r.width*SK,H=r.height*SK;
+  if(sky.width!==Math.round(W)||sky.height!==Math.round(H)){sky.width=Math.round(W);sky.height=Math.round(H)}
+  const lt=document.documentElement.dataset.theme==='light',k=Math.min(1,cur/12000);if(!sprites||spriteTheme!==String(lt)){makeSprites(lt);spriteTheme=String(lt)}
+  sx.setTransform(1,0,0,1,0,0);sx.clearRect(0,0,W,H);
   /* чем выше, тем темнее небо сверху */
   let g=sx.createLinearGradient(0,0,0,H);g.addColorStop(0,lt?`rgba(225,232,210,${.2+.4*k})`:`rgba(4,5,4,${.35+.4*k})`);g.addColorStop(1,lt?'rgba(198,244,50,.18)':'rgba(70,95,10,.22)');sx.fillStyle=g;sx.fillRect(0,0,W,H);
-  /* шкала высоты по краю: уходит вниз при наборе */
-  const step=170,off=(cur/1000*step)%step;sx.font='500 11px "JetBrains Mono",monospace';
-  for(let y=-step;y<H+step;y+=step){const yy=y+off,lvl=Math.round((cur/1000)-(yy-H*.5)/step)*1000+0;sx.strokeStyle=lt?'rgba(11,11,12,.18)':'rgba(255,255,255,.14)';sx.lineWidth=1;sx.beginPath();sx.moveTo(W-90,yy);sx.lineTo(W-40,yy);sx.stroke();
-    if(lvl>0||(lvl===0&&yy>0)){sx.fillStyle=lt?'rgba(11,11,12,.45)':'rgba(255,255,255,.4)';sx.textAlign='right';sx.fillText(f(lvl)+' ft',W-96,yy+4)}}
-  /* облака проносятся вниз */
-  puffs.forEach(p=>{p.y+=(dy*.00009+.00025)*p.z;if(p.y>1.25){p.y=-.25;p.x=Math.random()}
-    const x=p.x*W,y=p.y*H,R=p.r*Math.max(W,H)*(.6+p.z*.6);
-    for(let j=0;j<7;j++){const ox=Math.cos(p.s+j*1.9)*R*.7,oy=Math.sin(p.s+j*2.3)*R*.18-(j%3)*R*.08,rr=R*(.42+.09*(j%4));
-      const gg=sx.createRadialGradient(x+ox,y+oy-rr*.2,0,x+ox,y+oy,rr);
-      if(lt){gg.addColorStop(0,`rgba(255,255,255,${.5*p.z})`);gg.addColorStop(.7,`rgba(232,238,220,${.25*p.z})`);gg.addColorStop(1,'rgba(232,238,220,0)')}
-      else{gg.addColorStop(0,`rgba(26,30,20,${.32*p.z})`);gg.addColorStop(.55,`rgba(70,95,20,${.14*p.z})`);gg.addColorStop(1,'rgba(120,160,30,0)')}
-      sx.fillStyle=gg;sx.beginPath();sx.arc(x+ox,y+oy,rr,0,6.283);sx.fill()}})}
+  /* облака проносятся вниз: скорость зависит от вертикальной скорости, движение по времени, а не по кадрам */
+  puffs.forEach(p=>{p.y+=(vy*.000012+.012)*p.z*dt/1000;if(p.y>1.25){p.y=-.3;p.x=Math.random()}
+    const w=p.r*Math.max(W,H)*(1.2+p.z*1.1);sx.globalAlpha=.45+.55*p.z;sx.drawImage(sprites[p.i],p.x*W-w/2,p.y*H-w/4,w,w/2)});sx.globalAlpha=1;
+  /* шкала высоты по краю: уходит вниз при наборе (DOM, только сдвиг) */
+  const LH=r.height,step=170,base=cur/1000;
+  if(!ladderEls.length)for(let i=0;i<Math.ceil(LH/step)+3;i++){const d=document.createElement('div');ladder.appendChild(d);ladderEls.push(d)}
+  const first=Math.floor(base-LH/2/step)-1;
+  ladderEls.forEach((d,i)=>{const lvl=first+i,y=LH/2-(lvl-base)*step;d.style.transform=`translate3d(0,${y.toFixed(1)}px,0)`;const txt=lvl>=0?f(lvl*1000)+' ft':'';if(d.textContent!==txt)d.textContent=txt})}
 function loop(now){const dt=Math.min(64,now-last);last=now;const p=prog(),t=now/1000;
-  const e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;tgt=e*12000+(RED?0:Math.sin(t*.7)*18);
-  const prev=cur;cur+=(tgt-cur)*Math.min(1,dt/260);const dy=Math.max(0,cur-prev)*60/Math.max(dt,1)+30;
-  alt.draw(Math.max(0,cur));altFt.textContent=`${f(Math.max(0,cur))} ft (${f(Math.max(0,cur)*ISA.FT)} м)`;
-  drawSky(dy,t);
+  const e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;tgt=e*12000;
+  const prev=cur;cur+=(tgt-cur)*(1-Math.exp(-dt/220));const vy=Math.max(0,cur-prev)*1000/Math.max(dt,1);
+  if(Math.abs(cur-drawn)>.3){alt.draw(Math.max(0,cur));drawn=cur}altFt.textContent=`${f(Math.max(0,cur))} ft (${f(Math.max(0,cur)*ISA.FT)} м)`;
+  drawSky(vy,dt);
   const n=Math.min(4,Math.floor((p+.04)/.18));sfs.forEach((el,i)=>{el.classList.toggle('on',i<n||RED);el.classList.toggle('cur',i===n-1)});
-  box.style.transform=`perspective(1400px) rotateX(${8-ty*10}deg) rotateY(${-14+tx*16}deg) translateZ(0)`;
   if(!RED)raf2=requestAnimationFrame(loop)}
 let raf2=0;
 new IntersectionObserver(es=>{cancelAnimationFrame(raf2);if(es[0].isIntersecting){last=performance.now();raf2=requestAnimationFrame(loop)}}).observe(scene);
-scene.addEventListener('pointermove',e=>{const r=box.getBoundingClientRect();tx=Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/r.width));ty=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/r.height))});
+const tilt=()=>{box.style.transform=`perspective(1400px) rotateX(${8-ty*10}deg) rotateY(${-14+tx*16}deg)`};tilt();
+scene.addEventListener('pointermove',e=>{const r=box.getBoundingClientRect();tx=Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/r.width));ty=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/r.height));tilt()});
 if(RED){addEventListener('scroll',()=>requestAnimationFrame(loop),{passive:true});loop(performance.now())}
 document.fonts&&document.fonts.ready.then(()=>{alt.draw(Math.max(0,cur))});
 
+/* следим за плавностью: если кадры долго идут реже 40 в секунду – включаем облегчённый режим */
+(function(){let n=0,acc=0,l=0,slow=0;function m(t){if(l){const d=t-l;if(d<200){acc+=d;n++}}l=t;
+  if(n>=60){if(acc/n>25){if(++slow>=2){document.documentElement.classList.add('fp-lite');return}}else slow=0;n=0;acc=0}
+  requestAnimationFrame(m)}requestAnimationFrame(m)})();
 /* свечение шапки: лаймовый градиент и лучи, сами плавают и следуют за курсором */
 const cv=document.getElementById('glow'),cx=cv.getContext('2d'),hero=document.querySelector('.hero');let mx=.5,my=.6,t0=performance.now(),raf=0;
-const beams=[...Array(50)].map((_,i)=>({x:i/49,s:.3+Math.random()*.7,p:Math.random()*6.28}));
-function draw(now){const b=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),W=b.width,H=b.height;if(!W)return;
+const beams=[...Array(34)].map((_,i)=>({x:i/33,s:.3+Math.random()*.7,p:Math.random()*6.28}));
+function draw(now){const b=cv.getBoundingClientRect(),dpr=.5,W=b.width,H=b.height;if(!W)return;
  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr)}
  cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);const lt=document.documentElement.dataset.theme==='light',t=(now-t0)/1000;
  const gx=W*(.5+.2*Math.sin(t*.21)+(mx-.5)*.25),gy=H*(.6+.1*Math.sin(t*.33+1)+(my-.5)*.1);
@@ -296,7 +316,7 @@ function draw(now){const b=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixel
  orb(gx,gy,Mx*.6,.5*k*pulse,.17*k);
  orb(W*(.18+.12*Math.sin(t*.17+2)),H*(.35+.2*Math.cos(t*.23)),Mx*.32,.26*k,.08*k);
  orb(W*(.82+.12*Math.cos(t*.19)),H*(.42+.2*Math.sin(t*.27+3)),Mx*.3,.24*k,.07*k);
- beams.forEach(o=>{const x=o.x*W,a=Math.max(0,.55-Math.abs(x-gx)/W*1.6)*(.55+.45*Math.sin(t*o.s+o.p));if(a<=0)return;const lg=cx.createLinearGradient(0,gy-H*.55,0,gy+H*.2);lg.addColorStop(0,'rgba(198,244,50,0)');lg.addColorStop(.75,`rgba(${lt?'110,150,0':'198,244,50'},${a*.5})`);lg.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=lg;cx.fillRect(x,gy-H*.55,1,H*.75)});
+ beams.forEach(o=>{const x=o.x*W,a=Math.max(0,.55-Math.abs(x-gx)/W*1.6)*(.55+.45*Math.sin(t*o.s+o.p));if(a<=0)return;const lg=cx.createLinearGradient(0,gy-H*.55,0,gy+H*.2);lg.addColorStop(0,'rgba(198,244,50,0)');lg.addColorStop(.75,`rgba(${lt?'110,150,0':'198,244,50'},${a*.5})`);lg.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=lg;cx.fillRect(x,gy-H*.55,2,H*.75)});
  if(!RED)raf=requestAnimationFrame(draw)}
 hero.addEventListener('pointermove',e=>{const b=cv.getBoundingClientRect();mx=(e.clientX-b.left)/b.width;my=(e.clientY-b.top)/b.height;if(RED)draw(performance.now())});
 new IntersectionObserver(es=>{cancelAnimationFrame(raf);if(es[0].isIntersecting)raf=requestAnimationFrame(draw)}).observe(hero);
