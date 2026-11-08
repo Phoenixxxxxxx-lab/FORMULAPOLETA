@@ -9,11 +9,14 @@
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'},startup:{ready(){MathJax.startup.defaultReady();MathJax.startup.promise.then(()=>{if(window.FP)FP.typeset(document.body)})}}};</script>
 <script src="assets/tex-svg.js" async></script>
 <script src="assets/meteo.js"></script>
+<script src="assets/motion.js"></script>
+<script src="assets/meteo-clouds.js"></script>
 <style>
 .gut{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
 .wrap{max-width:1240px;margin:0 auto}
-.hero{position:relative;overflow:hidden;isolation:isolate;padding-bottom:40px}
-.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.hero{position:relative;overflow:hidden;padding-bottom:40px}
+.page{position:relative;z-index:2}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
 .nav-top{display:flex;align-items:center;gap:22px;padding-block:18px;padding-right:120px}
 .nav-top .back{font-size:.8rem;color:var(--ink-2);text-decoration:none}
 .nav-top .back:hover{color:var(--lime-ink)}
@@ -76,11 +79,52 @@
 .finale h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.4rem,5.4vw,4.4rem);line-height:1}
 .finale h2 em{color:var(--lime-ink)}
 .finale p{color:var(--ink-2);max-width:56ch;margin:18px auto 26px}
+
+/* ---- облака: тёмные градиентные, контур подсвечен лаймом ---- */
+html,body{overflow-x:clip}
+:root{--cl-top:#202812;--cl-bot:#0B0B0C;--cl-op:.92}
+:root[data-theme="light"]{--cl-top:#FFFFFF;--cl-bot:#E6EBD8;--cl-op:.95}
+.hero .gut{position:relative;z-index:2}
+.clouds{position:absolute;inset:0;z-index:0;pointer-events:none}
+.cl{position:absolute;will-change:transform}
+.cl-in{animation:clIn 1.8s cubic-bezier(.16,.8,.24,1) both;animation-delay:var(--d,0s)}
+.cl.r .cl-in{animation-name:clInR}
+.cl svg{display:block;width:100%;height:auto;opacity:var(--cl-op);overflow:visible;animation:clFloat var(--f,9s) ease-in-out infinite alternate;filter:drop-shadow(0 0 6px rgba(198,244,50,.55)) drop-shadow(0 0 22px rgba(198,244,50,.22))}
+@keyframes clIn{from{transform:translateX(-70vw) scale(.85);opacity:0;filter:blur(14px)}}
+@keyframes clInR{from{transform:translateX(70vw) scale(.85);opacity:0;filter:blur(14px)}}
+@keyframes clFloat{from{transform:translate(0,0)}to{transform:translate(var(--fx,14px),var(--fy,-10px))}}
+.sec{position:relative}
+.scl{position:absolute;pointer-events:none;z-index:-1;width:clamp(220px,26vw,420px);transition:transform 1.6s cubic-bezier(.16,.8,.24,1),opacity 1.6s,filter 1.6s}
+.scl.l{left:clamp(-260px,-12vw,-120px)} .scl.r{right:clamp(-260px,-12vw,-120px)}
+.js .scl.l:not(.in){transform:translateX(-50vw);opacity:0;filter:blur(12px)}
+.js .scl.r:not(.in){transform:translateX(50vw);opacity:0;filter:blur(12px)}
+.scl svg{display:block;width:100%;height:auto;opacity:var(--cl-op);overflow:visible;animation:clFloat 11s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px rgba(198,244,50,.5)) drop-shadow(0 0 20px rgba(198,244,50,.2))}
+
+/* ---- больше движущегося зелёного свечения на всей странице ---- */
+.roam{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.roam i{position:absolute;width:60vmax;height:60vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(198,244,50,.22),transparent);filter:blur(20px)}
+.roam i:nth-child(1){left:-20vmax;top:20vh;animation:roamA 22s ease-in-out infinite alternate}
+.roam i:nth-child(2){right:-25vmax;top:60vh;animation:roamB 27s ease-in-out infinite alternate}
+.roam i:nth-child(3){left:30vw;top:120vh;width:45vmax;height:45vmax;animation:roamA 31s ease-in-out infinite alternate-reverse}
+@keyframes roamA{to{transform:translate(40vw,-30vh) scale(1.2)}}
+@keyframes roamB{to{transform:translate(-45vw,-40vh) scale(.85)}}
+:root[data-theme="light"] .roam i{background:radial-gradient(closest-side,rgba(198,244,50,.35),transparent)}
+
+/* ---- появление при прокрутке: с разных сторон, с размытием, со «шторкой» ---- */
+.js .rv{transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1),filter .9s,clip-path 1.1s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.js .rv.from-l:not(.in){transform:translateX(-80px)}
+.js .rv.from-r:not(.in){transform:translateX(80px)}
+.js .rv.zoom:not(.in){transform:translateY(30px) scale(.9);filter:blur(8px)}
+.js .mask{transition:clip-path 1.1s cubic-bezier(.2,.7,.2,1),transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.js .mask:not(.in){clip-path:inset(0 0 100% 0);transform:translateY(24px)}
+.js .mask.in{clip-path:inset(0)} .js .mask.in.done{clip-path:none}
+@media (prefers-reduced-motion:reduce){.js .rv,.js .scl,.js .mask{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}.roam i{animation:none}}
 </style>
 </head>
 <body>
 <div class="hero">
   <canvas id="glow" aria-hidden="true"></canvas>
+  <div class="clouds" id="clouds" aria-hidden="true"></div>
   <div class="gut"><div class="wrap">
     <div class="nav-top"><span id="brand"></span><a class="back" href="../">← Формула полёта</a></div>
     <div class="hero-in">
@@ -102,7 +146,7 @@
   </div></div>
 </div>
 
-<div class="gut"><div class="wrap">
+<div class="gut page"><div class="wrap">
   <section class="sec">
     <div class="kick rv">Зачем пилоту метеорология</div>
     <h2 class="rv" style="--d:.1s">Формула на доске и шкала в кабине – <em>одно знание</em></h2>
@@ -163,6 +207,40 @@ const T=[[1,'Состав и строение атмосферы','t1.html',[['1
  [5,'Облака, осадки, туманы. Видимость',null,['облака','осадки','туманы','виды видимости','METAR, TAF, GAMET']],
  [6,'Синоптические процессы. Карты погоды. Прогноз погоды',null,['карты топографии','воздушные массы','фронты','циклоны и антициклоны','Практика 03','гроза, обледенение, турбулентность']]];
 document.getElementById('tcards').innerHTML=T.map((t,i)=>`<div class="tcard glass rv ${t[2]?'on':'off'}" style="--d:${i%3*.08}s"><div class="tn">${t[0]}</div><h3>${t[1]}</h3><ul>${t[3].map(x=>Array.isArray(x)?`<li><a href="${t[2]}${x[1]}">${x[0]}</a></li>`:`<li><span>${x}</span></li>`).join('')}</ul>${t[2]?`<a class="btn lime go" href="${t[2]}">Открыть раздел ${t[0]}</a>`:'<span class="soon">в разработке</span>'}</div>`).join('');
+/* облака */
+const CL=['M40 140 C10 140 5 100 35 92 C30 60 70 45 95 62 C105 25 165 20 180 58 C200 35 245 45 245 80 C280 82 290 140 255 140 Z',
+ 'M30 130 C5 128 8 95 38 95 C40 70 75 62 92 78 C110 40 170 42 178 75 C205 60 250 75 240 105 C270 110 268 132 245 132 Z',
+ 'M55 135 C25 135 20 105 45 98 C45 78 70 70 85 80 C95 55 130 50 145 70 C160 40 215 42 222 78 C250 70 280 95 265 118 C285 125 278 140 255 138 Z'];
+let cn=0;
+const cloud=(s)=>{const i=++cn;return `<svg viewBox="0 0 300 160"><defs><linearGradient id="cf${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--cl-top)"/><stop offset="1" style="stop-color:var(--cl-bot)"/></linearGradient><linearGradient id="cs${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C6F432"/><stop offset=".55" stop-color="#C6F432" stop-opacity=".55"/><stop offset="1" stop-color="#C6F432" stop-opacity=".05"/></linearGradient><radialGradient id="cg${i}" cx=".35" cy=".25" r=".6"><stop offset="0" stop-color="#C6F432" stop-opacity=".22"/><stop offset="1" stop-color="#C6F432" stop-opacity="0"/></radialGradient></defs><path d="${CL[s%CL.length]}" fill="url(#cf${i})"/><path d="${CL[s%CL.length]}" fill="url(#cg${i})" stroke="url(#cs${i})" stroke-width="1.6"/></svg>`};
+const HC=[['l',-6,8,30,.15,.5,0],['l',-10,46,22,.45,.9,1],['l',2,74,15,.75,.3,2],['r',-8,4,26,.3,.7,1],['r',-4,40,20,.6,.4,2],['r',4,70,16,.9,.8,0]];
+const cl=document.getElementById('clouds');
+cl.innerHTML=HC.map((c,i)=>`<div class="cl ${c[0]}" data-z="${c[5]}" style="${c[0]==='l'?'left':'right'}:${c[1]}%;top:${c[2]}%;width:${c[3]}vw;max-width:${c[3]*14}px;--d:${c[4]}s;--f:${8+i*1.5}s;--fx:${c[0]==='l'?14:-14}px"><div class="cl-in">${cloud(c[6])}</div></div>`).join('');
+document.querySelectorAll('.sec').forEach((s,i)=>{const side=i%2?'r':'l';s.insertAdjacentHTML('afterbegin',`<div class="scl ${side}" aria-hidden="true" style="top:${i%2?20:6}%">${cloud(i+1)}</div>`)});
+document.body.insertAdjacentHTML('afterbegin','<div class="roam" aria-hidden="true"><i></i><i></i><i></i></div>');
+/* объёмные облака WebGL; если видеокарта не справляется – остаются рисованные */
+let webgl=null;
+try{webgl=window.FPClouds&&FPClouds({before:document.querySelector('.roam').nextSibling,light:t=>{const g=window.__glow,hr=document.querySelector('.hero').getBoundingClientRect(),gy=g?(hr.top+g.hy)/innerHeight:.6;
+  const L1=g&&gy>-0.6?[g.x,gy,1.25]:[.5,-1,0];return [L1,[.5+.28*Math.sin(t*.13),1.12,.75]]}})}catch(e){webgl=null}
+if(webgl){document.getElementById('clouds').remove();document.querySelectorAll('.scl').forEach(x=>x.remove())}
+/* разные сценарии появления */
+const add=(sel,c)=>document.querySelectorAll(sel).forEach((e,i)=>e.classList.add(typeof c==='function'?c(i):c));
+add('.sec h2','mask');add('.feat',i=>['from-l','zoom','zoom','from-r'][i%4]);add('.ccard','from-l');add('.gauge','from-r');add('.tcard','zoom');add('.finale','zoom');add('.hcard','zoom');
+/* пружинное появление через Motion; без него работает CSS-вариант */
+if(window.Motion&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const {animate,inView}=Motion;
+ const sets=[['.hcard',i=>({y:60,d:.9+i*.12})],['.feat',i=>({x:[-140,-50,50,140][i%4],y:50,s:.9,d:(i%4)*.08})],['.ccard',i=>({x:-110,d:i*.1})],['.gauge',()=>({x:110,r:8,s:.92})],['.tcard',i=>({y:70,s:.88,d:(i%3)*.09})],['.finale',()=>({y:70,s:.94})]];
+ sets.forEach(([sel,fr])=>document.querySelectorAll(sel).forEach((el,i)=>{const f=fr(i);el.classList.remove('rv','from-l','from-r','zoom');
+  el.style.opacity=0;el.style.transform=`translate(${f.x||0}px,${f.y||0}px) scale(${f.s||1}) rotate(${f.r||0}deg)`;el.style.filter='blur(12px)';
+  inView(el,()=>{animate(el,{x:[f.x||0,0],y:[f.y||0,0],scale:[f.s||1,1],rotate:[f.r||0,0]},{type:'spring',bounce:.3,duration:1.2,delay:f.d||0});
+   animate(el,{opacity:[0,1],filter:['blur(12px)','blur(0px)']},{duration:.9,ease:'easeOut',delay:f.d||0}).then(()=>{el.style.filter=''})},{amount:.2})}))}
+/* облака секций и заголовки со «шторкой» скрыты сдвигом или маской, поэтому следим за самой секцией */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll(':scope > .scl, :scope > h2.mask').forEach((x,i)=>{x.style.transitionDelay=(i*.15)+'s';x.classList.add('in');if(x.matches('h2'))setTimeout(()=>x.classList.add('done'),1500)});io.unobserve(e.target)}}),{threshold:.08});
+document.querySelectorAll('.sec').forEach(x=>{x.querySelector(':scope > h2')?.classList.remove('rv');io.observe(x)});
+/* облака шапки: параллакс при прокрутке и движении мыши */
+let px=0,py=0;
+const par=()=>{const y=scrollY;cl.querySelectorAll('.cl').forEach(c=>{const z=+c.dataset.z;c.style.transform=`translate(${px*z*30}px,${y*z*-.35+py*z*16}px)`})};
+addEventListener('scroll',par,{passive:true});
+document.querySelector('.hero').addEventListener('pointermove',e=>{px=e.clientX/innerWidth-.5;py=e.clientY/innerHeight-.5;par()});
 FP.reveal(document);
 
 /* карточки шапки */
@@ -193,8 +271,15 @@ const cv=document.getElementById('glow'),cx=cv.getContext('2d'),hero=document.qu
 const red=matchMedia('(prefers-reduced-motion: reduce)').matches,beams=[...Array(50)].map((_,i)=>({x:i/49,s:.3+Math.random()*.7,p:Math.random()*6.28}));
 function draw(now){const b=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),W=b.width,H=b.height;if(!W)return;
  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr)}
- cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);const lt=document.documentElement.dataset.theme==='light',t=(now-t0)/1000,gx=W*(.5+(mx-.5)*.25),gy=H*(.58+(my-.5)*.1);
- const gr=cx.createRadialGradient(gx,gy,0,gx,gy,Math.max(W,H)*.55);gr.addColorStop(0,lt?'rgba(198,244,50,.55)':'rgba(198,244,50,.36)');gr.addColorStop(.4,lt?'rgba(198,244,50,.18)':'rgba(150,200,30,.12)');gr.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=gr;cx.fillRect(0,0,W,H);
+ cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);const lt=document.documentElement.dataset.theme==='light',t=(now-t0)/1000;
+ /* центр свечения сам плавает по шапке и смещается за курсором */
+ const gx=W*(.5+.2*Math.sin(t*.21)+(mx-.5)*.25),gy=H*(.6+.1*Math.sin(t*.33+1)+(my-.5)*.1);
+ window.__glow={x:gx/innerWidth,hy:gy};
+ const orb=(x,y,r,a0,a1)=>{const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(198,244,50,${a0})`);g.addColorStop(.45,`rgba(150,200,30,${a1})`);g.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=g;cx.fillRect(0,0,W,H)};
+ const M=Math.max(W,H),k=lt?1.2:1,pulse=.85+.15*Math.sin(t*.9);
+ orb(gx,gy,M*.6,.5*k*pulse,.17*k);
+ orb(W*(.18+.12*Math.sin(t*.17+2)),H*(.35+.2*Math.cos(t*.23)),M*.32,.26*k,.08*k);
+ orb(W*(.82+.12*Math.cos(t*.19)),H*(.42+.2*Math.sin(t*.27+3)),M*.3,.24*k,.07*k);
  beams.forEach(o=>{const x=o.x*W,a=Math.max(0,.55-Math.abs(x-gx)/W*1.6)*(.55+.45*Math.sin(t*o.s+o.p));if(a<=0)return;const lg=cx.createLinearGradient(0,gy-H*.55,0,gy+H*.2);lg.addColorStop(0,'rgba(198,244,50,0)');lg.addColorStop(.75,`rgba(${lt?'110,150,0':'198,244,50'},${a*.5})`);lg.addColorStop(1,'rgba(198,244,50,0)');cx.fillStyle=lg;cx.fillRect(x,gy-H*.55,1,H*.75)});
  if(!red)raf=requestAnimationFrame(draw)}
 hero.addEventListener('pointermove',e=>{const b=cv.getBoundingClientRect();mx=(e.clientX-b.left)/b.width;my=(e.clientY-b.top)/b.height;if(red)draw(performance.now())});
