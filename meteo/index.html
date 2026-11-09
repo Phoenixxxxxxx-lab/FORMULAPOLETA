@@ -12,6 +12,10 @@
 <script src="assets/motion.js"></script>
 <script src="assets/meteo-clouds.js"></script>
 <script src="assets/meteo-altimeter.js"></script>
+<script src="assets/gsap/gsap.min.js"></script>
+<script src="assets/gsap/ScrollTrigger.min.js"></script>
+<script src="assets/gsap/SplitText.min.js"></script>
+<script src="assets/meteo-story.js"></script>
 <style>
 html,body{overflow-x:clip}
 .gut{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
@@ -54,6 +58,30 @@ html,body{overflow-x:clip}
 .wd{display:inline-block}
 .split .wd{opacity:0}
 
+/* ---- история «от парты до кабины»: всегда тёмная, как кино ---- */
+.story{position:relative;height:1000vh;--ink:#FFFFFF;--ink-2:#A2A4AB;--lime-ink:#C6F432;--lime-line:#C6F432;color:#FFFFFF;z-index:3}
+.st-stage{position:sticky;top:0;height:100vh;overflow:hidden;background:#050605}
+.st-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.st-gl{opacity:0}
+#stWhite{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#FBFFEF,#C6F432 45%,rgba(5,6,5,0) 80%);opacity:0;pointer-events:none}
+.cap{position:absolute;max-width:min(600px,86vw);visibility:hidden;text-shadow:0 0 2px #000,0 2px 6px rgba(0,0,0,.95),0 4px 22px rgba(0,0,0,.95),0 0 46px rgba(0,0,0,.85)}
+.cap h2{font-family:var(--f-serif);font-weight:500;font-size:clamp(2.6rem,4.8vw,4.4rem);line-height:1.02;letter-spacing:-.015em;margin-top:12px}
+.cap h2 em{font-style:italic;color:#C6F432}
+.cap p{font-size:1.12rem;line-height:1.6;opacity:.9;margin:18px 0 0}
+.cap .kick{color:#FFFFFF}
+.cap::before{content:"";position:absolute;inset:-80px -100px;background:radial-gradient(closest-side,rgba(3,4,3,.82),rgba(3,4,3,.4) 60%,rgba(3,4,3,0));z-index:-1;pointer-events:none}
+.c4::before,.c5::before{inset:-40px 10vw}
+.c1{left:6vw;bottom:5vh}.c2{right:6vw;top:16vh;text-align:right}.c3{left:6vw;top:14vh}
+.c2::before,.c3::before,.c4::before{background:radial-gradient(closest-side,rgba(2,3,2,.92),rgba(2,3,2,.55) 60%,rgba(2,3,2,0))}
+.story::after{content:"";position:absolute;left:0;right:0;bottom:-40vh;height:40vh;background:linear-gradient(#030403,rgba(3,4,3,.6) 45%,rgba(3,4,3,0));pointer-events:none}
+.c4{left:4vw;right:4vw;top:11vh;text-align:center;max-width:none}
+.c4 h2{font-size:clamp(3.4rem,7.4vw,7.2rem)}.c4 p{max-width:60ch;margin-inline:auto}
+.c5{left:4vw;right:4vw;top:50%;transform:translateY(-50%);text-align:center;max-width:none}
+.c5 h2{font-size:clamp(3.6rem,8vw,8rem)}.c5 p{font-family:var(--f-serif);font-size:clamp(1.8rem,3.4vw,3.2rem);font-style:italic;color:#C6F432;opacity:1}
+.c2 .kick,.c3 .kick{display:none}
+/* без GSAP: история показывается текстом */
+.story.static{height:auto}.story.static .st-stage{position:relative;height:auto;padding:80px 6vw;display:grid;gap:60px}
+.story.static canvas,.story.static #stWhite{display:none}.story.static .cap{position:static;visibility:visible;transform:none;max-width:900px;text-align:left}
 /* ---- сцена «Что будет в тренажёре»: огромный высотомер и набор высоты ---- */
 .scene{position:relative;height:420vh}
 .stick{position:sticky;top:0;height:100vh;overflow:hidden}
@@ -156,13 +184,16 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
 </div>
 
 <div class="page">
-  <div class="gut"><div class="wrap">
-    <section class="sec" style="padding-bottom:20px">
-      <div class="kick">Зачем пилоту метеорология</div>
-      <h2>Формула на доске и шкала в кабине – <em>одно знание</em></h2>
-      <p class="lead">Высотомер, указатель скорости и датчик наружной температуры тарированы по стандартной атмосфере. Если Вы понимаете формулы, Вы понимаете и то, когда прибор ошибается: в мороз, при низком давлении, в жару на взлёте.</p>
-    </section>
-  </div></div>
+  <section class="story" id="story" aria-label="Зачем пилоту метеорология">
+    <div class="st-stage">
+      <div id="stWhite" aria-hidden="true"></div>
+      <div class="cap c1"><div class="kick">Зачем пилоту метеорология</div><h2>Всё начинается <em>за партой</em></h2><p>Формула в тетради кажется просто строчкой. Но именно она объясняет, как работает высотомер в Вашей будущей кабине.</p></div>
+      <div class="cap c2"><h2>Формула становится <em>знанием</em></h2><p>Вы понимаете, откуда она взялась и что из неё следует: почему в мороз высотомер завышает высоту, а в жару самолёт дольше разбегается.</p></div>
+      <div class="cap c3"><h2>Знание летит <em>вместе с Вами</em></h2><p>Высотомер, указатель скорости и датчик наружной температуры тарированы по стандартной атмосфере. Если Вы понимаете формулы, Вы видите, когда прибор ошибается.</p></div>
+      <div class="cap c4"><h2>Погода не прощает <em>незнания</em></h2><p>Гроза, обледенение, сдвиг ветра, туман. Решение принимает пилот, а метеорология даёт ему основания для этого решения.</p></div>
+      <div class="cap c5"><h2>Ненужного знания <em>не бывает,</em></h2><p>особенно для пилота гражданской авиации!</p></div>
+    </div>
+  </section>
 
   <section class="scene" id="scene" aria-label="Что будет в тренажёре">
     <div class="stick">
@@ -252,6 +283,11 @@ if(M){const {animate,inView,stagger}=M;
   const sets=[['.ccard',i=>({y:70,s:.94,d:i*.12})],['.tcard',i=>({y:70,s:.9,d:(i%3)*.1})],['.finale',()=>({y:70,s:.95})]];
   sets.forEach(([sel,fr])=>document.querySelectorAll(sel).forEach((el,i)=>{const o=fr(i);el.style.opacity=0;el.style.transform=`translateY(${o.y}px) scale(${o.s})`;
     inView(el,()=>{animate(el,{y:[o.y,0],scale:[o.s,1]},{type:'spring',bounce:.28,duration:1.2,delay:o.d||0});animate(el,{opacity:[0,1]},{duration:.8,ease:'easeOut',delay:o.d||0})},{amount:.2})}))}
+
+/* ---- история «от парты до кабины» ---- */
+const story=document.getElementById('story');
+let storyOk=false;try{storyOk=window.FPStory&&FPStory(story)}catch(e){console.warn(e)}
+if(!storyOk)story.classList.add('static');
 
 /* ---- сцена: высотомер, набор высоты, самолёты ---- */
 const scene=document.getElementById('scene'),sky=document.getElementById('sky'),sx=sky.getContext('2d'),alt=FPAltimeter(document.getElementById('altC'),{baro:1013});
