@@ -1483,6 +1483,60 @@ html.is-home .hp-in.hs-feat, html.is-home .hp-in.hs-why, html.is-home .hp-in.hs-
   padding-left: max(0px, calc((100% - 1360px) / 2)) !important; padding-right: max(0px, calc((100% - 1360px) / 2)) !important; }
 
 </style>
+<style>
+/* ═══ 1.3–1.4: модели на белом фоне, рамки формул, развилка ═══ */
+.viz.light { --cyan: #6A3FD1; --glass-strong: #E4E1EE; background: #FFFFFF; color: #12202B; border: 1px solid #E3E6EE; box-shadow: 0 22px 60px -36px rgba(40,20,90,.45); }
+.viz.light .note { color: #5A6773; } .viz.light output { color: #6A3FD1; }
+.viz.light .readout dt { color: #5A6773; } .viz.light .readout dd { color: #12202B; } .viz.light .readout dd.hl { color: #6A3FD1; }
+.viz.light .readout dt b { color: #2A1478; }
+.viz.light .seg { border-color: #D9DEE6; background: #F6F7FA; } .viz.light .seg button { color: #12202B; } .viz.light .seg button[aria-pressed="true"] { background: transparent; color: #FFFFFF; }
+.viz.light .seg .tab-ind { background: linear-gradient(180deg, #5B35D0, #2A1478) !important; box-shadow: 0 6px 16px rgba(42,20,120,.3) !important; }
+.viz.light .inputs label { color: #5A6773; } .viz.light .inputs input { background: #F6F7FA; border-color: #D9DEE6; color: #12202B; }
+.viz.light .ctl label { color: #12202B; }
+.viz.light .viz-fsb { color: #12202B; background: rgba(255,255,255,.85); border-color: #D9DEE6; }
+.viz.light.viz-fs { background: #FFFFFF; }
+.viz.light .btn { background: #FFFFFF; color: #12202B; border-color: #D9DEE6; }
+.viz.v3d > canvas { height: 520px; cursor: grab; touch-action: none; border-radius: 8px; }
+.viz.v3d.turn > canvas { height: 380px; }
+.viz.v3d > canvas.grabbing { cursor: grabbing; }
+.viz.v3d.viz-fs > canvas { height: calc(100vh / var(--z, 1)) !important; }
+.v3d-hint { position: absolute; left: 26px; top: 22px; margin: 0; font-size: .72rem; color: #6B7682; pointer-events: none; }
+.lv-info { margin-top: 12px; padding: 14px 16px; border-radius: 12px; background: #F6F4FD; border: 1px solid #E3DDF7; font-size: .88rem; line-height: 1.55; color: #12202B; }
+.lv-info b { color: #2A1478; } .lv-info p { margin: 4px 0 0; }
+.turn-out { margin-top: 12px; }
+.feq { display: grid; justify-items: center; gap: 2px; margin: 14px 0 18px; }
+.feq > span { font-size: .78rem; color: var(--ink-2); letter-spacing: .02em; }
+.prose mjx-container mjx-menclose, .steps mjx-container mjx-menclose { color: inherit; }
+.fork { margin: 18px 0 24px; display: grid; gap: 12px; justify-items: center; }
+.fork-head { padding: 10px 22px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+.fork-row { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; }
+.fork-row::before { content: ""; position: absolute; left: 25%; right: 25%; top: -12px; height: 12px; border: 1.5px solid var(--line); border-bottom: 0; border-radius: 10px 10px 0 0; }
+.fork-card { display: grid; gap: 6px; padding: 16px 18px; border-radius: 16px; text-decoration: none; color: var(--ink); border: 1px solid var(--line); background: var(--surface); transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s; }
+.fork-card:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -20px rgba(40,20,90,.45); }
+.fork-card small { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+.fork-card b { font-family: var(--head); font-size: 1rem; }
+.fork-card.a { box-shadow: inset 4px 0 0 #6A3FD1; } .fork-card.b { box-shadow: inset 4px 0 0 #D8283A; }
+.fork-card span { font-size: .86rem; color: var(--ink-2); }
+.fnote { margin: 14px 0 18px; padding: 12px 16px; border-left: 3px solid #6A3FD1; background: color-mix(in srgb, #6A3FD1 6%, transparent); border-radius: 0 10px 10px 0; font-size: .9rem; }
+.forms3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 12px 0 8px; }
+.forms3 > div { padding: 12px 10px 4px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); text-align: center; overflow-x: auto; }
+.forms3 small { display: block; font-size: .72rem; color: var(--ink-2); }
+@media (max-width: 1000px) { .forms3 { grid-template-columns: 1fr; } .fork-row { grid-template-columns: 1fr; } .fork-row::before { display: none; } }
+.cmp-wrap { overflow-x: auto; margin: 14px 0 20px; }
+.cmp { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.cmp th, .cmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.cmp thead th { font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; }
+.cmp td:first-child { color: var(--ink-2); white-space: nowrap; }
+.task-card { padding: 16px 18px; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); margin: 12px 0; }
+.task-card p { margin: 0 0 6px; } .task-card p:last-child { margin: 0; }
+.steps.solve li { display: grid; }
+.anchor-flash { animation: anchorFlash 1.8s ease; border-radius: 8px; }
+@keyframes anchorFlash { 0%, 30% { background: color-mix(in srgb, #6A3FD1 16%, transparent); } 100% { background: transparent; } }
+.viz.light input[type="range"]::-webkit-slider-runnable-track { background: linear-gradient(90deg, #6A3FD1 var(--p, 50%), #E4E1EE var(--p, 50%)); box-shadow: inset 0 1px 2px rgba(20,10,50,.15); }
+.viz.light input[type="range"]::-moz-range-track { background: #E4E1EE; }
+.viz.light input[type="range"]::-moz-range-progress { background: #6A3FD1; }
+
+</style>
 </head>
 <body>
 <div class="fp-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -1746,8 +1800,8 @@ document.querySelectorAll('.logo-slot').forEach(el => { el.innerHTML = LOGO_SVG(
 const SECTIONS = [
   { id: 'atm', n: '1.1', title: 'Параметры и свойства воздуха. Стандартная атмосфера', f: String.raw`p = \rho R T`, tabs: [['theory', 'Теория'], ['flight', 'В полёте'], ['quiz', 'Проверь себя']], rpd: 'Тема 1 «Основные понятия и уравнения движения газа»: физико-механические свойства воздуха, Международная стандартная атмосфера. Практические занятия «Основные параметры и свойства воздуха», «Основы термодинамики газовых потоков»', ready: true },
   { id: 'cont', n: '1.2', title: 'Уравнение неразрывности', f: String.raw`\rho_1 V_1 S_1 = \rho_2 V_2 S_2`, tabs: [['theory', 'Теория'], ['flight', 'В полёте'], ['quiz', 'Проверь себя']], rpd: 'Тема 1 «Основные понятия и уравнения движения газа»: уравнение неразрывности. Практическое занятие «Основы термодинамики газовых потоков»', ready: true },
-  { id: 'bern', n: '1.3', title: 'Уравнение Бернулли', f: String.raw`p + \dfrac{\rho V^2}{2} = p_0`, rpd: 'Тема 1 «Основные понятия и уравнения движения газа»: уравнения Эйлера, интеграл Бернулли. Практическое занятие «Уравнение Бернулли»', ready: false, plan: [] },
-  { id: 'sound', n: '1.4', title: 'Скорость звука, уравнение Гюгонио и сопло Лаваля', f: String.raw`\dfrac{dS}{S} = (M^2-1)\,\dfrac{dV}{V}`, rpd: 'Тема 1 «Основные понятия и уравнения движения газа»: распространение малых возмущений в газах. Практическое занятие «Основы термодинамики газовых потоков»', ready: false, plan: [] },
+  { id: 'bern', n: '1.3', title: 'Уравнение Бернулли', f: String.raw`p + \dfrac{\rho V^2}{2} = p_0`, rpd: 'Тема 1 «Основные понятия и уравнения движения газа»: уравнения Эйлера, интеграл Бернулли. Практическое занятие «Уравнение Бернулли»', tabs: [['theory', 'Теория'], ['model', 'Задача'], ['flight', 'В полёте'], ['quiz', 'Проверь себя']], ready: true },
+  { id: 'sound', n: '1.4', title: 'Скорость звука, уравнение Гюгонио и сопло Лаваля', f: String.raw`\dfrac{dS}{S} = -\dfrac{dV}{V}\,(1 - M^2)`, rpd: 'Тема 1 «Основные понятия и уравнения движения газа»: распространение малых возмущений в газах. Практическое занятие «Основы термодинамики газовых потоков»', tabs: [['theory', 'Теория'], ['model', 'Модель сопла'], ['flight', 'В полёте'], ['quiz', 'Проверь себя']], ready: true },
   { id: 'stag', n: '1.5', title: 'Параметры торможения, критическая и максимальная скорости', f: String.raw`\dfrac{T_0}{T} = 1 + \dfrac{k-1}{2}M^2`, rpd: 'Тема 1 «Основные понятия и уравнения движения газа»: параметры торможения, критическая и максимальная скорости. Практическое занятие «Параметры торможения газового потока»', ready: false, plan: [] },
   { id: 'shock', n: '1.6', title: 'Скачки уплотнения и конус Маха', f: String.raw`\sin\mu = \dfrac{1}{M}`, rpd: 'Тема 1 «Основные понятия и уравнения движения газа»: скачки уплотнения. Практическое занятие «Скачки уплотнения»', ready: false,
     plan: ['Модель конуса Маха: число М меняет угол конуса', 'Прямой скачок: параметры до и после', 'В полёте: где на крыле лайнера появляются первые скачки и почему ограничено MMO'] },
@@ -3319,6 +3373,13 @@ CONTENT.atm = {
   <div class="ratios" id="ckBars"></div><p class="ck-line" id="ckLine"></p></div>
 <p>И обратный вывод: \\(\\rho = \\dfrac{p}{RT}\\). Давление с высотой падает быстро, но температура в знаменателе тоже уменьшается и частично сдерживает падение плотности: холодный воздух плотнее тёплого. Поэтому плотность убывает медленнее давления.</p>
 
+<h3 id="atm-adiab">Договорённость: все процессы – адиабатические</h3>
+<p>Когда воздух обтекает самолёт, каждая его частица сжимается и расширяется за доли секунды. Обменяться теплом с соседним воздухом за это время она почти не успевает: процессы очень быстрые, а воздух плохо проводит тепло. Процесс без теплообмена с окружающей средой называют <b>адиабатическим</b>.</p>
+<div class="defn defn-acc"><b>Договоримся: все процессы, которые происходят с воздухом в потоке, мы считаем адиабатическими. Другие процессы нас не интересуют.</b></div>
+<p>Для адиабатического процесса давление и плотность связаны <b>уравнением Пуассона</b>:</p>
+\\[\\dfrac{p}{\\rho^k} = C = \\text{const},\\]
+<p>где \\(k\\) – адиабатический коэффициент (показатель адиабаты), для воздуха \\(k = 1{,}4\\). Это уравнение понадобится нам дважды: в выводе уравнения Бернулли для сжимаемого газа (раздел <a href="#bern" data-open-tab="theory" data-anchor="bern-comp">1.3</a>) и скорости звука (раздел <a href="#sound" data-open-tab="theory" data-anchor="snd-derive">1.4</a>).</p>
+
 <h2 class="part">Стандартная атмосфера</h2>
 <p>Параметры воздуха меняются с высотой по определённым закономерностям. Но реальная атмосфера каждый день разная: зимой и летом, над Сочи и над Норильском, утром и вечером. Построить точную модель на все случаи невозможно, поэтому учёные договорились о единой условной атмосфере.</p>
 <p><b>Стандартная атмосфера (СА) – условное распределение температуры, давления и плотности воздуха по высоте, принятое для расчётов в авиации и космонавтике.</b> Её значения получены осреднением многолетних измерений для средних широт. Международная стандартная атмосфера (МСА, ISA) в России закреплена в ГОСТ 4401-81.</p>
@@ -3429,7 +3490,7 @@ CONTENT.atm = {
   <div class="viz-ctl"><div class="ctl"><label for="lwK">Упругость среды – насколько быстро молекулы отталкиваются <output id="lwKo"></output></label><input type="range" id="lwK" min="1" max="5" step="0.1" value="2"></div><dl class="readout" id="lwOut" style="flex:1 1 220px"></dl></div></div>
 <p class="big-acc">Чем сильнее мы можем сблизить молекулы и чем быстрее они оттолкнутся друг от друга, тем больше скорость распространения волны.</p>
 
-<h3>Скорость звука</h3>
+<h3 id="atm-sound">Скорость звука</h3>
 <p>Мы договорились, что изучаем воздух. Так вот: <b>скорость распространения волны (малых возмущений) в воздухе – это и есть скорость звука.</b> Звук – это слабые волны сжатия, которые улавливает наше ухо. Обозначают скорость звука буквой \\(a\\).</p>
 <div class="defn defn-acc"><b>Принято, что сжимаемость характеризуется скоростью распространения волны – скоростью звука.</b></div>
 <p>Учёные вывели связь скорости звука со сжимаемостью:</p>
@@ -3581,7 +3642,7 @@ const BERN_STEPS = [
   [String.raw`\dfrac{p}{\rho^k} = C \;\Rightarrow\; \int\dfrac{dp}{\rho} = \dfrac{k}{k-1}\,\dfrac{p}{\rho}`, 'Для сжимаемого газа процесс адиабатический: используем уравнение Пуассона и интегрируем dp/ρ.'],
   [String.raw`\dfrac{V^2}{2} + \dfrac{k}{k-1}\dfrac{p}{\rho} = \dfrac{V^2}{2} + \dfrac{k}{k-1}RT = \dfrac{V^2}{2} + \dfrac{a^2}{k-1} = \text{const}`, 'Уравнение Бернулли для сжимаемого газа в трёх формах: через p/ρ, через p = ρRT и через a² = kRT.'],
 ];
-CONTENT.bern = {
+const CONTENT_BERN_OLD = {
   theory: () => `<div class="prose"><p>Уравнение Бернулли – закон сохранения энергии для струйки газа. Его главный смысл: <b>где скорость больше, там давление меньше</b>. Ниже – вывод в той последовательности, как на лекции. Открывайте шаги по одному и проговаривайте каждый, прежде чем идти дальше.</p></div>
 <div class="steps-ctl"><button class="btn primary" id="stepNext" type="button">Следующий шаг</button><button class="btn" id="stepAll" type="button">Показать весь вывод</button><button class="btn" id="stepReset" type="button">Начать сначала</button></div>
 <ol class="steps" id="steps">${BERN_STEPS.map(([f, w], i) => `<li${i ? ' hidden' : ''}><div>\\[${f}\\]<div class="why">${w}</div></div></li>`).join('')}</ol>`,
@@ -3665,8 +3726,488 @@ CONTENT.bern = {
   ],
 };
 
-/* 1.4 звук, Гюгонио, сопло */
-CONTENT.sound = {
+/* ───────── 1.3: модели на белом фоне ───────── */
+const LT = { ink: '#12202B', dim: '#6B7682', line: '#D9DEE6', vio: '#6A3FD1', red: '#D8283A', deep: '#2A1478', soft: '#F4F2FB' };
+function ltText(g, s, x, y, o = {}) { g.font = (o.w || 500) + ' ' + (o.s || 13) + 'px "Unbounded", Arial'; g.fillStyle = o.c || LT.ink; g.textAlign = o.a || 'left'; g.textBaseline = o.b || 'alphabetic'; g.fillText(s, x, y); }
+function seeded(n, seed) { let s = seed; const r = () => (s = (s * 16807) % 2147483647) / 2147483647; return Array.from({ length: n }, () => [r(), r(), r()]); }
+
+/* срез потока: силы давления на две грани */
+function mountEuler() {
+  const cv = $('#euCv'), rg = $('#euDp'); if (!cv) return;
+  const dots = seeded(420, 7); let xs = 0, vs = 0;
+  const cap = () => { const d = +rg.value; $('#euDpo').textContent = (d > 0 ? '+' : d < 0 ? '−' : '') + fmt(Math.abs(d), 2);
+    $('#euCap').innerHTML = Math.abs(d) < 0.03 ? 'dp = 0: давление слева и справа одинаковое, силы уравновешены. Равнодействующая равна нулю – срез движется с постоянной скоростью.'
+      : d < 0 ? 'dp &lt; 0: по потоку давление падает. Слева давят сильнее, чем справа, равнодействующая F = −dp·S направлена по потоку – срез <b>разгоняется</b> (dV &gt; 0).'
+      : 'dp &gt; 0: по потоку давление растёт. Справа давят сильнее, равнодействующая направлена против потока – срез <b>тормозится</b> (dV &lt; 0).'; };
+  rg.addEventListener('input', cap); cap();
+  const tag = (g, s, x, y, c) => { g.font = '700 13px "Unbounded", Arial'; const tw = g.measureText(s).width + 14; g.fillStyle = 'rgba(255,255,255,.92)'; g.beginPath(); g.roundRect ? g.roundRect(x - tw / 2, y - 15, tw, 22, 6) : g.rect(x - tw / 2, y - 15, tw, 22); g.fill(); ltText(g, s, x, y + 1, { s: 13, w: 700, a: 'center', c: c || LT.ink }); };
+  animCanvas(cv, 360, (g, w, h, t, dt) => {
+    const d = +rg.value, x0 = 30, x1 = w - 30, L = x1 - x0, yc = 150, hh = 76;
+    g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, w, h);
+    const pAt = xn => 1 + d * 0.45 * (xn - 0.5);
+    const grd = g.createLinearGradient(x0, 0, x1, 0);
+    grd.addColorStop(0, `rgba(106,63,209,${0.04 + 0.12 * clamp((pAt(0) - 0.7) / 0.6, 0, 1)})`); grd.addColorStop(1, `rgba(106,63,209,${0.04 + 0.12 * clamp((pAt(1) - 0.7) / 0.6, 0, 1)})`);
+    g.fillStyle = grd; g.fillRect(x0, yc - hh, L, 2 * hh);
+    g.fillStyle = LT.ink;
+    dots.forEach(p => { const xn = (p[0] + t * 0.035 * (1 - d * 0.4 * (p[0] - 0.5))) % 1; if (p[2] > pAt(xn) * 0.62) return;
+      g.globalAlpha = 0.5; g.beginPath(); g.arc(x0 + xn * L, yc - hh + 6 + p[1] * (2 * hh - 12), 1.7, 0, 7); g.fill(); });
+    g.globalAlpha = 1;
+    g.strokeStyle = LT.ink; g.lineWidth = 2; g.beginPath(); g.moveTo(x0, yc - hh); g.lineTo(x1, yc - hh); g.moveTo(x0, yc + hh); g.lineTo(x1, yc + hh); g.stroke();
+    if (Math.abs(d) < 0.03) ltText(g, 'давление вдоль трубки одинаковое', x0 + L / 2, yc - hh - 12, { s: 11, c: LT.dim, a: 'center' });
+    else { ltText(g, 'давление выше', d < 0 ? x0 + 4 : x1 - 4, yc - hh - 12, { s: 11, w: 600, c: LT.vio, a: d < 0 ? 'left' : 'right' }); ltText(g, 'давление ниже', d < 0 ? x1 - 4 : x0 + 4, yc - hh - 12, { s: 11, c: LT.dim, a: d < 0 ? 'right' : 'left' }); }
+    ltText(g, 'поток →', x0 + 8, yc + hh - 10, { s: 11, c: LT.dim });
+    const span = 0.5; if (!xs || xs > span) { xs = 0.001; vs = 0.07; }
+    vs = clamp(vs + (-d) * 0.06 * dt, 0.018, 0.2); xs += vs * dt;
+    const dx = 40, rx = 14, sx = x0 + L * (0.25 + xs);
+    g.fillStyle = 'rgba(106,63,209,.20)'; g.fillRect(sx, yc - hh, dx, 2 * hh);
+    g.fillStyle = 'rgba(106,63,209,.16)'; g.beginPath(); g.ellipse(sx, yc, rx, hh, 0, 0, 7); g.fill();
+    g.strokeStyle = LT.vio; g.lineWidth = 2; [sx, sx + dx].forEach(xx => { g.beginPath(); g.ellipse(xx, yc, rx, hh, 0, 0, 7); g.stroke(); });
+    tag(g, 'S', sx, yc + hh * 0.55, LT.vio);
+    g.strokeStyle = LT.ink; g.lineWidth = 1; g.beginPath(); g.moveTo(sx, yc + hh + 6); g.lineTo(sx, yc + hh + 20); g.moveTo(sx + dx, yc + hh + 6); g.lineTo(sx + dx, yc + hh + 20); g.moveTo(sx, yc + hh + 13); g.lineTo(sx + dx, yc + hh + 13); g.stroke();
+    ltText(g, 'dx', sx + dx / 2, yc + hh + 36, { s: 13, w: 600, a: 'center' });
+    const L1 = 100, L2 = 100 * (1 + d * 0.42), ya = yc - 14;
+    arrow(g, sx - rx - 6 - L1, ya, sx - rx - 4, ya, LT.ink, 3.5, 14); tag(g, 'pS', sx - rx - 6 - L1 / 2, ya - 16);
+    arrow(g, sx + dx + rx + 6 + L2, ya, sx + dx + rx + 4, ya, LT.ink, 3.5, 14); tag(g, '(p + dp)S', sx + dx + rx + 6 + L2 / 2, ya - 16);
+    const Fy = yc + hh + 66, Fl = -d * 150, cx = sx + dx / 2;
+    if (Math.abs(Fl) > 5) arrow(g, cx, Fy, cx + Fl, Fy, LT.vio, 4.5, 15); else { g.fillStyle = LT.vio; g.beginPath(); g.arc(cx, Fy, 5, 0, 7); g.fill(); }
+    ltText(g, Math.abs(Fl) > 5 ? 'F = −dp·S' : 'F = 0', cx + (Fl > 5 ? Fl + 12 : Fl < -5 ? Fl - 12 : 14), Fy + 5, { s: 14, w: 700, c: LT.vio, a: Fl < -5 ? 'right' : 'left' });
+    ltText(g, 'равнодействующая', cx, Fy + 26, { s: 10, c: LT.dim, a: 'center' });
+    ltText(g, 'скорость среза: ' + fmt(vs * 600, 0) + ' (усл.)', x1, h - 10, { s: 11, c: LT.dim, a: 'right' });
+  });
+}
+
+/* коробку толкают с двух сторон */
+function mountBox() {
+  const cv = $('#bxCv'), f1 = $('#bxF1'), f2 = $('#bxF2'); if (!cv) return;
+  const m = 10; let x = 0, v = 0, fade = 1;
+  const out = () => { const F1 = +f1.value, F2 = +f2.value, F = F1 - F2, a = F / m;
+    $('#bxF1o').textContent = F1 + ' Н'; $('#bxF2o').textContent = F2 + ' Н';
+    $('#bxOut').innerHTML = `<dt>Масса коробки m</dt><dd>${m} кг</dd><dt>Равнодействующая F = F₁ − F₂</dt><dd class="hl">${F > 0 ? '+' : F < 0 ? '−' : ''}${Math.abs(F)} Н</dd><dt>Ускорение a = F / m</dt><dd class="hl">${F > 0 ? '+' : F < 0 ? '−' : ''}${fmt(Math.abs(a), 1)} м/с²</dd>
+<dt style="grid-column:1/-1">${F === 0 ? 'Силы равны – коробка не разгоняется.' : F > 0 ? 'Слева толкают сильнее – коробка разгоняется вправо, туда, где сила меньше.' : 'Справа толкают сильнее – коробка разгоняется влево.'}</dt>`; x = 0; v = 0; };
+  [f1, f2].forEach(r => r.addEventListener('input', out)); out();
+  animCanvas(cv, 240, (g, w, h, t, dt) => {
+    const F1 = +f1.value, F2 = +f2.value, a = (F1 - F2) / m, fy = 176, bw = 118, bh = 86;
+    v += a * dt * 9; x += v * dt; if (Math.abs(x) > w * 0.28) { fade -= dt * 3; if (fade <= 0) { x = 0; v = 0; fade = 1; } }
+    g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#F1F2F6'; g.fillRect(0, fy, w, h - fy); g.strokeStyle = LT.line; g.lineWidth = 1; for (let i = -1; i < w / 40 + 1; i++) { const xx = i * 40 - (x % 40); g.beginPath(); g.moveTo(xx, fy + 2); g.lineTo(xx - 14, h); g.stroke(); }
+    g.strokeStyle = LT.ink; g.lineWidth = 2; g.beginPath(); g.moveTo(0, fy); g.lineTo(w, fy); g.stroke();
+    const bx = w / 2 + x - bw / 2, by = fy - bh;
+    g.globalAlpha = Math.max(0, fade);
+    g.fillStyle = 'rgba(18,32,43,.10)'; g.beginPath(); g.ellipse(bx + bw / 2, fy + 3, bw * 0.55, 6, 0, 0, 7); g.fill();
+    g.fillStyle = '#E9D8B8'; g.fillRect(bx, by, bw, bh); g.strokeStyle = '#B79A68'; g.lineWidth = 2; g.strokeRect(bx, by, bw, bh);
+    g.fillStyle = '#D5BF95'; g.fillRect(bx + bw / 2 - 9, by, 18, bh);
+    ltText(g, 'm', bx + bw / 2, by + bh / 2 + 6, { s: 16, w: 700, c: '#7A5F33', a: 'center' });
+    const L1 = 20 + F1 * 1.1, L2 = 20 + F2 * 1.1, ay = by + bh / 2;
+    if (F1 > 0) { arrow(g, bx - 8 - L1, ay, bx - 8, ay, LT.ink, 3, 12); ltText(g, 'F₁', bx - 8 - L1 / 2, ay - 12, { s: 14, w: 700, a: 'center' }); }
+    if (F2 > 0) { arrow(g, bx + bw + 8 + L2, ay, bx + bw + 8, ay, LT.ink, 3, 12); ltText(g, 'F₂', bx + bw + 8 + L2 / 2, ay - 12, { s: 14, w: 700, a: 'center' }); }
+    const Fl = (F1 - F2) * 1.4, cx = bx + bw / 2;
+    if (Math.abs(Fl) > 3) { arrow(g, cx, by - 30, cx + Fl, by - 30, LT.vio, 4, 14); ltText(g, 'F = F₁ − F₂', cx + Fl + (Fl > 0 ? 10 : -10), by - 25, { s: 13, w: 700, c: LT.vio, a: Fl > 0 ? 'left' : 'right' }); }
+    g.globalAlpha = 1;
+  });
+}
+
+/* частица воздуха: тепловая энергия переходит в кинетическую */
+function mountEnergy() {
+  const cv = $('#enCv'), rg = $('#enV'); if (!cv) return;
+  const T0 = 288.15, H0 = CP * T0, Vmax = Math.sqrt(2 * H0);
+  const mol = seeded(26, 31).map(p => ({ x: (p[0] - 0.5) * 70, y: (p[1] - 0.5) * 70, a: p[2] * 6.28 }));
+  const streaks = seeded(46, 5); let px = 0, anim = null;
+  const upd = () => { const V = +rg.value, T = Math.max(T0 - V * V / (2 * CP), 0.5), a = sndSpeed(T);
+    $('#enVo').textContent = fmt(V) + ' м/с';
+    $('#enOut').innerHTML = `<dt>Температура потока T = T₀ − V²/(2cₚ)</dt><dd class="hl">${fmt(T, 1)} К (${fmt(T - 273.15, 1)} °C)</dd><dt>Местная скорость звука a = 20,1√T</dt><dd>${fmt(a)} м/с</dd><dt>Число M = V/a</dt><dd>${fmt(V / a, 2)}</dd><dt>Доля кинетической энергии</dt><dd>${fmt(V * V / 2 / H0 * 100, 1)} %</dd>
+<dt style="grid-column:1/-1">${V < 5 ? 'Поток стоит: вся энергия тепловая.' : V > Vmax * 0.97 ? 'Почти вся тепловая энергия стала кинетической: газ остыл почти до абсолютного нуля. Быстрее разогнать уже нельзя – это предельная скорость ≈ ' + fmt(Vmax) + ' м/с.' : 'Чем быстрее поток, тем меньше в нём тепловой энергии: газ остывает, местная скорость звука падает.'}</dt>`; };
+  rg.addEventListener('input', () => { anim = null; upd(); }); upd();
+  $('#enGo').onclick = () => { anim = { t: 0, from: 0 }; };
+  animCanvas(cv, 340, (g, w, h, t, dt) => {
+    if (anim) { anim.t += dt / 4.5; const k = clamp(anim.t, 0, 1), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; rg.value = Math.round(740 * e); rangeFill(rg); upd(); if (k >= 1) anim = null; }
+    const V = +rg.value, T = Math.max(T0 - V * V / (2 * CP), 0.5), kin = V * V / 2 / H0, th = 1 - kin;
+    const cw = w * 0.66, yc = 170, ch = 112;
+    g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#F6F5FB'; g.fillRect(20, yc - ch, cw - 30, 2 * ch);
+    g.strokeStyle = LT.line; g.lineWidth = 1.5; g.beginPath(); g.moveTo(20, yc - ch); g.lineTo(cw - 10, yc - ch); g.moveTo(20, yc + ch); g.lineTo(cw - 10, yc + ch); g.stroke();
+    const sp = 30 + V * 0.55;
+    g.strokeStyle = 'rgba(106,63,209,.35)'; g.lineWidth = 1.5;
+    streaks.forEach(p => { const L = 6 + V * 0.06, xx = 20 + ((p[0] * (cw - 30) + t * sp * (0.8 + p[2] * 0.4)) % (cw - 30)), yy = yc - ch + 8 + p[1] * (2 * ch - 16);
+      g.beginPath(); g.moveTo(xx, yy); g.lineTo(Math.max(20, xx - L), yy); g.stroke(); });
+    /* частица */
+    px = V < 3 ? px * 0.98 : px + dt * (20 + V * 0.42); const span = cw - 170; const pxx = 95 + ((px % span) + span) % span;
+    const R = 62, warm = clamp(T / T0, 0, 1);
+    const fill = `rgb(${Math.round(200 + 55 * warm)},${Math.round(226 + 6 * warm - 10 * (1 - warm))},${Math.round(255 - 40 * warm)})`;
+    g.fillStyle = fill; g.beginPath(); g.arc(pxx, yc, R, 0, 7); g.fill();
+    g.strokeStyle = LT.ink; g.lineWidth = 1.5; g.stroke();
+    const amp = Math.sqrt(T / T0);
+    g.fillStyle = '#111018';
+    mol.forEach(m => { m.a += (Math.random() - 0.5) * 2.2; const s = 95 * amp * dt; m.x += Math.cos(m.a) * s; m.y += Math.sin(m.a) * s;
+      const r = Math.hypot(m.x, m.y); if (r > R - 7) { m.x *= (R - 7) / r; m.y *= (R - 7) / r; m.a += Math.PI; }
+      g.beginPath(); g.arc(pxx + m.x, yc + m.y, 3.4, 0, 7); g.fill(); });
+    if (V > 2) arrow(g, pxx + R + 8, yc, pxx + R + 14 + V * 0.1, yc, LT.vio, 3, 11);
+    ltText(g, 'T = ' + fmt(T, 0) + ' К', pxx, yc - R - 12, { s: 13, w: 700, a: 'center', c: warm > 0.5 ? LT.red : '#2F6FD6' });
+    ltText(g, 'частица воздуха', pxx, yc + R + 22, { s: 11, c: LT.dim, a: 'center' });
+    /* столбик энергии */
+    const bx = cw + 40, bw = Math.min(90, w - bx - 120), by = 46, bh = 248;
+    if (bw > 30) {
+      const hk = bh * kin, ht = bh * th;
+      const gk = g.createLinearGradient(0, by, 0, by + hk); gk.addColorStop(0, '#8A5CFF'); gk.addColorStop(1, '#5B2FC4');
+      const gt = g.createLinearGradient(0, by + hk, 0, by + bh); gt.addColorStop(0, '#FF8A5C'); gt.addColorStop(1, '#D8283A');
+      g.fillStyle = gk; g.fillRect(bx, by, bw, hk); g.fillStyle = gt; g.fillRect(bx, by + hk, bw, ht);
+      g.strokeStyle = LT.ink; g.lineWidth = 1.5; g.strokeRect(bx, by, bw, bh);
+      ltText(g, 'полная энергия = const', bx + bw / 2, by - 14, { s: 11, w: 600, a: 'center' });
+      const lx = bx + bw + 10;
+      if (hk > 16) ltText(g, 'V²/2', lx, by + hk / 2 + 5, { s: 13, w: 700, c: LT.vio });
+      if (hk > 34) ltText(g, 'кинетическая', lx, by + hk / 2 + 21, { s: 10, c: LT.dim });
+      if (ht > 16) ltText(g, 'cₚT', lx, by + hk + ht / 2 + 5, { s: 13, w: 700, c: LT.red });
+      if (ht > 34) ltText(g, 'тепловая', lx, by + hk + ht / 2 + 21, { s: 10, c: LT.dim });
+    }
+  });
+}
+
+/* ───────── three.js: берётся из встроенной 3D-модели DA 40 NG, второй копии в файле нет ───────── */
+let fpThreeP = null;
+function fpThree() {
+  if (window.THREE) return Promise.resolve(window.THREE);
+  if (fpThreeP) return fpThreeP;
+  fpThreeP = new Promise((res, rej) => {
+    try {
+      const bin = atob(DA40_B64), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const page = new TextDecoder().decode(bytes);
+      const cdn = page.match(/<script src="(https:[^"]*three[^"]*)"><\/script>/);
+      if (cdn) { const s = document.createElement('script'); s.src = cdn[1]; s.onload = () => res(window.THREE); s.onerror = () => rej(new Error('three.js')); document.head.appendChild(s); return; }
+      const code = page.split('<script>').slice(1).map(x => x.split('<\/script>')[0]).find(x => x.includes('REVISION'));
+      if (!code) throw new Error('three.js не найден');
+      const s = document.createElement('script'); s.textContent = code; document.head.appendChild(s);
+      window.THREE ? res(window.THREE) : rej(new Error('three.js'));
+    } catch (e) { rej(e); }
+  });
+  return fpThreeP;
+}
+/* общий запуск 3D-сцены: рисуется, только пока видна; вращение мышью, колесо – приближение */
+function fp3d(cv, opt, setup) {
+  return fpThree().then(THREE => {
+    const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true });
+    renderer.setClearColor(0xffffff, 1); renderer.outputEncoding = THREE.sRGBEncoding;
+    const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(opt.fov || 32, 1, 0.1, 200);
+    const st = Object.assign({ yaw: 0.6, pitch: 0.3, dist: 15, tx: 0, ty: 0, tz: 0, dmin: 4, dmax: 30 }, opt.cam); ['yaw', 'pitch', 'dist', 'tx', 'ty', 'tz'].forEach(k => { st[k + 'T'] = st[k]; });
+    let drag = null;
+    cv.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY }; cv.setPointerCapture(e.pointerId); cv.classList.add('grabbing'); });
+    cv.addEventListener('pointermove', e => { if (!drag) return; const k = fpK(cv); st.yawT -= (e.clientX - drag.x) / k * 0.0065; st.pitchT = clamp(st.pitchT + (e.clientY - drag.y) / k * 0.0045, -1.25, 1.25); drag = { x: e.clientX, y: e.clientY }; });
+    ['pointerup', 'pointercancel'].forEach(t => cv.addEventListener(t, () => { drag = null; cv.classList.remove('grabbing'); }));
+    cv.addEventListener('wheel', e => { e.preventDefault(); st.distT = clamp(st.distT * Math.exp(e.deltaY * 0.0012), st.dmin, st.dmax); }, { passive: false });
+    const api = setup(THREE, scene, camera, st) || {};
+    let vis = false, raf = 0, last = 0, t = 0, W = 0, H = 0;
+    const size = () => { const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return false; const pr = Math.min(window.devicePixelRatio || 1, 2.5);
+      if (w !== W || h !== H || renderer.getPixelRatio() !== pr) { W = w; H = h; renderer.setPixelRatio(pr); renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); } return true; };
+    const loop = now => { raf = 0; if (!vis || !cv.isConnected || !cv.offsetParent) return;
+      const dt = last ? Math.min(0.05, (now - last) / 1000) : 0; last = now; t += dt;
+      if (size()) {
+        const k = 1 - Math.exp(-dt * 5); ['yaw', 'pitch', 'dist', 'tx', 'ty', 'tz'].forEach(n => { st[n] += (st[n + 'T'] - st[n]) * k; });
+        const cp = Math.cos(st.pitch); camera.position.set(st.tx + st.dist * cp * Math.sin(st.yaw), st.ty + st.dist * Math.sin(st.pitch), st.tz + st.dist * cp * Math.cos(st.yaw)); camera.lookAt(st.tx, st.ty, st.tz);
+        if (api.frame) api.frame(dt, t); renderer.render(scene, camera);
+      }
+      raf = requestAnimationFrame(loop); };
+    const start = () => { if (!raf) { last = 0; raf = requestAnimationFrame(loop); } };
+    new IntersectionObserver(es => { vis = es[es.length - 1].isIntersecting; if (vis) start(); }).observe(cv);
+    return api;
+  }).catch(e => { cv.insertAdjacentHTML('afterend', '<p class="note">3D-модель не загрузилась. Обновите страницу.</p>'); console.error(e); });
+}
+/* надпись-спрайт: светлая плашка с тёмным текстом */
+function fpLabel(THREE, lines, o = {}) {
+  const c = document.createElement('canvas'), S = 3, fs = o.fs || 30, pad = 18;
+  const g = c.getContext('2d'); g.font = `700 ${fs}px Unbounded, Arial`;
+  const wd = Math.max(...lines.map((l, i) => { g.font = `${i ? 500 : 700} ${i ? fs * 0.8 : fs}px Unbounded, Arial`; return g.measureText(l).width; })) + pad * 2;
+  const ht = pad * 2 + fs * (1 + 1.15 * (lines.length - 1));
+  c.width = wd * S; c.height = ht * S; g.scale(S, S);
+  g.fillStyle = 'rgba(255,255,255,.94)'; g.strokeStyle = o.border || '#D9DEE6'; g.lineWidth = 2;
+  const r = 14; g.beginPath(); g.moveTo(r, 1); g.arcTo(wd - 1, 1, wd - 1, ht - 1, r); g.arcTo(wd - 1, ht - 1, 1, ht - 1, r); g.arcTo(1, ht - 1, 1, 1, r); g.arcTo(1, 1, wd - 1, 1, r); g.closePath(); g.fill(); g.stroke();
+  lines.forEach((l, i) => { g.font = `${i ? 500 : 700} ${i ? fs * 0.8 : fs}px Unbounded, Arial`; g.fillStyle = i ? '#5A6773' : (o.color || '#12202B'); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(l, wd / 2, pad + fs / 2 + i * fs * 1.15); });
+  const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true }));
+  const k = (o.size || 0.012); sp.scale.set(wd * k, ht * k, 1); sp.renderOrder = 10; return sp;
+}
+function fpShadow(THREE, w, d) {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  const gr = g.createRadialGradient(64, 64, 4, 64, 64, 64); gr.addColorStop(0, 'rgba(30,20,60,.28)'); gr.addColorStop(1, 'rgba(30,20,60,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+  m.rotation.x = -Math.PI / 2; return m;
+}
+function fpLights(THREE, scene) {
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xe4e6ee, 0.95));
+  const key = new THREE.DirectionalLight(0xffffff, 0.85); key.position.set(5, 9, 7); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xe2d9ff, 0.4); rim.position.set(-7, 3, -6); scene.add(rim);
+}
+
+/* 3D-модель сопла Лаваля */
+function mountLaval3D(host) {
+  if (!host) return;
+  const cv = host.querySelector('canvas'), info = host.querySelector('#lvInfo');
+  const X0 = -6, X1 = 6, XT = -1, AIN = 2.5, AE = 2.0, RK = 0.95;
+  const A = x => x <= XT ? 1 + (AIN - 1) * (1 + Math.cos(Math.PI * (x - X0) / (XT - X0))) / 2 : 1 + (AE - 1) * (1 - Math.cos(Math.PI * (x - XT) / (X1 - XT))) / 2;
+  const rr = x => RK * Math.sqrt(A(x));
+  const NS = 600, VT = [], MT = [];
+  for (let i = 0; i <= NS; i++) { const x = X0 + (X1 - X0) * i / NS, M = machFromAR(Math.max(1, A(x)), x > XT) || 1; MT.push(M); VT.push(M * Math.sqrt(1.2 / (1 + 0.2 * M * M))); }
+  const vAt = x => VT[clamp(Math.round((x - X0) / (X1 - X0) * NS), 0, NS)];
+  const mAt = x => MT[clamp(Math.round((x - X0) / (X1 - X0) * NS), 0, NS)];
+  const setInfo = z => { if (info) info.innerHTML = `<b>${LAVAL_ZONES[z][0].replace('<', '&lt;').replace('>', '&gt;')}</b><p>${LAVAL_ZONES[z][1].replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>`; };
+  setInfo('all');
+  const views = { all: { tx: 0, dist: 18.5, yaw: 0.3, pitch: 0.24 }, z1: { tx: -3.6, dist: 11, yaw: 0.55, pitch: 0.26 }, crit: { tx: -1, dist: 10.5, yaw: 0.6, pitch: 0.14 }, z2: { tx: 2.8, dist: 11, yaw: 0.2, pitch: 0.26 } };
+  fp3d(cv, { cam: { yaw: 0.3, pitch: 0.24, dist: 18.5, dmin: 5, dmax: 28 } }, (THREE, scene, camera, st) => {
+    fpLights(THREE, scene);
+    scene.fog = new THREE.Fog(0xffffff, 22, 42);
+    const zoneMat = col => new THREE.MeshStandardMaterial({ color: col, transparent: true, opacity: 0.16, roughness: 0.2, metalness: 0.05, side: THREE.DoubleSide, depthWrite: false });
+    const lathe = (xa, xb, mat) => { const pts = []; for (let i = 0; i <= 80; i++) { const x = xa + (xb - xa) * i / 80; pts.push(new THREE.Vector2(rr(x), x)); }
+      const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 72), mat); m.rotation.z = -Math.PI / 2; scene.add(m); return m; };
+    const m1 = zoneMat(0xCFC2FF), m2 = zoneMat(0xFFC9D2);
+    lathe(X0, XT, m1); lathe(XT, X1, m2);
+    /* продольные линии и кольца – чтобы читалась форма */
+    const lineMat = new THREE.LineBasicMaterial({ color: 0x8C93A8, transparent: true, opacity: 0.45 });
+    for (let j = 0; j < 16; j++) { const th = j / 16 * Math.PI * 2, pts = []; for (let i = 0; i <= 120; i++) { const x = X0 + (X1 - X0) * i / 120, r = rr(x); pts.push(new THREE.Vector3(x, r * Math.cos(th), r * Math.sin(th))); }
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat)); }
+    const ring = (x, col, op) => { const pts = []; for (let i = 0; i <= 96; i++) { const th = i / 96 * Math.PI * 2; pts.push(new THREE.Vector3(x, rr(x) * Math.cos(th), rr(x) * Math.sin(th))); }
+      const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op })); scene.add(l); return l; };
+    ring(X0, 0x2A1478, 0.9); ring(X1, 0x2A1478, 0.9);
+    const throat = new THREE.Mesh(new THREE.TorusGeometry(rr(XT), 0.035, 10, 96), new THREE.MeshStandardMaterial({ color: 0x2A1478, roughness: 0.4 })); throat.rotation.y = Math.PI / 2; throat.position.x = XT; scene.add(throat);
+    /* сечения с условными единицами площади */
+    const labels = [];
+    const cell = Math.sqrt(Math.PI * RK * RK / 4);
+    const stations = [X0 + 0.02, -3.5, XT, 2.5, X1 - 0.02];
+    const disks = stations.map(x => {
+      const r = rr(x), c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d');
+      g.save(); g.beginPath(); g.arc(256, 256, 254, 0, 7); g.clip();
+      g.fillStyle = x <= XT + 0.01 ? 'rgba(106,63,209,.16)' : 'rgba(216,40,58,.13)'; g.fillRect(0, 0, 512, 512);
+      const px = cell / r * 256; g.strokeStyle = x <= XT + 0.01 ? 'rgba(42,20,120,.75)' : 'rgba(150,20,40,.7)'; g.lineWidth = 3;
+      for (let k = -8; k <= 8; k++) { const p = 256 + k * px; g.beginPath(); g.moveTo(p, 0); g.lineTo(p, 512); g.moveTo(0, p); g.lineTo(512, p); g.stroke(); }
+      g.restore(); g.lineWidth = 5; g.strokeStyle = '#2A1478'; g.beginPath(); g.arc(256, 256, 252, 0, 7); g.stroke();
+      const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding;
+      const m = new THREE.Mesh(new THREE.CircleGeometry(r, 64), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
+      m.rotation.y = Math.PI / 2; m.position.x = x; scene.add(m);
+      const units = Math.round(A(x) * 4), M = mAt(x);
+      const lb = fpLabel(THREE, ['S = ' + units + ' ед.', 'M = ' + fmt(M, x === XT ? 0 : 2)], { color: x <= XT + 0.01 ? '#2A1478' : '#A3162B', size: 0.0105 });
+      lb.position.set(x, r + 0.75 + (x < -4 ? 0.55 : 0), 0); scene.add(lb); labels.push([lb, lb.scale.x, lb.scale.y]);
+      return m;
+    });
+    [[-4.3, 'Зона 1', 'M < 1, сужение', '#2A1478', 0.9], [XT + 0.3, 'Критическое сечение', 'M = 1', '#12202B', 1.9], [3.2, 'Зона 2', 'M > 1, расширение', '#A3162B', 0.9]].forEach(([x, a, b, c, dy]) => { const l = fpLabel(THREE, [a, b], { color: c, size: 0.0092 }); l.position.set(x, -rr(x) - dy, 0); scene.add(l); labels.push([l, l.scale.x, l.scale.y]); });
+    const sh = fpShadow(THREE, 15, 5); sh.position.y = -2.6; scene.add(sh);
+    /* молекулы: на входе плотно и медленно, на срезе – редко и быстро */
+    const N = 1100, geo = new THREE.SphereGeometry(0.05, 10, 8), mat = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.35, metalness: 0 });
+    const im = new THREE.InstancedMesh(geo, mat, N); scene.add(im);
+    const P = []; const vmax = Math.max(...VT);
+    for (let i = 0; i < N; i++) { let x; do { x = X0 + Math.random() * (X1 - X0); } while (Math.random() > VT[0] / vAt(x)); P.push({ x, u: Math.sqrt(Math.random()) * 0.88, th: Math.random() * 6.283 }); }
+    const d = new THREE.Object3D();
+    let zone = 'all';
+    host.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+      zone = b.dataset.m; host.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b)); setInfo(zone);
+      const v = views[zone]; st.txT = v.tx; st.distT = v.dist; st.yawT = v.yaw; st.pitchT = v.pitch;
+    }));
+    return { frame(dt, t) {
+      const speed = 1.5;
+      for (let i = 0; i < N; i++) { const p = P[i]; p.x += vAt(p.x) * speed * dt; if (p.x > X1) { p.x = X0 + (p.x - X1) * VT[0] / vAt(X1); }
+        const r = rr(p.x) * p.u; d.position.set(p.x, r * Math.cos(p.th), r * Math.sin(p.th)); d.updateMatrix(); im.setMatrixAt(i, d.matrix); }
+      im.instanceMatrix.needsUpdate = true;
+      const on = z => zone === 'all' || zone === z;
+      m1.opacity += ((on('z1') ? 0.2 : 0.07) - m1.opacity) * 0.1; m2.opacity += ((on('z2') ? 0.2 : 0.07) - m2.opacity) * 0.1;
+      const f = clamp(st.dist / 18.5, 0.55, 1.15); labels.forEach(([l, sx, sy]) => l.scale.set(sx * f, sy * f, 1));
+      throat.scale.setScalar(zone === 'crit' ? 1 + 0.04 * Math.sin(t * 4) : 1);
+      disks.forEach((m, i) => { const x = stations[i], want = zone === 'all' || (zone === 'z1' && x < XT) || (zone === 'z2' && x > XT) || (zone === 'crit' && Math.abs(x - XT) < 0.1) ? 1 : 0.25; m.material.opacity += (want - m.material.opacity) * 0.1; });
+    } };
+  });
+}
+
+/* 3D-модель: турникеты – аналогия для каждой зоны сопла */
+const TURN_CFG = {
+  z1: { NA: 6, NB: 5, vA: 1.0, vB: 1.5 },
+  crit: { NA: 5, NB: 4, vA: 1.5, vB: 2.1 },
+  z2: { NA: 4, NB: 6, vA: 2.1, vB: 2.73 },
+};
+function mountTurn3D(cv) {
+  const cfg = TURN_CFG[cv.dataset.turn], out = cv.parentNode.querySelector('.turn-out'); if (!cfg) return;
+  const Q = 6, XA = -3, XB = 3, PITCH = 0.95, rhoB = (cfg.vA * cfg.NA) / (cfg.vB * cfg.NB);
+  const sm = k => { k = clamp(k, 0, 1); return k * k * (3 - 2 * k); };
+  const Nx = x => lerp(cfg.NA, cfg.NB, sm((x - XA) / (XB - XA)));
+  const Vx = x => lerp(cfg.vA, cfg.vB, sm((x - XA) / (XB - XA)));
+  if (out) out.innerHTML = `<dt>Ряд 1: турникетов</dt><dd>${cfg.NA}</dd><dt>Ряд 2: турникетов</dt><dd class="hl">${cfg.NB}</dd>
+<dt>Скорость людей от ряда 1 к ряду 2</dt><dd>×${fmt(cfg.vB / cfg.vA, 2)}</dd><dt>Плотность толпы</dt><dd>×${fmt(rhoB, 2)}</dd>
+<dt>Через один турникет, ряд 1 → ряд 2</dt><dd class="hl">${fmt(Q / cfg.NA, 2)} → ${fmt(Q / cfg.NB, 2)} чел./с</dd>`;
+  fp3d(cv, { fov: 30, cam: { yaw: 0, pitch: 1.0, dist: 15, ty: 0, tz: -0.6, dmin: 6, dmax: 26 } }, (THREE, scene) => {
+    fpLights(THREE, scene); scene.fog = new THREE.Fog(0xffffff, 20, 36);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(22, 14), new THREE.MeshStandardMaterial({ color: 0xFAFAFC, roughness: 0.95 })); floor.rotation.x = -Math.PI / 2; floor.position.y = -0.01; scene.add(floor);
+    /* коридор: ширина меняется от ряда к ряду */
+    const seg = 60, xs = [], fl = [], wallL = [], wallR = [];
+    for (let i = 0; i <= seg; i++) { const x = -8 + 16 * i / seg, hw = Nx(x) * PITCH / 2; xs.push([x, hw]); }
+    const strip = new THREE.BufferGeometry(), pos = [], idx = [];
+    xs.forEach(([x, hw]) => { pos.push(x, 0, -hw, x, 0, hw); });
+    for (let i = 0; i < seg; i++) { const a = i * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
+    strip.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); strip.setIndex(idx); strip.computeVertexNormals();
+    scene.add(new THREE.Mesh(strip, new THREE.MeshBasicMaterial({ color: 0xE9E3FB, side: THREE.DoubleSide })));
+    const wall = sgn => { const g = new THREE.BufferGeometry(), p = [], ix = []; xs.forEach(([x, hw]) => { p.push(x, 0, sgn * (hw + 0.06), x, 0.55, sgn * (hw + 0.06)); });
+      for (let i = 0; i < seg; i++) { const a = i * 2; ix.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); } g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); g.setIndex(ix); g.computeVertexNormals();
+      scene.add(new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: 0xBDB3E6, transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false })));
+      const top = []; xs.forEach(([x, hw]) => top.push(new THREE.Vector3(x, 0.55, sgn * (hw + 0.06)))); scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(top), new THREE.LineBasicMaterial({ color: 0x6A3FD1 }))); };
+    wall(1); wall(-1);
+    /* ряды турникетов */
+    const cabGeo = new THREE.BoxGeometry(0.55, 0.95, 0.18), cabMat = new THREE.MeshStandardMaterial({ color: 0xD7DAE3, roughness: 0.35, metalness: 0.4 });
+    const capMat = new THREE.MeshStandardMaterial({ color: 0x6A3FD1, roughness: 0.4 }), barMat = new THREE.MeshStandardMaterial({ color: 0x9CA3B4, roughness: 0.25, metalness: 0.8 });
+    const rotors = [];
+    const gate = (x, N, rate) => { const hw = N * PITCH / 2;
+      for (let k = 0; k <= N; k++) { const z = -hw + k * PITCH; const c = new THREE.Mesh(cabGeo, cabMat); c.position.set(x, 0.475, z); scene.add(c);
+        const cap = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.06, 0.2), capMat); cap.position.set(x, 0.97, z); scene.add(cap); }
+      for (let k = 0; k < N; k++) { const z = -hw + k * PITCH + 0.07; const r = new THREE.Group(); r.position.set(x, 0.72, z);
+        for (let j = 0; j < 3; j++) { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.42, 8), barMat); b.position.z = 0.21; b.rotation.x = Math.PI / 2; const arm = new THREE.Group(); arm.add(b); arm.rotation.x = j * Math.PI * 2 / 3; r.add(arm); }
+        r.rotation.z = 0.5; scene.add(r); rotors.push({ r, rate }); }
+      const lb = fpLabel(THREE, [N + ' турникетов', fmt(Q / N, 2) + ' чел./с через каждый'], { color: '#2A1478', size: 0.011 }); lb.position.set(x, 0.3, -hw - 1.15); scene.add(lb); };
+    gate(XA, cfg.NA, Q / cfg.NA); gate(XB, cfg.NB, Q / cfg.NB);
+    const sh = fpShadow(THREE, 18, 9); sh.position.y = 0.002; scene.add(sh);
+    /* люди */
+    const MAX = 260, bodyG = new THREE.CylinderGeometry(0.12, 0.15, 0.5, 12), headG = new THREE.SphereGeometry(0.105, 14, 10);
+    const bodies = new THREE.InstancedMesh(bodyG, new THREE.MeshStandardMaterial({ roughness: 0.6 }), MAX), heads = new THREE.InstancedMesh(headG, new THREE.MeshStandardMaterial({ color: 0xB9825E, roughness: 0.7 }), MAX);
+    const pal = [0x1D1B26, 0x2E2747, 0x3D2F66, 0x4A1F33, 0x23303F, 0x5B2FC4, 0x7A1F2E].map(c => new THREE.Color(c));
+    for (let i = 0; i < MAX; i++) bodies.setColorAt(i, pal[i % pal.length]);
+    scene.add(bodies); scene.add(heads);
+    const people = [], d = new THREE.Object3D(); let acc = 0, lane = 0;
+    const VS = 1.15, rate = 2.6;  // скорость в сцене и сколько людей появляется в секунду
+    const spawn = x => { lane = (lane + 1 + Math.floor(Math.random() * (cfg.NA - 1))) % cfg.NA; const uA = (lane + 0.5) / cfg.NA;
+      const kB = clamp(Math.floor(uA * cfg.NB + (Math.random() - 0.5) * 1.2), 0, cfg.NB - 1); people.push({ x, uA, uB: (kB + 0.5) / cfg.NB, ph: Math.random() * 6, s: 0.9 + Math.random() * 0.2 }); };
+    for (let x = -8; x < 8; ) { spawn(x); x += Vx(x) * VS / rate; }
+    return { frame(dt) {
+      acc += dt * rate; while (acc >= 1) { acc -= 1; spawn(-8); }
+      for (let i = people.length - 1; i >= 0; i--) { const p = people[i]; p.x += Vx(p.x) * VS * dt; p.ph += Vx(p.x) * dt * 9; if (p.x > 8) people.splice(i, 1); }
+      people.slice(0, MAX).forEach((p, i) => { const u = lerp(p.uA, p.uB, sm((p.x - XA) / (XB - XA))), z = (u - 0.5) * Nx(p.x) * PITCH, bob = Math.abs(Math.sin(p.ph)) * 0.05;
+        d.position.set(p.x, 0.25 + bob, z); d.rotation.set(0, 0, -0.06 * Vx(p.x)); d.scale.setScalar(p.s); d.updateMatrix(); bodies.setMatrixAt(i, d.matrix);
+        d.position.y = 0.62 + bob * 1.1; d.updateMatrix(); heads.setMatrixAt(i, d.matrix); });
+      bodies.count = heads.count = Math.min(people.length, MAX);
+      bodies.instanceMatrix.needsUpdate = true; heads.instanceMatrix.needsUpdate = true;
+      rotors.forEach(o => { o.r.children.forEach((a, j) => { a.rotation.x += o.rate * dt * 0.9; }); });
+    } };
+  });
+}
+
+/* ссылки на подраздел другого раздела: перейти и прокрутить к нужному заголовку */
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('a[data-anchor]'); if (!a) return;
+  const id = a.dataset.anchor, href = a.getAttribute('href');
+  if (href && location.hash === href) e.preventDefault();
+  const go = () => { const t = document.getElementById(id); if (!t || !t.offsetParent) return false;
+    window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 24, behavior: 'smooth' }); t.classList.add('anchor-flash'); setTimeout(() => t.classList.remove('anchor-flash'), 1800); return true; };
+  const fix = () => { const t = document.getElementById(id); if (!t || !t.offsetParent) return; const d = t.getBoundingClientRect().top - 24; if (Math.abs(d) > 30) window.scrollTo({ top: window.scrollY + d, behavior: 'auto' }); };
+  setTimeout(() => { if (!go()) setTimeout(go, 600); setTimeout(fix, 900); setTimeout(fix, 1700); setTimeout(fix, 2600); }, 260);
+});
+
+/* 1.3 Бернулли */
+/* шаги вывода: [формула, пояснение] */
+const EU_STEPS = [
+  [String.raw`dm = \rho\,S\,dx`, 'Масса среза – его объём \\(S\\,dx\\), умноженный на плотность.'],
+  [String.raw`F_1 = p\,S, \qquad F_2 = (p + dp)\,S`, 'Давление – сила на единицу площади. Поэтому сила на каждую грань – давление, умноженное на площадь \\(S\\). Слева давит \\(p\\), справа – чуть изменившееся давление \\(p + dp\\).'],
+  [String.raw`F = F_1 - F_2 = p\,S - (p + dp)\,S = -dp\,S`, 'Сила \\(F_1\\) направлена по оси \\(x\\), сила \\(F_2\\) – против неё, поэтому её берём со знаком минус. <b>Отсюда и минус в уравнении Эйлера:</b> срез толкает туда, где давление ниже. Если по потоку давление падает (\\(dp &lt; 0\\)), сила положительна и срез разгоняется.'],
+  [String.raw`dm\,\dfrac{dV}{dt} = F \;\Rightarrow\; \rho\,S\,dx\,\dfrac{dV}{dt} = -dp\,S`, 'Второй закон Ньютона: масса на ускорение равна равнодействующей силе. Подставляем массу и силу.'],
+  [String.raw`\rho\,\dfrac{dx}{dt}\,dV = -dp`, 'Площадь \\(S\\) сокращается. Множители переставляем: \\(dx\\cdot\\dfrac{dV}{dt} = \\dfrac{dx}{dt}\\cdot dV\\).'],
+  [String.raw`\dfrac{dx}{dt} = V \;\Rightarrow\; \rho\,V\,dV = -dp`, 'Путь, пройденный срезом за время \\(dt\\), делённый на это время, – скорость среза \\(V\\).'],
+  [String.raw`\boxed{\;V\,\dfrac{dV}{dx} = -\dfrac{1}{\rho}\,\dfrac{dp}{dx}\;}`, 'Делим обе части на \\(\\rho\\,dx\\). Это <b>уравнение Эйлера</b> для струйки газа – второй закон Ньютона, записанный для воздуха: ускорение частицы определяется тем, как быстро меняется давление вдоль потока.'],
+];
+const BI_STEPS = [
+  [String.raw`\rho = \text{const} \;\Rightarrow\; \int\dfrac{dp}{\rho} = \dfrac{1}{\rho}\int dp = \dfrac{p}{\rho}`, 'Плотность постоянна, её можно вынести за знак интеграла.'],
+  [String.raw`\dfrac{V^2}{2} + \dfrac{p}{\rho} = \text{const}`, 'Подставляем в интегральную форму.'],
+  [String.raw`p + \dfrac{\rho V^2}{2} = \text{const}`, 'Умножаем обе части на \\(\\rho\\). Каждое слагаемое теперь измеряется в паскалях.'],
+  [String.raw`\boxed{\;p + \dfrac{\rho V^2}{2} = p_0\;}`, 'Если поток затормозить до нуля (\\(V = 0\\)), останется только давление – это <b>давление торможения</b> \\(p_0\\). Значит, константа и есть \\(p_0\\). Это уравнение Бернулли для несжимаемого газа.'],
+];
+const BC_STEPS = [
+  [String.raw`\dfrac{p}{\rho^k} = C \;\Rightarrow\; p = C\rho^k`, 'Уравнение Пуассона. Выражаем из него давление: теперь мы знаем, как давление зависит от плотности.'],
+  [String.raw`dp = k\,C\,\rho^{k-1}\,d\rho`, 'Дифференцируем: производная \\(\\rho^k\\) равна \\(k\\rho^{k-1}\\).'],
+  [String.raw`\dfrac{dp}{\rho} = k\,C\,\rho^{k-2}\,d\rho`, 'Делим обе части на \\(\\rho\\) – именно это выражение стоит под интегралом.'],
+  [String.raw`\int\dfrac{dp}{\rho} = k\,C\,\dfrac{\rho^{k-1}}{k-1} = \dfrac{k}{k-1}\cdot\dfrac{C\rho^k}{\rho} = \dfrac{k}{k-1}\,\dfrac{p}{\rho}`, 'Интегрируем степенную функцию и возвращаем \\(C\\rho^k = p\\).'],
+  [String.raw`\boxed{\;\dfrac{V^2}{2} + \dfrac{k}{k-1}\,\dfrac{p}{\rho} = \text{const}\;}`, 'Подставляем в интегральную форму. Это уравнение Бернулли для сжимаемого газа.'],
+];
+const stepsHTML = (id, arr, btn) => `<ol class="steps" id="${id}">${arr.map(([f, w], i) => `<li${i ? ' hidden' : ''}><div>\\[${f}\\]<div class="why">${w}</div></div></li>`).join('')}</ol>
+<div class="steps-ctl"><button class="btn primary" id="${btn}N" type="button">Следующий шаг</button><button class="btn" id="${btn}A" type="button">Показать весь вывод</button><button class="btn" id="${btn}R" type="button">Начать сначала</button></div>`;
+
+CONTENT.bern = {
+  theory: () => String.raw`<div class="prose">
+<h2 class="part">Уравнение Эйлера</h2>
+<p>Уравнение Бернулли выводят из уравнения Эйлера, а уравнение Эйлера – из второго закона Ньютона. Поэтому начнём с самого начала: посмотрим, какие силы действуют на маленький кусочек воздуха в потоке.</p>
+<h3>Бесконечно малый срез потока</h3>
+<p>Возьмём элементарную трубку тока, по которой движется воздух, и мысленно вырежем из неё тонкую «пластинку» поперёк потока – <b>бесконечно малый срез</b> толщиной \(dx\) и площадью \(S\). Ось \(x\) направим по потоку.</p>
+<p>Срез со всех сторон окружён воздухом. Слева на него давит воздух с давлением \(p\), справа – воздух с давлением \(p + dp\): на расстоянии \(dx\) давление успевает чуть-чуть измениться. Силы на боковые стенки уравновешены, нас интересуют только две грани – левая и правая.</p>
+<p>Двигайте ползунок: он задаёт, как меняется давление по потоку. Посмотрите, куда направлена равнодействующая сила и что происходит со скоростью среза.</p>
+<div class="viz light"><canvas id="euCv" aria-label="Модель: бесконечно малый срез потока и силы давления на его грани"></canvas>
+  <div class="viz-ctl"><div class="ctl"><label for="euDp">Изменение давления по потоку dp <output id="euDpo"></output></label><input type="range" id="euDp" min="-1" max="1" step="0.05" value="-0.6"></div></div>
+  <p class="note" id="euCap"></p></div>
+<h3>Вывод уравнения Эйлера по шагам</h3>
+${stepsHTML('euSteps', EU_STEPS, 'eu')}
+
+<h3>То же самое на примере коробки</h3>
+<p>Если срез воздуха кажется слишком абстрактным, представьте обычную коробку на гладком полу. Её толкают с двух сторон: слева с силой \(F_1\), справа с силой \(F_2\). Коробка поедет туда, куда толкают сильнее, и с ускорением \(a = (F_1 - F_2)/m\). С нашим срезом воздуха происходит ровно то же самое – только толкают его не руки, а давление соседнего воздуха.</p>
+<div class="viz light"><canvas id="bxCv" aria-label="Модель: коробку толкают с двух сторон"></canvas>
+  <div class="viz-ctl"><div class="ctl"><label for="bxF1">Сила слева F₁ <output id="bxF1o"></output></label><input type="range" id="bxF1" min="0" max="100" step="1" value="70"></div>
+  <div class="ctl"><label for="bxF2">Сила справа F₂ <output id="bxF2o"></output></label><input type="range" id="bxF2" min="0" max="100" step="1" value="40"></div></div>
+  <dl class="readout" id="bxOut"></dl></div>
+<div class="cmp-wrap"><table class="cmp"><thead><tr><th></th><th>Коробка</th><th>Срез воздуха</th></tr></thead><tbody>
+<tr><td>Масса</td><td>\(m\)</td><td>\(dm = \rho\,S\,dx\)</td></tr>
+<tr><td>Сила слева</td><td>\(F_1\) – толкает рука</td><td>\(p\,S\) – давит воздух слева</td></tr>
+<tr><td>Сила справа</td><td>\(F_2\) – толкает рука</td><td>\((p + dp)\,S\) – давит воздух справа</td></tr>
+<tr><td>Равнодействующая</td><td>\(F_1 - F_2\)</td><td>\(-dp\,S\)</td></tr>
+<tr><td>Второй закон Ньютона</td><td>\(m\,a = F_1 - F_2\)</td><td>\(\rho\,S\,dx\,\dfrac{dV}{dt} = -dp\,S\)</td></tr>
+<tr><td>Куда поедет</td><td>туда, где сила меньше</td><td>туда, где давление меньше</td></tr></tbody></table></div>
+
+<h2 class="part">Уравнение Бернулли</h2>
+<h3>Дифференциальная форма</h3>
+<p>Возьмём уравнение Эйлера в виде \(\rho V\,dV = -dp\) (шаг 6), поделим на \(\rho\) и перенесём всё в одну сторону:</p>
+<div class="feq">\[\boxed{\;V\,dV + \dfrac{dp}{\rho} = 0\;}\]<span>дифференциальная форма уравнения Бернулли</span></div>
+<h3>Интегральная форма</h3>
+<p>Проинтегрируем вдоль струйки. Интеграл от \(V\,dV\) равен \(V^2/2\), а от нуля – константа:</p>
+<div class="feq">\[\boxed{\;\dfrac{V^2}{2} + \int\dfrac{dp}{\rho} = \text{const}\;}\]<span>интегральная форма уравнения Бернулли</span></div>
+<p>Чтобы взять оставшийся интеграл, нужно знать, как плотность связана с давлением. Здесь дорога раздваивается.</p>
+<div class="fork"><div class="fork-head">\(\displaystyle\int\dfrac{dp}{\rho} = \;?\)</div>
+<div class="fork-row"><a class="fork-card a" href="#bern" data-anchor="bern-inc"><small>Развилка 1</small><b>Воздух несжимаем</b><span>\(M &lt; 0{,}4\), плотность постоянна: \(\rho = \text{const}\)</span></a>
+<a class="fork-card b" href="#bern" data-anchor="bern-comp"><small>Развилка 2</small><b>Воздух сжимаем</b><span>\(M &gt; 0{,}4\), плотность меняется под действием давления</span></a></div></div>
+
+<h3 id="bern-inc">Развилка 1. Несжимаемый газ</h3>
+<p>Пока число \(M &lt; 0{,}4\), плотность воздуха меняется меньше чем на 8 %, и её считают постоянной (об этой границе – в разделе <a href="#cont" data-open-tab="theory">1.2</a>).</p>
+${stepsHTML('biSteps', BI_STEPS, 'bi')}
+<ul class="plist"><li>\(p\) – <b>статическое давление</b>, его чувствует тело, движущееся вместе с потоком;</li><li>\(q = \rho V^2/2\) – <b>динамическое давление</b> (скоростной напор);</li><li>\(p_0\) – <b>давление торможения</b> (полное давление).</li></ul>
+<div class="defn defn-acc"><b>Где скорость больше, там давление меньше.</b> Сумма статического и динамического давления в струйке постоянна: вырос скоростной напор – статическое давление упало.</div>
+
+<h3 id="bern-comp">Развилка 2. Сжимаемый газ</h3>
+<p>Самолёты летают и на больших скоростях. Тогда плотность воздуха заметно меняется под действием давления, и вынести её за знак интеграла уже нельзя. Нужна формула, которая описывает, <b>как давление зависит от плотности</b>, – это уравнение Пуассона.</p>
+<div class="fnote"><b>Почему именно уравнение Пуассона.</b> В разделе <a href="#atm" data-open-tab="theory" data-anchor="atm-adiab">1.1</a> мы договорились, что все процессы в потоке воздуха – адиабатические, то есть идут без теплообмена. А для адиабатического процесса связь давления и плотности как раз и даёт уравнение Пуассона \(p/\rho^k = C\), где \(k = 1{,}4\) – показатель адиабаты воздуха.</div>
+${stepsHTML('bcSteps', BC_STEPS, 'bc')}
+<h3>Три формы записи</h3>
+<p>Отношение \(p/\rho\) можно заменить по уравнению состояния, а \(kp/\rho\) – по формуле скорости звука. Получаем три равноправные записи одного и того же уравнения:</p>
+<div class="forms3">
+<div><small>через давление и плотность</small>\[\dfrac{V^2}{2} + \dfrac{k}{k-1}\,\dfrac{p}{\rho} = \text{const}\]</div>
+<div><small>через температуру, \(p/\rho = RT\)</small>\[\dfrac{V^2}{2} + \dfrac{k}{k-1}\,RT = \text{const}\]</div>
+<div><small>через скорость звука, \(a^2 = kRT\)</small>\[\dfrac{V^2}{2} + \dfrac{a^2}{k-1} = \text{const}\]</div></div>
+<p class="note">Откуда берётся \(a^2 = kRT\) – вывод в разделе <a href="#sound" data-open-tab="theory" data-anchor="snd-derive">1.4</a>.</p>
+
+<h2 class="part">Что говорит уравнение Бернулли</h2>
+<div class="defn defn-acc"><b>Полная энергия единицы массы газа постоянна.</b> Она складывается из двух частей: кинетической энергии \(V^2/2\) и тепловой энергии \(\dfrac{k}{k-1}RT = c_p T\).</div>
+<p>Здесь \(c_p = \dfrac{kR}{k-1} \approx 1005\) Дж/(кг·К) – теплоёмкость воздуха при постоянном давлении. Сумма двух энергий не меняется, поэтому одна может переходить в другую:</p>
+<ul class="plist"><li><b>Разгоняем поток</b> – переводим тепловую энергию в кинетическую. Газ остывает, и вместе с температурой падает местная скорость звука \(a = 20{,}1\sqrt{T}\).</li><li><b>Тормозим поток</b> – кинетическая энергия возвращается в тепловую, газ нагревается. Поэтому нагревается кромка крыла и приёмник воздушного давления на большой скорости.</li></ul>
+<p>Посмотрите, что происходит с частицей воздуха, когда её разгоняют. Внутри частицы – молекулы: чем выше температура, тем сильнее они мечутся. Справа – как делится полная энергия.</p>
+<div class="viz light"><canvas id="enCv" aria-label="Модель: частица воздуха разгоняется, тепловая энергия переходит в кинетическую"></canvas>
+  <div class="viz-ctl"><div class="ctl"><label for="enV">Скорость потока V <output id="enVo"></output></label><input type="range" id="enV" min="0" max="755" step="1" value="200"></div>
+  <div class="viz-btns"><button class="btn primary" id="enGo" type="button">Разогнать поток</button></div></div>
+  <dl class="readout" id="enOut"></dl></div>
+<h3>Предельная скорость</h3>
+<p>Тепловая энергия не бесконечна. Если превратить её в кинетическую целиком, газ остынет до абсолютного нуля, а скорость достигнет предела:</p>
+\[V_{\max} = \sqrt{2c_pT_0} = a_0\sqrt{\dfrac{2}{k-1}} \approx 2{,}24\,a_0.\]
+<p>Для нормальных условий (\(T_0 = 288\) К, \(a_0 = 340\) м/с) это примерно <b>760 м/с</b>. Как бы мы ни хотели, разогнать воздушную струю быстрее не получится: вся её тепловая энергия уже стала кинетической. В любой газовой среде есть такая предельная скорость потока.</p>
+<div class="callout"><b>Зачем это нужно.</b> По уравнению Бернулли работает указатель скорости (вкладка «В полёте»), им объясняют разрежение над крылом и падение давления в сужении канала. Форма для сжимаемого газа нужна на больших скоростях: по ней считают, как меняются температура, давление и местная скорость звука в потоке, – это пригодится в разделах 1.4 и 1.5.</div>
+</div>`,
+  mountTheory() {
+    stepper('#euSteps', '#euN', '#euA', '#euR'); stepper('#biSteps', '#biN', '#biA', '#biR'); stepper('#bcSteps', '#bcN', '#bcA', '#bcR');
+    mountEuler(); mountBox(); mountEnergy();
+    addVizFs(document.querySelector('.sv-bern') || document);
+  },
+  model: CONTENT_BERN_OLD.model, mountModel: CONTENT_BERN_OLD.mountModel,
+  flight: CONTENT_BERN_OLD.flight, mountFlight: CONTENT_BERN_OLD.mountFlight,
+  quiz: [
+    ...CONTENT_BERN_OLD.quiz,
+    { q: 'Откуда в уравнении Эйлера знак минус?', o: ['Это поправка на вязкость', 'Сила давления справа направлена против оси x: F = pS − (p + dp)S = −dp·S', 'Так принято, физического смысла нет'], a: 1, e: 'Равнодействующая сил давления на срез равна −dp·S: срез толкает туда, где давление ниже. При dp < 0 сила положительна и поток разгоняется.' },
+    { q: 'Почему для сжимаемого газа в выводе используют уравнение Пуассона?', o: ['Потому что процессы в потоке считают адиабатическими', 'Потому что температура постоянна', 'Потому что плотность постоянна'], a: 0, e: 'Мы договорились, что все процессы в потоке адиабатические (без теплообмена). Для такого процесса p/ρ^k = C.' },
+    { q: 'Поток разгоняют. Что происходит с его температурой и местной скоростью звука?', o: ['Растут', 'Падают', 'Не меняются'], a: 1, e: 'Полная энергия V²/2 + cₚT постоянна. Растёт кинетическая – падает тепловая: газ остывает, а a = 20,1√T уменьшается.' },
+    { q: 'Чему примерно равна предельная скорость воздушного потока при T₀ = 288 К?', o: ['340 м/с', 'около 760 м/с', 'Предела нет'], a: 1, e: 'Vmax = √(2cₚT₀) ≈ 2,24·a₀ ≈ 760 м/с: вся тепловая энергия превратилась в кинетическую.' },
+  ],
+};
+
+/* 1.4 звук, Гюгонио, сопло (старая версия) */
+const CONTENT_SOUND_OLD = {
   theory: () => `<div class="prose">
 <p>Квадрат скорости звука – предел отношения приращений давления и плотности. Если процесс адиабатический, то из уравнения Пуассона \\(p/\\rho^k = C\\) получаем:</p>
 \\[a^2 = \\dfrac{dp}{d\\rho} = k\\dfrac{p}{\\rho} = kRT, \\qquad a = \\sqrt{kRT} \\approx 20{,}1\\sqrt{T}.\\]
@@ -3738,6 +4279,122 @@ CONTENT.sound = {
     { q: 'Дозвуковой поток в расширяющемся канале…', o: ['ускоряется', 'тормозится', 'становится сверхзвуковым'], a: 1, e: 'При M < 1 множитель (M² − 1) отрицательный: dS > 0 означает dV < 0.' },
     { q: 'Где в сопле Лаваля на расчётном режиме M = 1?', o: ['На входе', 'В минимальном сечении (горле)', 'На срезе'], a: 1, e: 'Из уравнения Гюгонио при M = 1 получаем dS = 0 – это экстремум площади, то есть горло.' },
     { q: 'Самолёт летит с одним и тем же числом М зимой (−35 °C) и летом (+35 °C). Когда истинная скорость больше?', o: ['Зимой', 'Летом', 'Одинаково'], a: 1, e: 'Летом воздух теплее, скорость звука больше, а V = M·a.' },
+  ],
+};
+
+/* 1.4 звук, Гюгонио, сопло */
+const SD_STEPS = [
+  [String.raw`p_0 = C\rho_0^{\,k}, \qquad p = C\rho^k`, 'Записываем уравнение Пуассона дважды: для начального состояния воздуха и для текущего. Константа \\(C\\) одна и та же, \\(k = 1{,}4\\) – адиабатический коэффициент воздуха.'],
+  [String.raw`\dfrac{p}{p_0} = \left(\dfrac{\rho}{\rho_0}\right)^{k}`, 'Делим второе уравнение на первое – константа \\(C\\) сокращается.'],
+  [String.raw`p = \dfrac{p_0}{\rho_0^{\,k}}\,\rho^k`, 'Выражаем давление. Множитель \\(p_0/\\rho_0^{\\,k}\\) – постоянное число.'],
+  [String.raw`\dfrac{dp}{d\rho} = \dfrac{p_0}{\rho_0^{\,k}}\,k\,\rho^{k-1} = k\,\dfrac{p_0\,\rho^k}{\rho_0^{\,k}}\cdot\dfrac{1}{\rho} = k\,\dfrac{p}{\rho}`, 'Дифференцируем по плотности и замечаем, что \\(\\dfrac{p_0\\rho^k}{\\rho_0^{\\,k}}\\) – это снова \\(p\\) (шаг 3).'],
+  [String.raw`a^2 = \dfrac{dp}{d\rho} = k\,\dfrac{p}{\rho} = kRT`, 'Квадрат скорости звука по определению равен \\(dp/d\\rho\\). Отношение \\(p/\\rho\\) заменяем по уравнению состояния: \\(p/\\rho = RT\\).'],
+  [String.raw`\boxed{\;a = \sqrt{kRT} = \sqrt{1{,}4\cdot 287}\,\sqrt{T} \approx 20{,}1\sqrt{T}\;}`, 'Для воздуха \\(k = 1{,}4\\), \\(R = 287\\) Дж/(кг·К), и множитель \\(\\sqrt{kR}\\) равен примерно 20,1. Температура – в кельвинах.'],
+];
+const HG_STEPS = [
+  [String.raw`\rho V S = \text{const}`, 'Уравнение неразрывности для сжимаемого потока (раздел 1.2): массовый расход одинаков во всех сечениях.'],
+  [String.raw`d\rho\cdot VS + dV\cdot\rho S + dS\cdot\rho V = 0`, 'Дифференцируем произведение трёх величин: по очереди дифференцируем каждую, остальные оставляем. Производная константы – ноль.'],
+  [String.raw`\dfrac{d\rho}{\rho} + \dfrac{dV}{V} + \dfrac{dS}{S} = 0`, 'Делим всё на \\(\\rho VS\\). Получились относительные изменения плотности, скорости и площади.'],
+  [String.raw`\dfrac{dS}{S} = -\dfrac{dV}{V} - \dfrac{d\rho}{\rho}`, 'Выражаем изменение площади. Осталось узнать, чему равно \\(d\\rho/\\rho\\).'],
+  [String.raw`V\,\dfrac{dV}{dx} = -\dfrac{1}{\rho}\,\dfrac{dp}{dx} \;\;\Big|\cdot dx \quad\Rightarrow\quad V\,dV = -\dfrac{dp}{\rho} \;\Rightarrow\; dp = -\rho V\,dV`, 'Берём уравнение Эйлера (раздел 1.3), умножаем на \\(dx\\) и выражаем \\(dp\\).'],
+  [String.raw`a^2 = \dfrac{dp}{d\rho} \;\Rightarrow\; dp = a^2\,d\rho`, 'Определение скорости звука даёт второе выражение для того же \\(dp\\).'],
+  [String.raw`-\rho V\,dV = a^2\,d\rho \;\;\Big|:\rho a^2`, 'Приравниваем два выражения для \\(dp\\) и делим на \\(\\rho a^2\\).'],
+  [String.raw`\boxed{\;\dfrac{d\rho}{\rho} = -\dfrac{V}{a^2}\,dV = -\dfrac{V^2}{a^2}\cdot\dfrac{dV}{V} = -M^2\,\dfrac{dV}{V}\;}`, 'Умножаем и делим на \\(V\\), а \\(V/a\\) – это число Маха. Получили важную связь: относительное изменение плотности в \\(M^2\\) раз больше изменения скорости и противоположно ему по знаку.'],
+  [String.raw`\dfrac{dS}{S} = -\dfrac{dV}{V} + M^2\,\dfrac{dV}{V}`, 'Подставляем в шаг 4.'],
+  [String.raw`\boxed{\;\dfrac{dS}{S} = -\dfrac{dV}{V}\,\left(1 - M^2\right)\;}`, 'Выносим \\(dV/V\\) за скобки. Это и есть <b>уравнение Гюгонио</b>.'],
+];
+const LAVAL_ZONES = {
+  all: ['Сопло Лаваля целиком', 'Сначала канал сужается (зона 1), в самом узком месте – критическое сечение, дальше канал расширяется (зона 2). Поток проходит все три участка и разгоняется непрерывно: от дозвуковой скорости на входе до сверхзвуковой на срезе.'],
+  z1: ['Зона 1 – сужение, M < 1', 'Поток дозвуковой. Скорость растёт, плотность падает, но медленнее, чем растёт скорость: |dρ/ρ| = M²·|dV/V| < |dV/V|. Значит, произведение ρV растёт – каждый квадратный метр сечения пропускает больше воздуха. Квадратных метров нужно меньше, и канал сужается.'],
+  crit: ['Критическое сечение – M = 1', 'В самом узком месте поток достигает местной скорости звука. Здесь плотность падает ровно так же быстро, как растёт скорость, и ρV максимально: каждый квадратный метр работает на пределе. По уравнению Гюгонио при M = 1 получаем dS = 0 – это минимум площади. Параметры в этом сечении называют критическими: T*, p*, ρ*, a*.'],
+  z2: ['Зона 2 – расширение, M > 1', 'Поток сверхзвуковой. Теперь плотность падает быстрее, чем растёт скорость: |dρ/ρ| = M²·|dV/V| > |dV/V|. Произведение ρV уменьшается – каждый квадратный метр пропускает меньше воздуха. Чтобы пропустить тот же расход, квадратных метров нужно больше, и канал расширяется.'],
+};
+CONTENT.sound = {
+  theory: () => String.raw`<div class="prose">
+<h2 class="part" id="snd-derive">Скорость звука</h2>
+<p>В разделе <a href="#atm" data-open-tab="theory" data-anchor="atm-sound">1.1</a> мы уже договорились: сжимаемость воздуха характеризуют скоростью звука – скоростью, с которой по нему бегут малые возмущения. Квадрат скорости звука – предел отношения приращений давления и плотности:</p>
+\[a^2 = \lim_{\Delta\rho\to 0}\dfrac{\Delta p}{\Delta\rho} = \dfrac{dp}{d\rho}.\]
+<p>Теперь выведем из этого определения рабочую формулу. Чтобы взять производную \(dp/d\rho\), нужно знать, как давление связано с плотностью. Процессы в потоке адиабатические (<a href="#atm" data-open-tab="theory" data-anchor="atm-adiab">договорённость из раздела 1.1</a>), поэтому эту связь даёт уравнение Пуассона.</p>
+${stepsHTML('sdSteps', SD_STEPS, 'sd')}
+<div class="defn defn-acc"><b>Скорость звука в воздухе зависит только от температуры.</b> Давление и плотность по отдельности на неё не влияют – в формулу входит только их отношение \(p/\rho = RT\).</div>
+<p><b>Почему так.</b> Звук – это волна сжатия, которая передаётся от молекулы к молекуле через столкновения. Температура – мера скорости хаотического движения молекул. Чем горячее воздух, тем быстрее молекулы долетают до соседей и сталкиваются с ними, тем быстрее бежит волна. Поэтому с высотой, где холоднее, скорость звука падает.</p>
+<p>Отношение скорости потока к местной скорости звука – <b>число Маха</b>: \(M = V/a\). Оно и решает, как поведёт себя поток в канале.</p>
+
+<h2 class="part">Уравнение Гюгонио</h2>
+<p>Уравнение Гюгонио отвечает на вопрос: <b>каким должен быть канал, чтобы поток в нём разгонялся?</b> Выведем его из трёх уже известных уравнений: неразрывности, Эйлера и скорости звука.</p>
+${stepsHTML('hgSteps', HG_STEPS, 'hg')}
+<h3>Как читать уравнение</h3>
+<div class="cmp-wrap"><table class="cmp"><thead><tr><th>Поток</th><th>Множитель</th><th>Что следует</th></tr></thead><tbody>
+<tr><td>Дозвуковой, \(M &lt; 1\)</td><td>\(1 - M^2 &gt; 0\)</td><td>\(dS\) и \(dV\) разных знаков: чтобы <b>разогнать</b> поток, канал нужно <b>сужать</b></td></tr>
+<tr><td>Звуковой, \(M = 1\)</td><td>\(1 - M^2 = 0\)</td><td>\(dS = 0\): скорость звука достигается только в <b>минимальном сечении</b></td></tr>
+<tr><td>Сверхзвуковой, \(M &gt; 1\)</td><td>\(1 - M^2 &lt; 0\)</td><td>\(dS\) и \(dV\) одного знака: чтобы <b>разогнать</b> поток, канал нужно <b>расширять</b></td></tr></tbody></table></div>
+<p>Причина видна из промежуточного результата \(d\rho/\rho = -M^2\,dV/V\). При \(M &lt; 1\) плотность меняется медленнее скорости, при \(M &gt; 1\) – быстрее. От этого зависит, растёт или падает \(\rho V\) – количество воздуха, которое проходит через каждый квадратный метр сечения.</p>
+
+<h3>Задача</h3>
+<div class="task-card"><p><b>Условие.</b> Поток движется с числом \(M = 0{,}8\). Его разгоняют на 2 %: со 100 до 102 м/с. На сколько процентов изменятся плотность и произведение \(\rho V\)? Канал должен сужаться или расширяться?</p>
+<p class="note">Скорости в условии условные: для решения важны только относительные изменения.</p></div>
+<ol class="steps solve">
+<li><div>\[\dfrac{dV}{V} = \dfrac{102 - 100}{100} = +0{,}02 = +2\,\%\]<div class="why">Относительное изменение скорости.</div></div></li>
+<li><div>\[\dfrac{d\rho}{\rho} = -M^2\,\dfrac{dV}{V} = -0{,}8^2\cdot 0{,}02 = -0{,}0128 = -1{,}28\,\%\]<div class="why">Плотность упала, но меньше, чем выросла скорость: поток дозвуковой.</div></div></li>
+<li><div>\[\dfrac{d(\rho V)}{\rho V} = \dfrac{d\rho}{\rho} + \dfrac{dV}{V} = -1{,}28\,\% + 2\,\% = +0{,}72\,\%\]<div class="why">Относительное изменение произведения – сумма относительных изменений множителей.</div></div></li>
+<li><div>\[\dfrac{dS}{S} = -\dfrac{dV}{V}\,(1 - M^2) = -0{,}02\cdot(1 - 0{,}64) = -0{,}0072 = -0{,}72\,\%\]<div class="why">Проверка по уравнению Гюгонио: ответ тот же.</div></div></li></ol>
+<div class="defn defn-acc"><b>Ответ.</b> Через тот же квадратный метр сечения теперь проходит на 0,72 % больше воздуха. Раз каждый квадратный метр пропускает на 0,72 % больше, то квадратных метров нужно на 0,72 % меньше: канал должен <b>сужаться</b>.</div>
+<p>Проверьте сами: поменяйте число М и скорости.</p>
+<div class="viz light"><div class="inputs"><label>Число М<input id="hgM" type="number" value="0.8" step="0.05" min="0.05" max="3"></label><label>Скорость V₁, м/с<input id="hgV1" type="number" value="100"></label><label>Скорость V₂, м/с<input id="hgV2" type="number" value="102"></label></div>
+  <dl class="readout" id="hgOut"></dl></div>
+
+<h2 class="part">Сопло Лаваля</h2>
+<p>Из уравнения Гюгонио сразу получается форма канала, в котором поток можно разогнать от дозвуковой скорости до сверхзвуковой: сначала он сужается, потом расширяется. Это <b>сопло Лаваля</b>. Ниже – его 3D-модель: молекулы воздуха показаны чёрными точками, в нескольких сечениях – площадь в условных единицах (квадратиках) и число М.</p>
+<div class="viz light v3d" id="lvViz"><canvas id="lvCv" aria-label="3D-модель сопла Лаваля с движущимися молекулами"></canvas>
+  <p class="v3d-hint">Вращайте мышью, колесом приближайте</p>
+  <div class="viz-ctl"><div class="seg" role="group" aria-label="Участок сопла"><button type="button" data-m="all" aria-pressed="true">Всё сопло</button><button type="button" data-m="z1" aria-pressed="false">Зона 1</button><button type="button" data-m="crit" aria-pressed="false">Критическое сечение</button><button type="button" data-m="z2" aria-pressed="false">Зона 2</button></div></div>
+  <div class="lv-info" id="lvInfo"></div></div>
+<p>Посмотрите на квадратики. На входе площадь – 10 единиц, в критическом сечении – 4, на срезе – 8. Молекулы на входе идут плотно и медленно, в горле – быстрее, а за ним – совсем редко, но очень быстро.</p>
+
+<h3>Непонятно? Давайте на пальцах</h3>
+<p>Представьте выход со стадиона через ряды турникетов. Каждый турникет – это один «квадратный метр» сечения, люди – это воздух. Сколько людей в секунду выходит через все турникеты вместе – одинаково на любом ряду: люди не исчезают и не появляются, как массовый расход в сопле. А вот сколько людей проходит через <b>один</b> турникет, зависит от двух вещей: <b>как быстро</b> люди идут (скорость \(V\)) и <b>как плотно</b> они идут (плотность \(\rho\)). Это и есть \(\rho V\).</p>
+
+<h3>Зона 1. Сужение, M &lt; 1</h3>
+<p>${LAVAL_ZONES.z1[1]}</p>
+<div class="viz light v3d turn"><canvas data-turn="z1" aria-label="3D-модель: турникеты в зоне 1"></canvas><dl class="readout turn-out"></dl></div>
+<p><b>На турникетах:</b> люди ускоряются (скорость ×1,5), а толпа редеет совсем немного (плотность ×0,8). Через каждый турникет теперь проходит в 1,2 раза больше людей – значит, во втором ряду хватит не 6, а 5 турникетов. Ряд стал уже – канал сузился.</p>
+
+<h3>Критическое сечение, M = 1</h3>
+<p>${LAVAL_ZONES.crit[1]}</p>
+<div class="viz light v3d turn"><canvas data-turn="crit" aria-label="3D-модель: турникеты в критическом сечении"></canvas><dl class="readout turn-out"></dl></div>
+<p><b>На турникетах:</b> люди уже бегут, и каждый турникет пропускает столько, сколько может. Ряд из 4 турникетов – самый узкий. Если поставить ещё меньше, люди не пройдут: дальше толпа начинает редеть так же быстро, как растёт скорость, и пропускная способность одного турникета больше не растёт.</p>
+
+<h3>Зона 2. Расширение, M &gt; 1</h3>
+<p>${LAVAL_ZONES.z2[1]}</p>
+<div class="viz light v3d turn"><canvas data-turn="z2" aria-label="3D-модель: турникеты в зоне 2"></canvas><dl class="readout turn-out"></dl></div>
+<p><b>На турникетах:</b> люди бегут ещё быстрее (скорость ×1,3), но толпа редеет гораздо сильнее (плотность примерно ×0,5). Через каждый турникет проходит в 1,5 раза меньше людей, и, чтобы выпустить всех, нужно уже не 4, а 6 турникетов. Ряд стал шире – канал расширяется.</p>
+<div class="callout"><b>Главное.</b> В зоне 1 «пропускная способность» квадратного метра \(\rho V\) растёт – канал сужают. В критическом сечении она максимальна. В зоне 2 она падает – канал расширяют. Так работают сопла ракетных двигателей и сверхзвуковых аэродинамических труб.</div>
+</div>`,
+  mountTheory() {
+    stepper('#sdSteps', '#sdN', '#sdA', '#sdR'); stepper('#hgSteps', '#hgN', '#hgA', '#hgR');
+    const upd = () => {
+      const M = +$('#hgM').value, V1 = +$('#hgV1').value, V2 = +$('#hgV2').value;
+      if (!(M > 0 && V1 > 0 && V2 > 0)) { $('#hgOut').innerHTML = '<dt class="warn" style="grid-column:1/-1">Введите положительные число М и скорости.</dt>'; return; }
+      const dV = (V2 - V1) / V1, dr = -M * M * dV, dq = dr + dV, dS = -dV * (1 - M * M);
+      const pc = x => (x > 0 ? '+' : x < 0 ? '−' : '') + fmt(Math.abs(x * 100), 2) + ' %';
+      const what = Math.abs(dS) < 1e-9 ? 'площадь не меняется – это критическое сечение' : (dS < 0 ? 'канал должен <b>сужаться</b>' : 'канал должен <b>расширяться</b>');
+      $('#hgOut').innerHTML = `<dt>dV/V</dt><dd>${pc(dV)}</dd><dt>dρ/ρ = −M²·dV/V</dt><dd>${pc(dr)}</dd><dt>d(ρV)/(ρV)</dt><dd class="hl">${pc(dq)}</dd><dt>dS/S = −dV/V·(1 − M²)</dt><dd class="hl">${pc(dS)}</dd>
+<dt style="grid-column:1/-1">${M < 1 ? 'Поток дозвуковой' : M > 1 ? 'Поток сверхзвуковой' : 'Поток звуковой'}: через каждый квадратный метр проходит ${dq >= 0 ? 'на ' + fmt(Math.abs(dq * 100), 2) + ' % больше' : 'на ' + fmt(Math.abs(dq * 100), 2) + ' % меньше'} воздуха, ${what}.</dt>`;
+    };
+    ['#hgM', '#hgV1', '#hgV2'].forEach(id => $(id).addEventListener('input', upd)); upd();
+    mountLaval3D($('#lvViz'));
+    document.querySelectorAll('.sv-sound canvas[data-turn]').forEach(cv => mountTurn3D(cv));
+    addVizFs(document.querySelector('.sv-sound') || document);
+  },
+  model: CONTENT_SOUND_OLD.model, mountModel: CONTENT_SOUND_OLD.mountModel,
+  flight: CONTENT_SOUND_OLD.flight, mountFlight: CONTENT_SOUND_OLD.mountFlight,
+  quiz: [
+    { q: 'От чего зависит скорость звука в воздухе?', o: ['От давления', 'От плотности', 'Только от температуры'], a: 2, e: 'a² = k·p/ρ = kRT: давление и плотность входят только отношением p/ρ = RT.' },
+    { q: 'Какое уравнение связывает давление и плотность при выводе скорости звука?', o: ['Уравнение Пуассона p/ρ^k = C', 'Уравнение Бернулли', 'Уравнение неразрывности'], a: 0, e: 'Процесс адиабатический, поэтому используем уравнение Пуассона. Из него dp/dρ = k·p/ρ.' },
+    { q: 'Чему равно dρ/ρ, если поток с M = 0,5 разогнали на 4 %?', o: ['−1 %', '−4 %', '+1 %'], a: 0, e: 'dρ/ρ = −M²·dV/V = −0,25·4 % = −1 %.' },
+    ...CONTENT_SOUND_OLD.quiz,
+    { q: 'M = 0,8, поток разогнали на 2 %. Как изменилось ρV?', o: ['Выросло на 0,72 %', 'Упало на 1,28 %', 'Выросло на 2 %'], a: 0, e: 'd(ρV)/(ρV) = dρ/ρ + dV/V = −1,28 % + 2 % = +0,72 %. Каждый квадратный метр пропускает больше воздуха – канал сужается.' },
+    { q: 'Почему за критическим сечением сопло Лаваля расширяется?', o: ['Там поток сверхзвуковой: плотность падает быстрее, чем растёт скорость, и ρV уменьшается', 'Чтобы затормозить поток', 'Чтобы уменьшить температуру на срезе'], a: 0, e: 'При M > 1 |dρ/ρ| > |dV/V|: каждый квадратный метр пропускает меньше воздуха, поэтому нужно больше площади.' },
   ],
 };
 
