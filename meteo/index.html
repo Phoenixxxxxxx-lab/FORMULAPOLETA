@@ -168,13 +168,36 @@ html.fp-lite .glass{background:linear-gradient(180deg,rgba(28,30,26,.9),rgba(16,
 :root[data-theme="light"].fp-lite .glass{background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(246,247,242,.9))}
 html.fp-lite .roam,html.fp-lite .planes{display:none}
 @media (prefers-reduced-motion:reduce){.roam i,.plane{animation:none}.plane{display:none}.sf{opacity:1;transform:none;filter:none}.split .wd{opacity:1}}
+
+/* ====== единый шрифт Unbounded: размеры под более широкий шрифт ====== */
+.nav-top{height:118px;padding:0}
+.hero h1{font-weight:600;font-size:clamp(2.4rem,5.2vw,4.7rem);line-height:1.02;letter-spacing:-.035em}
+.hero h1 em,.sec h2 em,.scene h2 em,.cap h2 em,.finale h2 em,.sf h3 em{font-style:normal;color:var(--lime-ink)}
+.cap h2 em{color:#C6F432}
+.stat b{font-weight:500;font-size:clamp(1.8rem,2.6vw,2.5rem);letter-spacing:-.03em}
+.stat span{font-size:.62rem;letter-spacing:.1em}
+.sub{font-size:.8rem;line-height:1.75}
+.credit b{font-size:1.02rem;font-weight:600;line-height:1.25}
+.sec h2,.scene h2{font-weight:600;font-size:clamp(1.8rem,3.2vw,2.9rem);line-height:1.08;letter-spacing:-.03em}
+.cap h2{font-weight:600;font-size:clamp(1.9rem,3.4vw,3.1rem);line-height:1.08;letter-spacing:-.03em}
+.cap p{font-size:.95rem}
+.c5 h2{font-size:clamp(2.6rem,5.6vw,5.6rem)}.c5 p{font-style:normal;font-weight:500;font-size:clamp(1.2rem,2.2vw,2rem)}
+.sf .n{font-size:1.6rem;font-weight:600}
+.sf h3{font-size:1.02rem;line-height:1.2}
+.tcard .tn{font-size:2.8rem;font-weight:600;letter-spacing:-.04em}
+.tcard h3{font-size:.9rem;line-height:1.35}
+.tcard li a,.tcard li span{font-size:.68rem}
+.finale h2{font-weight:600;font-size:clamp(1.9rem,3.8vw,3.2rem);line-height:1.08;letter-spacing:-.03em}
+.ccard .lbl{font-size:.64rem}
+.brandline{font-size:.74rem}
+.st-stage{transition:none}
 </style>
 </head>
 <body>
 <div class="hero">
   <canvas id="glow" aria-hidden="true"></canvas>
   <div class="gut"><div class="wrap">
-    <div class="nav-top"><span id="brand"></span><a class="back" href="../">← Формула полёта</a></div>
+    <div class="nav-top" aria-hidden="true"></div>
     <div class="hero-in">
       <div class="stats fade" style="--d:1s"><div class="stat"><b>11 000 м</b><span>тропопауза СА</span></div><div class="stat"><b>8,3 м</b><span>на 1 гПа у земли</span></div></div>
       <div class="hero-c">
@@ -190,6 +213,7 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
 </div>
 
 <div class="page">
+  <div class="bridge" aria-hidden="true"></div>
   <section class="story" id="story" aria-label="Зачем пилоту метеорология">
     <div class="st-stage">
       <div id="stWhite" aria-hidden="true"></div>
@@ -257,9 +281,8 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
 (function(){
 const {f,ISA}=FP;
 const RED=matchMedia('(prefers-reduced-motion: reduce)').matches;
-FP.chrome({lecture:false});
-document.body.insertAdjacentHTML('afterbegin',FP.side(0));document.body.classList.add('has-side');
-document.getElementById('brand').innerHTML=FP.brand('index.html');
+FP.chrome({lecture:false,side:false});
+FP.head();
 document.getElementById('foot').innerHTML=FP.footer();
 document.body.insertAdjacentHTML('afterbegin','<div class="roam" aria-hidden="true"><i></i><i></i><i></i></div>');
 
@@ -288,6 +311,12 @@ if(M){const {animate,inView,stagger}=M;
 /* ---- история «от парты до кабины» ---- */
 const story=document.getElementById('story');
 let storyOk=false;try{storyOk=window.FPStory&&FPStory(story)}catch(e){console.warn(e)}
+/* плавный переход: облака шапки гаснут, сцена истории проявляется из темноты */
+{const stg=story.querySelector('.st-stage'),hero=document.querySelector('.hero');const sm=x=>{x=Math.min(1,Math.max(0,x));return x*x*(3-2*x)};
+ const fade=()=>{const sr=story.getBoundingClientRect(),hr=hero.getBoundingClientRect(),H=innerHeight;
+   if(stg&&storyOk)stg.style.opacity=sm((H*1.05-sr.top)/(H*.6)).toFixed(3);
+   if(webgl)webgl.style.opacity=(1-sm((H*.75-hr.bottom)/(H*.5))).toFixed(3)};
+ addEventListener('scroll',fade,{passive:true});addEventListener('resize',fade);fade()}
 if(!storyOk)story.classList.add('static');
 
 /* ---- сцена: высотомер, набор высоты, самолёты ---- */
