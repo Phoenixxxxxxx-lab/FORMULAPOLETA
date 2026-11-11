@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Формула полёта. Метеорология</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0B0B0C">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/meteo.css">
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'},startup:{ready(){MathJax.startup.defaultReady();MathJax.startup.promise.then(()=>{if(window.FP)FP.typeset(document.body)})}}};</script>
@@ -125,6 +130,7 @@ html,body{overflow-x:clip}
 .ccard small{display:block;color:var(--ink);opacity:.75;font-size:.88rem}
 /* ---- темы ---- */
 .topics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
+.sem-row{grid-column:1/-1;padding:18px 0 2px;border-bottom:1px solid var(--line)}.sem-row:first-child{padding-top:0}
 .tcard{padding:24px;display:flex;flex-direction:column;gap:10px;min-height:280px}
 .tcard .tn{font-family:var(--f-serif);font-size:4.2rem;line-height:.9;color:var(--lime-ink)}
 .tcard.off .tn{color:var(--ink-2);opacity:.55}
@@ -175,7 +181,7 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
         <div class="brandline fade" style="--d:.05s">Авиационная метеорология</div>
         <h1 aria-label="Атмосфера, которую видит пилот"><span class="w" style="--i:0">Атмосфера,</span> <em class="w" style="--i:1">которую</em><br><span class="w" style="--i:2">видит</span> <span class="w" style="--i:3">пилот.</span></h1>
         <p class="sub fade" style="--d:.7s">Компьютерный тренажёр по дисциплине «Авиационная метеорология». Выводы формул по шагам, интерактивные модели и примеры в полёте на DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p>
-        <div class="cta fade" style="--d:.85s"><a class="btn lime" href="t1.html">Начать с раздела 1</a><a class="btn" href="#topics">Темы семестра</a></div>
+        <div class="cta fade" style="--d:.85s"><a class="btn lime" href="t1.html" data-intro>Начать с раздела 1</a><a class="btn" href="#topics" data-intro>Темы дисциплины</a><button class="btn" type="button" onclick="FP.intro()"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>Предисловие</button></div>
         <div class="credits fade" style="--d:1.05s"><div class="credit"><b>Назаркин<br>Максим Дмитриевич</b><span>руководитель проекта</span></div><div class="credit"><b>Тимофеев<br>Вадим Иванович</b><span>научное содержание</span></div></div>
       </div>
       <div class="stats r fade" style="--d:1.1s"><div class="stat"><b>1013,25</b><span>гПа на уровне моря</span></div><div class="stat"><b>−56,5°</b><span>над тропопаузой</span></div></div>
@@ -231,9 +237,9 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
     </section>
 
     <section class="sec" id="topics" style="padding-top:0">
-      <div class="kick">Темы семестра</div>
-      <h2>Шесть разделов – <em>одна атмосфера</em></h2>
-      <p class="lead">Темы следуют рабочей программе дисциплины «Авиационная метеорология» и курсу лекций.</p>
+      <div class="kick">Темы дисциплины</div>
+      <h2>Девять разделов – <em>два семестра</em></h2>
+      <p class="lead">Разделы следуют рабочей программе дисциплины «Авиационная метеорология»: разделы 1–5 изучаются во 2 семестре, разделы 6–9 – в 3 семестре.</p>
       <div class="topics" id="tcards"></div>
     </section>
 
@@ -241,7 +247,7 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
       <div class="kick">Добро пожаловать в проект</div>
       <h2 style="margin-top:14px">Погода – это <em>язык,</em><br>на котором говорит небо.</h2>
       <p>Давайте учиться его понимать. Первый раздел: состав и строение атмосферы, стандартная атмосфера.</p>
-      <a class="btn lime" href="t1.html">Приступить к занятиям →</a>
+      <a class="btn lime" href="t1.html" data-intro>Приступить к занятиям →</a>
     </section>
     <div id="foot"></div>
   </div></div>
@@ -251,19 +257,14 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
 (function(){
 const {f,ISA}=FP;
 const RED=matchMedia('(prefers-reduced-motion: reduce)').matches;
-FP.chrome();
+FP.chrome({lecture:false});
+document.body.insertAdjacentHTML('afterbegin',FP.side(0));document.body.classList.add('has-side');
 document.getElementById('brand').innerHTML=FP.brand('index.html');
 document.getElementById('foot').innerHTML=FP.footer();
 document.body.insertAdjacentHTML('afterbegin','<div class="roam" aria-hidden="true"><i></i><i></i><i></i></div>');
 
-/* темы по курсу лекций */
-const T=[[1,'Состав и строение атмосферы','t1.html',[['1.1 Общие сведения','#s11'],['1.2 Газовый состав','#s12'],['1.3 Строение атмосферы','#s13'],['1.4 Стандартная атмосфера','#s14'],['1.5 Реальная атмосфера','#s15']]],
- [2,'Физические характеристики атмосферы','t2.html',[['2.1 Параметры атмосферы','#s21'],['2.2 Практика 01','#s22'],['2.3 Измерения','#s23'],['2.4 Влияние на полёт','#s24'],['2.5 Барометрическая высота','#s25'],['2.6 Барическое поле','#s26'],['2.7 Практика 02','#s27']]],
- [3,'Динамика атмосферы. Ветер и его влияние на полёт',null,['характеристики ветра','измерение ветра','ветер на картах погоды','ветер в барических системах','влияние на ВС и аэродромы']],
- [4,'Элементы термодинамики атмосферы',null,['вертикальные движения','адиабатические процессы','устойчивость, уровень конвекции']],
- [5,'Облака, осадки, туманы. Видимость',null,['облака','осадки','туманы','виды видимости','METAR, TAF, GAMET']],
- [6,'Синоптические процессы. Карты погоды. Прогноз погоды',null,['карты топографии','воздушные массы','фронты','циклоны и антициклоны','Практика 03','гроза, обледенение, турбулентность']]];
-document.getElementById('tcards').innerHTML=T.map(t=>`<div class="tcard glass ${t[2]?'on':'off'}"><div class="tn">${t[0]}</div><h3>${t[1]}</h3><ul>${t[3].map(x=>Array.isArray(x)?`<li><a href="${t[2]}${x[1]}">${x[0]}</a></li>`:`<li><span>${x}</span></li>`).join('')}</ul>${t[2]?`<a class="btn lime go" href="${t[2]}">Открыть раздел ${t[0]}</a>`:'<span class="soon">в разработке</span>'}</div>`).join('');
+/* темы по рабочей программе дисциплины */
+document.getElementById('tcards').innerHTML=FP.TOPICS.map(g=>`<div class="sem-row"><span class="kick">${g.sem}</span></div>`+g.items.map(t=>`<div class="tcard glass ${t.href?'on':'off'}"><div class="tn">${t.n}</div><h3>${t.t}</h3><ul>${t.href?t.secs.map(x=>`<li><a href="${t.href}#${x[2]}" data-intro>${x[0]} ${x[1]}</a></li>`).join(''):t.plan.map(x=>`<li><span>${x}</span></li>`).join('')}</ul>${t.href?`<a class="btn lime go" href="${t.href}" data-intro>Открыть раздел ${t.n}</a>`:'<span class="soon">в разработке</span>'}</div>`).join('')).join('');
 
 /* объёмные облака WebGL; если WebGL нет – рисованные облака в шапке */
 let webgl=null;
