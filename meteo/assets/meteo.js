@@ -45,20 +45,115 @@ let logoN=0;
 FP.logo = ()=>{const id='lg'+(++logoN);return `<svg role="img" aria-label="Логотип «Формула полёта»" xmlns="http://www.w3.org/2000/svg" viewBox="36 70 536 536"><defs><linearGradient id="${id}" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="currentColor" stop-opacity="0"/><stop offset=".3" stop-color="currentColor"/><stop offset="1" stop-color="currentColor"/></linearGradient></defs><path d="M 495.5 225.0 A 214 214 0 0 1 141.0 455.2" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round"/><path d="M 96.5 378.1 A 214 214 0 0 1 407.0 126.7" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round"/><g transform="translate(300 312) scale(.8) translate(-305 -326)"><path d="M 70 500 C 118 352, 250 252, 540 150 C 504 214, 466 256, 378 280 C 244 316, 128 380, 70 500 Z" fill="currentColor"/><path d="M 80 504 C 150 404, 268 330, 474 268 C 440 332, 396 368, 306 386 C 206 406, 124 444, 80 504 Z" fill="var(--lime-line)"/></g><path d="M 60 566 C 150 520, 250 430, 330 346 C 400 272, 470 210, 526 152" fill="none" stroke="url(#${id})" stroke-width="7" stroke-linecap="round"/><path d="M 52 0 C 48 -4, 40 -6, 30 -6 L 6 -6 L -14 -42 L -25 -42 L -12 -6 L -36 -6 L -46 -21 L -54 -21 L -48 -4 L -51 0 L -48 4 L -54 21 L -46 21 L -36 6 L -12 6 L -25 42 L -14 42 L 6 6 L 30 6 C 40 6, 48 4, 52 0 Z" fill="var(--lime-line)" transform="translate(532 146) rotate(-46) scale(0.55)"/></svg>`};
 FP.brand = (href)=>`<a class="logo" href="${href}">${FP.logo()}<span><b>Формула полёта</b><small>Авиационная метеорология</small></span></a>`;
 
-/* ---------- каркас страницы: фон, верхняя панель, плашка, подвал ---------- */
-FP.chrome = ()=>{
+/* ---------- темы по рабочей программе дисциплины (2 и 3 семестры) ---------- */
+FP.TOPICS=[
+ {sem:'2 семестр',items:[
+  {n:1,t:'Введение в дисциплину. Состав и строение атмосферы',href:'t1.html',secs:[['1.1','Общие сведения','s11'],['1.2','Газовый состав','s12'],['1.3','Строение атмосферы','s13'],['1.4','Стандартная атмосфера','s14'],['1.5','Реальная атмосфера','s15']]},
+  {n:2,t:'Физические характеристики атмосферы',href:'t2.html',secs:[['2.1','Параметры атмосферы','s21'],['2.2','Практика 01','s22'],['2.3','Измерения','s23'],['2.4','Влияние на полёт','s24'],['2.5','Барометрическая высота','s25'],['2.6','Барическое поле','s26'],['2.7','Практика 02','s27']]},
+  {n:3,t:'Динамика атмосферы. Ветер и его влияние на полёт',plan:['характеристики ветра и его измерение','ветер на картах погоды','ветер в барических системах','изменение ветра с высотой','опасные явления, связанные с ветром']},
+  {n:4,t:'Термодинамические процессы в атмосфере',plan:['адиабатические процессы','сухо- и влажноадиабатический градиенты','вертикальные движения воздуха','устойчивость атмосферы','температурно-ветровое зондирование']},
+  {n:5,t:'Туманы, облака, осадки. Видимость',plan:['конденсация и сублимация','туманы и дымки','облака и их классификация','осадки','видимость, минимумы погоды']}]},
+ {sem:'3 семестр',items:[
+  {n:6,t:'Наблюдения за фактической погодой в аэропортах',plan:['метеорологические органы и наблюдения','MET REPORT и SPECIAL','METAR и SPECI','предупреждения по аэродрому и о сдвиге ветра']},
+  {n:7,t:'Синоптические процессы. Карты погоды. Прогноз погоды. Авиационные прогнозы',plan:['воздушные массы и фронты','циклоны и антициклоны','приземные и высотные карты','авиационные прогнозы, GAMET']},
+  {n:8,t:'Опасные для авиации явления погоды',plan:['турбулентность и болтанка','обледенение','грозы и микропорыв','статическое электричество','сдвиг ветра']},
+  {n:9,t:'Основы метеорологического обеспечения полётов',plan:['принципы метеообеспечения','виды и источники метеоинформации','сроки и формы предоставления','автоматизированные системы']}]}];
+
+/* боковая панель со всеми темами, как в тренажёре по аэродинамике.
+   cur – номер открытой темы (0 – главная). На странице темы её подразделы заполняет FP.topic в #snav */
+FP.side = (cur)=>{
+  const top=cur?`<a class="back" href="index.html">← Главная метеорологии</a>`:`<a class="back" href="../">← Формула полёта</a>`;
+  const item=tp=>{
+    const on=tp.n===cur, ready=!!tp.href;
+    const head=ready?`<a class="tp-h" href="${on?'#':tp.href}" data-intro><span class="tn">${tp.n}</span><span class="tt">${tp.t}</span></a>`
+                    :`<div class="tp-h"><span class="tn">${tp.n}</span><span class="tt">${tp.t}</span></div>`;
+    let body='';
+    if(on) body='<ul class="snav" id="snav"></ul>';
+    else if(ready&&!cur) body=`<ul class="snav sub">${tp.secs.map(x=>`<li><a href="${tp.href}#${x[2]}" data-intro><span class="num">${x[0]}</span><span>${x[1]}</span><span class="dot"></span></a></li>`).join('')}</ul>`;
+    else if(!ready) body='<span class="soon-tag">в разработке</span>';
+    return `<div class="tp ${on?'cur':''} ${ready?'':'off'}">${head}${body}</div>`;
+  };
+  return `<aside class="side glass" id="fpSide" aria-label="Темы дисциплины">
+  <div class="side-head">${FP.brand('index.html')}<div class="side-links">${top}</div></div>
+  <div class="side-body">
+    <a class="side-home ${cur?'':'cur'}" href="index.html"><span class="tn">0</span><span>О тренажёре</span></a>
+    <button class="side-intro" type="button" onclick="FP.intro()"><span class="pl"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span><b>Предисловие</b><small>видео о дисциплине, 3,5 мин</small></span></button>
+    ${FP.TOPICS.map(g=>`<div class="sem"><div class="sem-h">${g.sem}</div>${g.items.map(item).join('')}</div>`).join('')}
+    <p class="side-foot">© 2026 М.&nbsp;Д.&nbsp;Назаркин</p>
+  </div></aside>`;
+};
+
+/* ---------- каркас страницы: фон, верхняя панель, плашка, подвал ----------
+   opts.lecture – кнопка «Режим лекции» (на страницах тем); на главной её нет */
+FP.chrome = (opts={})=>{
+  const lecture=opts.lecture!==false;
   document.body.insertAdjacentHTML('afterbegin','<div class="fp-bg" aria-hidden="true"><i></i><i></i><i></i><b></b></div>');
   document.body.insertAdjacentHTML('beforeend',`
 <div class="topbar" role="toolbar" aria-label="Вид страницы">
-  <button class="pill lec" id="lecBtn" type="button" aria-pressed="false" title="Крупный шрифт, без меню и служебной информации"><svg class="scr" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Режим лекции</span></button>
+  <button class="pill side-btn" id="sideBtn" type="button" aria-label="Темы дисциплины"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Темы</span></button>
+  <button class="pill to-top" id="toTop" type="button" aria-label="Вернуться в начало страницы" title="Вернуться в начало"><svg viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg><span>В начало</span></button>
+  ${lecture?'<button class="pill lec" id="lecBtn" type="button" aria-pressed="false" title="Крупный шрифт, без меню и служебной информации"><svg class="scr" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Режим лекции</span></button>':''}
   <button class="pill theme-sw" id="themeBtn" type="button" aria-label="Сменить оформление: светлое или тёмное" title="Сменить оформление"></button>
 </div>
+<div class="side-veil" id="sideVeil"></div>
 <div class="alpha" role="note">АЛЬФА версия 1</div>`);
   FP.$('#themeBtn').onclick=()=>{const l=root.dataset.theme!=='light';if(l)root.dataset.theme='light';else delete root.dataset.theme;FP.store.set('fp-theme',l?'light':'dark');document.dispatchEvent(new Event('fp-theme'))};
-  let t; const lb=FP.$('#lecBtn');
-  lb.onclick=()=>{const on=root.classList.toggle('lecture');lb.setAttribute('aria-pressed',on);lb.classList.remove('mini');clearTimeout(t);if(on)t=setTimeout(()=>lb.classList.add('mini'),3000)};
+  if(lecture){let t; const lb=FP.$('#lecBtn');
+    lb.onclick=()=>{const on=root.classList.toggle('lecture');lb.setAttribute('aria-pressed',on);lb.classList.remove('mini');clearTimeout(t);if(on)t=setTimeout(()=>lb.classList.add('mini'),3000)};}
+  /* «В начало» появляется после прокрутки */
+  const tt=()=>root.classList.toggle('tt-show',scrollY>innerHeight*.8);
+  addEventListener('scroll',tt,{passive:true});tt();
+  FP.$('#toTop').onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  /* на узком экране боковая панель выезжает по кнопке «Темы» */
+  const close=()=>root.classList.remove('side-open');
+  FP.$('#sideBtn').onclick=()=>root.classList.toggle('side-open');
+  FP.$('#sideVeil').onclick=close;
+  document.addEventListener('click',e=>{if(e.target.closest('#fpSide a'))close()});
+  /* плавное появление страницы и плавный уход при переходе между страницами тренажёра */
+  root.classList.add('fp-enter');requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('fp-in')));
+  addEventListener('pageshow',e=>{if(e.persisted)root.classList.remove('fp-leave')});
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a[href]');if(!a||e.defaultPrevented||e.metaKey||e.ctrlKey||e.shiftKey||a.target)return;
+    const u=new URL(a.href,location.href);if(u.origin!==location.origin)return;
+    if(a.hasAttribute('data-intro')&&FP.introPending()){e.preventDefault();FP.intro({then:u.href});return}
+    if(u.pathname===location.pathname&&(u.hash||a.getAttribute('href')==='#'))return;
+    e.preventDefault();root.classList.add('fp-leave');setTimeout(()=>{location.href=u.href},380);
+  });
   FP.reveal(document);
 };
+
+/* ---------- видео-предисловие ----------
+   Открывается поверх страницы. Звук включается сразу, если переход начат нажатием (так разрешают браузеры).
+   Если браузер запретил звук (например, страницу открыли по ссылке), видео идёт без звука и крупная кнопка
+   предлагает включить звук. После просмотра – плавный переход к темам. */
+const INTRO_KEY='fp-meteo-intro-seen';
+FP.introPending=()=>FP.store.get(INTRO_KEY)!=='1';
+FP.intro=(o={})=>{
+  if(document.getElementById('fpIntro'))return;
+  const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.body.insertAdjacentHTML('beforeend',`<div class="intro" id="fpIntro" role="dialog" aria-modal="true" aria-label="Предисловие к курсу">
+  <div class="intro-box">
+    <div class="intro-head"><div><span class="kick">Предисловие к курсу</span><b>Авиационная метеорология</b></div>
+      <button class="btn intro-skip" type="button">${o.label||(o.then?'Перейти к темам →':'Закрыть')}</button></div>
+    <div class="intro-frame"><video id="fpIntroV" src="assets/video/predislovie.mp4" poster="assets/video/predislovie.jpg" playsinline preload="auto" controls></video>
+      <button class="intro-sound" type="button" hidden><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>Включить звук</span></button></div>
+  </div></div>`);
+  const m=document.getElementById('fpIntro'),v=m.querySelector('video'),snd=m.querySelector('.intro-sound');
+  document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>m.classList.add('on')));
+  const go=()=>{v.muted=false;v.play().then(()=>{snd.hidden=true}).catch(()=>{v.muted=true;v.play().catch(()=>{});snd.hidden=false})};
+  go();
+  snd.onclick=()=>{v.muted=false;v.currentTime=v.currentTime<2?0:v.currentTime;v.play();snd.hidden=true};
+  const done=()=>{FP.store.set(INTRO_KEY,'1');v.pause();m.classList.remove('on');m.classList.add('off');
+    setTimeout(()=>{m.remove();document.body.style.overflow='';
+      if(!o.then)return;const u=new URL(o.then,location.href);
+      if(u.pathname===location.pathname){const t=u.hash&&document.querySelector(u.hash);if(t)t.scrollIntoView({behavior:RM?'auto':'smooth'});}
+      else{root.classList.add('fp-leave');setTimeout(()=>{location.href=u.href},380)}},RM?0:750)};
+  v.addEventListener('ended',done);
+  m.querySelector('.intro-skip').onclick=done;
+  addEventListener('keydown',function k(e){if(e.key==='Escape'&&document.getElementById('fpIntro')){removeEventListener('keydown',k);done()}});
+};
+
 FP.reveal = el=>{
   const items=el.querySelectorAll('.rv:not(.in)');
   if(!('IntersectionObserver' in window)){items.forEach(x=>x.classList.add('in'));return}
@@ -131,8 +226,7 @@ const TAB_NAMES={theory:'Теория',model:'Модель',flight:'В полё�
 FP.topic = cfg=>{
   const stKey='fp-meteo-state', state=FP.store.json(stKey,{}), visKey='fp-meteo-visited', visited=new Set(FP.store.json(visKey,[]));
   const app=document.createElement('div');app.className='app';
-  app.innerHTML=`<aside class="side glass" aria-label="Разделы темы"><div class="side-head">${FP.brand('index.html')}<br><a class="back" href="../">← Формула полёта</a> &nbsp; <a class="back" href="index.html">Все темы</a></div>
-    <div class="side-body"><p class="ttl">Раздел ${cfg.n}<b>${cfg.title}</b></p><ul class="snav" id="snav"></ul><p class="side-foot">© 2026 М.&nbsp;Д.&nbsp;Назаркин</p></div></aside>
+  app.innerHTML=FP.side(cfg.n)+`
     <main class="work"><div class="whead"><div><div class="kick" id="sKick"></div><h1 id="sTitle"></h1></div><div class="fbox glass" id="sF"></div></div>
     <p class="rpd" id="sRpd"></p><div id="views"></div><div class="pager" id="pager"></div>${FP.footer()}</main>`;
   document.body.appendChild(app);
@@ -175,6 +269,7 @@ FP.topic = cfg=>{
   }
   const route=()=>show(location.hash.slice(1)||secs[0].id);
   addEventListener('hashchange',route);route();
+  if(FP.introPending())setTimeout(()=>FP.intro({label:'К теме →'}),500);
   document.addEventListener('fp-theme',()=>{Object.values(views).forEach(v=>v.dispatchEvent(new Event('rerender')))});
 };
 FP.slider=(id,label,min,max,step,val)=>`<div class="ctl"><div class="top"><label for="${id}">${label}</label><output id="o-${id}"></output></div><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;

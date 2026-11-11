@@ -220,3 +220,69 @@ input.ans{width:150px;height:42px;padding:0 14px;border:0;border-radius:999px;ba
 .legal-x:hover{box-shadow:inset 0 0 0 1px var(--lime)}
 html.lecture .foot{display:none}
 mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+
+/* ====== боковая панель со всеми темами (как в тренажёре по аэродинамике) ====== */
+.side-links{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}.side-links .back{margin-top:0}
+.side-home{display:grid;grid-template-columns:34px 1fr;gap:6px;align-items:center;padding:10px;border-radius:14px;color:var(--ink);text-decoration:none;font-size:.9rem;font-weight:500}
+.side-home:hover{background:var(--glass-2)}
+.side-home.cur{background:var(--glass-2);box-shadow:inset 3px 0 0 var(--lime),inset 0 0 0 1px var(--line)}
+.side-home .tn{font-family:var(--f-mono);color:var(--lime-ink);font-size:.78rem}
+.side-intro{display:grid;grid-template-columns:42px 1fr;gap:8px;align-items:center;width:100%;padding:12px;border:0;border-radius:18px;cursor:pointer;text-align:left;color:var(--ink);background:linear-gradient(135deg,rgba(198,244,50,.30),rgba(198,244,50,.07));box-shadow:inset 0 0 0 1px rgba(198,244,50,.5),0 12px 30px -16px rgba(198,244,50,.7);transition:transform .25s,box-shadow .25s}
+.side-intro:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 1px var(--lime),0 14px 34px -14px rgba(198,244,50,.8)}
+.side-intro .pl{width:34px;height:34px;border-radius:50%;background:var(--lime);display:grid;place-items:center;box-shadow:0 0 22px rgba(198,244,50,.55)}
+.side-intro .pl svg{width:14px;height:14px;fill:#0B0B0C;margin-left:2px}
+.side-intro b{display:block;font-weight:600;font-size:.92rem}
+.side-intro small{display:block;font-size:.72rem;color:var(--ink-2)}
+.sem{display:flex;flex-direction:column;gap:2px}
+.sem-h{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--lime-ink);padding:12px 10px 4px;border-top:1px solid var(--line)}
+.tp-h{display:grid;grid-template-columns:34px 1fr;gap:6px;padding:9px 10px;border-radius:12px;color:var(--ink);text-decoration:none;font-size:.88rem;line-height:1.3;font-weight:600}
+a.tp-h:hover{background:var(--glass-2)}
+.tp-h .tn{font-family:var(--f-mono);font-size:.78rem;color:var(--lime-ink);padding-top:1px}
+.tp.cur>.tp-h{background:var(--lime-soft);box-shadow:inset 0 0 0 1px rgba(198,244,50,.35)}
+.tp.off .tp-h{color:var(--ink-2);font-weight:500}
+.tp.off .tp-h .tn{color:var(--ink-2)}
+.tp .snav{margin:2px 0 6px 14px}
+.tp .snav.sub a{font-size:.82rem;padding:6px 10px;color:var(--ink-2)}
+.tp .snav.sub a:hover{color:var(--ink)}
+.soon-tag{display:block;margin:-6px 0 4px 50px;font-size:.68rem;letter-spacing:.04em;color:var(--ink-2);opacity:.65}
+.side-veil{display:none}
+.side-btn{display:none}
+/* «В начало» – появляется после прокрутки */
+.to-top{opacity:0;transform:translateY(-8px) scale(.85);pointer-events:none;transition:opacity .5s ease,transform .6s cubic-bezier(.32,.72,0,1),box-shadow .2s}
+html.tt-show .to-top{opacity:1;transform:none;pointer-events:auto}
+html.lecture .to-top{display:none}
+/* главная: панель закреплена слева */
+body.has-side>.side{position:fixed;left:0;top:0;width:290px;height:100vh;z-index:45;border-radius:0;box-shadow:none}
+@media (min-width:1181px){body.has-side .hero,body.has-side .page{margin-left:290px}body.has-side .nav-top #brand{display:none}}
+@media (max-width:1180px){
+  .side-btn{display:inline-flex}
+  body.has-side>.side,.app>.side{position:fixed;left:0;top:0;width:min(330px,88vw);height:100vh;z-index:66;transform:translateX(-105%);transition:transform .55s cubic-bezier(.32,.72,0,1)}
+  html.side-open .side{transform:none}
+  .side-veil{display:block;position:fixed;inset:0;z-index:65;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .4s}
+  html.side-open .side-veil{opacity:1;pointer-events:auto}
+  .app{grid-template-columns:minmax(0,1fr)}
+}
+html.lecture .side-btn{display:none}
+
+/* ====== плавные переходы между страницами ====== */
+html.js body{animation:fpPageIn .7s cubic-bezier(.2,.7,.2,1) backwards}
+@keyframes fpPageIn{from{opacity:0}}
+html.fp-leave body{opacity:0;transition:opacity .35s ease}
+@media (prefers-reduced-motion:reduce){html.js body{animation:none}}
+
+/* ====== видео-предисловие ====== */
+.intro{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:clamp(12px,3vw,40px);background:rgba(4,5,4,.86);opacity:0;transition:opacity .7s ease}
+.intro.on{opacity:1}
+.intro.off{opacity:0;transition:opacity .7s ease}
+.intro-box{width:min(1280px,100%);display:flex;flex-direction:column;gap:14px;transform:translateY(24px) scale(.96);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.intro.on .intro-box{transform:none}
+.intro.off .intro-box{transform:scale(1.03);transition:transform .7s ease}
+.intro-head{display:flex;justify-content:space-between;align-items:center;gap:16px;color:#fff}
+.intro-head b{display:block;font-family:var(--f-brand);font-size:1.05rem;margin-top:4px}
+.intro-head .kick{color:#A2A4AB}
+.intro-skip{color:#fff}
+.intro-frame{position:relative;border-radius:22px;overflow:hidden;background:#000;box-shadow:0 0 0 1px rgba(198,244,50,.25),0 40px 120px -30px rgba(198,244,50,.35),0 30px 80px rgba(0,0,0,.7);aspect-ratio:16/9;max-height:calc(100vh - 140px)}
+.intro-frame video{width:100%;height:100%;display:block;background:#000}
+.intro-sound{position:absolute;left:50%;bottom:12%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:12px;padding:18px 30px;border:0;border-radius:999px;cursor:pointer;font:600 1.05rem var(--f-body);color:#0B0B0C;background:var(--lime);box-shadow:0 0 0 8px rgba(198,244,50,.18),0 20px 60px rgba(0,0,0,.6);animation:sndPulse 2s ease-in-out infinite}
+.intro-sound svg{width:24px;height:24px;fill:none;stroke:#0B0B0C;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@keyframes sndPulse{50%{box-shadow:0 0 0 16px rgba(198,244,50,.08),0 20px 60px rgba(0,0,0,.6)}}
