@@ -62,7 +62,6 @@ FP.TOPICS=[
 /* боковая панель со всеми темами, как в тренажёре по аэродинамике.
    cur – номер открытой темы (0 – главная). На странице темы её подразделы заполняет FP.topic в #snav */
 FP.side = (cur)=>{
-  const top=cur?`<a class="back" href="index.html">← Главная метеорологии</a>`:`<a class="back" href="../">← Формула полёта</a>`;
   const item=tp=>{
     const on=tp.n===cur, ready=!!tp.href;
     const head=ready?`<a class="tp-h" href="${on?'#':tp.href}" data-intro><span class="tn">${tp.n}</span><span class="tt">${tp.t}</span></a>`
@@ -74,13 +73,50 @@ FP.side = (cur)=>{
     return `<div class="tp ${on?'cur':''} ${ready?'':'off'}">${head}${body}</div>`;
   };
   return `<aside class="side glass" id="fpSide" aria-label="Темы дисциплины">
-  <div class="side-head">${FP.brand('index.html')}<div class="side-links">${top}</div></div>
+  <div class="side-head">${FP.brand('index.html')}</div>
   <div class="side-body">
-    <a class="side-home ${cur?'':'cur'}" href="index.html"><span class="tn">0</span><span>О тренажёре</span></a>
+    <a class="side-home ${cur?'':'cur'}" href="index.html"><span class="tn">←</span><span>Главная метеорологии</span></a>
     <button class="side-intro" type="button" onclick="FP.intro()"><span class="pl"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span><b>Предисловие</b><small>видео о дисциплине, 3,5 мин</small></span></button>
     ${FP.TOPICS.map(g=>`<div class="sem"><div class="sem-h">${g.sem}</div>${g.items.map(item).join('')}</div>`).join('')}
     <p class="side-foot">© 2026 М.&nbsp;Д.&nbsp;Назаркин</p>
   </div></aside>`;
+};
+
+
+/* ---------- шапка главной, как в тренажёре по аэродинамике ----------
+   Верхний ряд: логотип и переключатель направлений. Нижний ряд: разделы по семестрам в выпадающих списках,
+   предисловие и правовая информация. При прокрутке вниз шапка уезжает, при прокрутке вверх возвращается. */
+FP.head = ()=>{
+  const menu=tp=>{
+    const items=tp.href?tp.secs.map(x=>`<li><a href="${tp.href}#${x[2]}" data-intro><b>${x[0]}</b><span>${x[1]}</span></a></li>`).join('')
+                       :tp.plan.map(x=>`<li><span class="later"><b></b><span>${x}</span></span></li>`).join('');
+    const go=tp.href?`<a class="fh-open" href="${tp.href}" data-intro>Открыть раздел ${tp.n} →</a>`:'<p class="fh-wip">Раздел в разработке</p>';
+    return `<div class="fh-item"><button class="fh-link${tp.href?'':' wip'}" type="button" aria-haspopup="true"><span>Раздел ${tp.n}</span><i class="car" aria-hidden="true"></i></button>
+      <div class="fh-menu${tp.n>6?' right':''}"><p class="fh-mt"><small>Раздел ${tp.n}</small>${tp.t}</p><ul>${items}</ul>${go}</div></div>`;
+  };
+  document.body.insertAdjacentHTML('afterbegin',`<header class="fp-head" id="fpHead">
+  <div class="fh-row">
+    <a class="fh-brand" href="../" aria-label="Формула полёта – на главную">${FP.logo()}<b>Формула полёта</b></a>
+    <nav class="fh-dirs" aria-label="Направления">
+      <a class="fh-dir" data-dir="aero" href="../#home"><i aria-hidden="true"></i><span>Аэродинамика</span></a>
+      <a class="fh-dir" data-dir="meteo" href="index.html" aria-current="page"><i aria-hidden="true"></i><span>Метеорология</span></a>
+      <a class="fh-dir" data-dir="anav" href="../#anav"><i aria-hidden="true"></i><span>Аэронавигация</span></a>
+    </nav>
+  </div>
+  <div class="fh-row fh-sub">
+    <nav class="fh-topics" aria-label="Разделы дисциплины">${FP.TOPICS.map(g=>`<span class="fh-sem">${g.sem}</span>${g.items.map(menu).join('')}`).join('<span class="fh-gap"></span>')}
+      <button class="fh-link fh-pre" type="button" onclick="FP.intro()"><span class="pl" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span>Предисловие</span></button></nav>
+    <button class="fh-link fh-legal" type="button" onclick="FP.legal()"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span>Правовая информация</span></button>
+  </div>
+</header>`);
+  root.classList.add('has-head');
+  const h=FP.$('#fpHead');let lastY=scrollY;
+  addEventListener('scroll',()=>{const y=scrollY,dy=y-lastY;lastY=y;if(h.matches(':focus-within,:hover'))return;
+    if(y<160||dy<-6)root.classList.remove('fh-hide');else if(dy>6)root.classList.add('fh-hide')},{passive:true});
+  /* выпадающие списки: по наведению и по нажатию (для сенсорных экранов) */
+  h.addEventListener('click',e=>{const b=e.target.closest('.fh-item>.fh-link');if(!b)return;const it=b.parentNode,on=!it.classList.contains('open');
+    h.querySelectorAll('.fh-item.open').forEach(x=>x.classList.remove('open'));if(on)it.classList.add('open')});
+  document.addEventListener('click',e=>{if(!e.target.closest('.fh-item'))h.querySelectorAll('.fh-item.open').forEach(x=>x.classList.remove('open'))});
 };
 
 /* ---------- каркас страницы: фон, верхняя панель, плашка, подвал ----------
@@ -88,25 +124,35 @@ FP.side = (cur)=>{
 FP.chrome = (opts={})=>{
   const lecture=opts.lecture!==false;
   document.body.insertAdjacentHTML('afterbegin','<div class="fp-bg" aria-hidden="true"><i></i><i></i><i></i><b></b></div>');
+  const ic=(p)=>`<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
   document.body.insertAdjacentHTML('beforeend',`
 <div class="topbar" role="toolbar" aria-label="Вид страницы">
-  <button class="pill side-btn" id="sideBtn" type="button" aria-label="Темы дисциплины"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Темы</span></button>
-  <button class="pill to-top" id="toTop" type="button" aria-label="Вернуться в начало страницы" title="Вернуться в начало"><svg viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg><span>В начало</span></button>
-  ${lecture?'<button class="pill lec" id="lecBtn" type="button" aria-pressed="false" title="Крупный шрифт, без меню и служебной информации"><svg class="scr" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Режим лекции</span></button>':''}
+  ${opts.side!==false?`<button class="pill lg side-btn" id="sideBtn" type="button" aria-label="Темы дисциплины">${ic('<path d="M4 7h16M4 12h16M4 17h16"/>')}<span>Темы</span></button>`:''}
+  <button class="pill lg to-top" id="toTop" type="button" aria-label="Вернуться в начало страницы" title="Вернуться в начало">${ic('<path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/>')}<span>В начало</span></button>
+  ${opts.legal?`<button class="pill lg" id="legalBtn" type="button" title="Правовая информация" onclick="FP.legal()">${ic('<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>')}<span>Правовая информация</span></button>`:''}
+  ${lecture?`<button class="pill lg lec" id="lecBtn" type="button" aria-pressed="false" title="Крупный шрифт, без меню и служебной информации">${ic('<path class="scr" d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>')}<span>Режим лекции</span></button>`:''}
   <button class="pill theme-sw" id="themeBtn" type="button" aria-label="Сменить оформление: светлое или тёмное" title="Сменить оформление"></button>
 </div>
 <div class="side-veil" id="sideVeil"></div>
 <div class="alpha" role="note">АЛЬФА версия 1</div>`);
   FP.$('#themeBtn').onclick=()=>{const l=root.dataset.theme!=='light';if(l)root.dataset.theme='light';else delete root.dataset.theme;FP.store.set('fp-theme',l?'light':'dark');document.dispatchEvent(new Event('fp-theme'))};
   if(lecture){let t; const lb=FP.$('#lecBtn');
-    lb.onclick=()=>{const on=root.classList.toggle('lecture');lb.setAttribute('aria-pressed',on);lb.classList.remove('mini');clearTimeout(t);if(on)t=setTimeout(()=>lb.classList.add('mini'),3000)};}
+    lb.onclick=()=>{const on=root.classList.toggle('lecture');lb.setAttribute('aria-pressed',on);lb.querySelector('span').textContent=on?'Выйти из режима':'Режим лекции';lb.dataset.w='';measure();fold()};}
+  /* подписи кнопок плавно сворачиваются в круглые значки после начала прокрутки */
+  const lgs=[...document.querySelectorAll('.topbar .pill.lg')];
+  const measure=()=>lgs.forEach(b=>{b.classList.add('nm');b.style.width='';b.dataset.w=b.offsetWidth;b.classList.remove('nm');b.style.width=(b.classList.contains('is-c')?42:b.dataset.w)+'px'});
+  const fold=()=>{const c=scrollY>40;lgs.forEach(b=>{if(b.classList.contains('is-c')!==c){b.classList.toggle('is-c',c);b.style.width=(c?42:b.dataset.w)+'px'}})};
+  (document.fonts&&document.fonts.ready||Promise.resolve()).then(()=>{measure();fold()});
+  addEventListener('scroll',fold,{passive:true});addEventListener('resize',measure);
+  lgs.forEach(b=>{b.addEventListener('mouseenter',()=>{if(b.classList.contains('is-c')){b.classList.add('peek');b.style.width=b.dataset.w+'px'}});
+    b.addEventListener('mouseleave',()=>{if(b.classList.contains('peek')){b.classList.remove('peek');b.style.width=(b.classList.contains('is-c')?42:b.dataset.w)+'px'}})});
   /* «В начало» появляется после прокрутки */
   const tt=()=>root.classList.toggle('tt-show',scrollY>innerHeight*.8);
   addEventListener('scroll',tt,{passive:true});tt();
   FP.$('#toTop').onclick=()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   /* на узком экране боковая панель выезжает по кнопке «Темы» */
   const close=()=>root.classList.remove('side-open');
-  FP.$('#sideBtn').onclick=()=>root.classList.toggle('side-open');
+  if(FP.$('#sideBtn'))FP.$('#sideBtn').onclick=()=>root.classList.toggle('side-open');
   FP.$('#sideVeil').onclick=close;
   document.addEventListener('click',e=>{if(e.target.closest('#fpSide a'))close()});
   /* плавное появление страницы и плавный уход при переходе между страницами тренажёра */

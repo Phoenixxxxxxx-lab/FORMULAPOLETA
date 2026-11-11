@@ -46,15 +46,15 @@ window.FPAltimeter = function(cv,opt){
     /* деления: 50 штук, крупные через 100 ft */
     for(let i=0;i<50;i++){const a=i/50*TAU,maj=i%5===0;ctx.save();ctx.rotate(a);ctx.strokeStyle=maj?'#f4f5f6':'#c9ccd0';ctx.lineWidth=(maj?5.2:2.2)*u;ctx.lineCap='butt';
       ctx.beginPath();ctx.moveTo(0,-Rd*(maj?.78:.87));ctx.lineTo(0,-Rd*.965);ctx.stroke();ctx.restore()}
-    ctx.fillStyle='#f4f5f6';ctx.font=`600 ${Math.round(Rd*.2)}px "Golos Text",system-ui,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='#f4f5f6';ctx.font=`600 ${Math.round(Rd*.2)}px "Unbounded"`;ctx.textAlign='center';ctx.textBaseline='middle';
     for(let i=0;i<10;i++){const a=i/10*TAU-Math.PI/2;ctx.fillText(String(i),Math.cos(a)*Rd*.6,Math.sin(a)*Rd*.6+Rd*.01)}
-    ctx.fillStyle='#b9bcc1';ctx.font=`600 ${Math.round(Rd*.075)}px "JetBrains Mono",monospace`;ctx.fillText('ALT',0,-Rd*.36);
-    ctx.font=`500 ${Math.round(Rd*.05)}px "JetBrains Mono",monospace`;ctx.fillStyle='#8d9096';ctx.fillText('100 FEET',0,Rd*.3);ctx.fillText('1000 FEET',0,Rd*.38);
+    ctx.fillStyle='#b9bcc1';ctx.font=`600 ${Math.round(Rd*.075)}px "Unbounded"`;ctx.fillText('ALT',0,-Rd*.36);
+    ctx.font=`500 ${Math.round(Rd*.05)}px "Unbounded"`;ctx.fillStyle='#8d9096';ctx.fillText('100 FEET',0,Rd*.3);ctx.fillText('1000 FEET',0,Rd*.38);
     /* окно шкалы давления: уровень отсчёта, при наборе не меняется */
     const kx=Rd*.2,kw=Rd*.33,kh=Rd*.13;g=ctx.createLinearGradient(0,-kh/2,0,kh/2);g.addColorStop(0,'#000');g.addColorStop(.5,'#151618');g.addColorStop(1,'#000');
     ctx.fillStyle=g;rr(kx,-kh/2,kw,kh,kh*.18);ctx.fill();ctx.strokeStyle='rgba(198,244,50,.85)';ctx.lineWidth=1.6*u;ctx.stroke();
-    ctx.fillStyle='#f4f5f6';ctx.font=`600 ${Math.round(kh*.66)}px "JetBrains Mono",monospace`;ctx.fillText(String(opt.baro||1013),kx+kw/2,kh*.04);
-    ctx.fillStyle='#C6F432';ctx.font=`600 ${Math.round(Rd*.048)}px "JetBrains Mono",monospace`;ctx.fillText('hPa',kx+kw/2,kh*.95);
+    ctx.fillStyle='#f4f5f6';ctx.font=`600 ${Math.round(kh*.66)}px "Unbounded"`;ctx.fillText(String(opt.baro||1013),kx+kw/2,kh*.04);
+    ctx.fillStyle='#C6F432';ctx.font=`600 ${Math.round(Rd*.048)}px "Unbounded"`;ctx.fillText('hPa',kx+kw/2,kh*.95);
     ctx.restore();
     /* кремальера BARO */
     const bx=c-k,by=cy+k,br=S*.058;
@@ -62,7 +62,7 @@ window.FPAltimeter = function(cv,opt){
     g=ctx.createRadialGradient(bx-br*.3,by-br*.3,br*.1,bx,by,br);g.addColorStop(0,'#5a5d63');g.addColorStop(1,'#141517');ctx.fillStyle=g;ctx.beginPath();ctx.arc(bx,by,br,0,TAU);ctx.fill();ctx.restore();
     ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=1.2*u;for(let i=0;i<40;i++){const a=i/40*TAU;ctx.beginPath();ctx.moveTo(bx+Math.cos(a)*br*.78,by+Math.sin(a)*br*.78);ctx.lineTo(bx+Math.cos(a)*br*.98,by+Math.sin(a)*br*.98);ctx.stroke()}
     g=ctx.createRadialGradient(bx-br*.2,by-br*.25,0,bx,by,br*.7);g.addColorStop(0,'#8c9096');g.addColorStop(1,'#25262a');ctx.fillStyle=g;ctx.beginPath();ctx.arc(bx,by,br*.66,0,TAU);ctx.fill();
-    ctx.fillStyle='#8d9096';ctx.font=`600 ${Math.round(S*.022)}px "JetBrains Mono",monospace`;ctx.textAlign='center';ctx.fillText('BARO',bx,by-br*1.35);
+    ctx.fillStyle='#8d9096';ctx.font=`600 ${Math.round(S*.022)}px "Unbounded"`;ctx.textAlign='center';ctx.fillText('BARO',bx,by-br*1.35);
   }
   function glassPart(c,cy,Rd,u){
     let g;

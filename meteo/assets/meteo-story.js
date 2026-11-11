@@ -160,9 +160,9 @@ function drawDesk(x,t,S,layer){
   /* формула пишется */
   const w=S.write,p1=cl(w*2),p2=cl(w*2-1);
   x.save();x.transform(PAGE.ex[0]/300,PAGE.ex[1]/300,PAGE.ey[0]/60,PAGE.ey[1]/60,PAGE.o[0],PAGE.o[1]);
-  x.fillStyle='#1b2852';x.font='italic 600 15px "Cormorant Garamond",Georgia,serif';
+  x.fillStyle='#1b2852';x.font='500 15px "Unbounded",sans-serif';
   x.save();x.beginPath();x.rect(16,4,p1*130,22);x.clip();x.fillText('T = T₀ − 0,0065 H',20,20);x.restore();
-  x.save();x.beginPath();x.rect(16,28,p2*168,26);x.clip();x.fillText('p = p₀ (1 − 0,0065 H / T₀)',20,46);x.font='italic 600 10px "Cormorant Garamond",Georgia,serif';x.fillText('5,256',175,38);x.restore();
+  x.save();x.beginPath();x.rect(16,28,p2*168,26);x.clip();x.fillText('p = p₀ (1 − 0,0065 H / T₀)',20,46);x.font='500 10px "Unbounded",sans-serif';x.fillText('5,256',175,38);x.restore();
   x.restore();
   /* рука: предплечье лежит на столе, кисть с ручкой идёт вдоль строки */
   const fu=p2>0?20+p2*164:20+p1*126,fv=p2>0?44:18,pen=pageP(fu/300,fv/60);
@@ -214,12 +214,12 @@ function drawBrain(x,t,S,cw,ch){
     const X=mix(a[0],c[0],s.t),Y=mix(a[1],c[1],s.t),z=mix(a[2],c[2],s.t),f=fog(z),sz=Math.min(70,40/z);x.globalAlpha=f;x.drawImage(SPR.white,X-sz/2,Y-sz/2,sz,sz)});
   x.globalAlpha=1;x.globalCompositeOperation='source-over';
   x.textAlign='center';WORDS.forEach(([w,[X,Y,Z]],k)=>{const x1=X*cy+Z*sy,z1=-X*sy+Z*cy,y1=Y*cx-z1*sx,z2=Y*sx+z1*cx,zz=z2+D;if(zz<.25)return;
-    const f=fog(zz)*cl((S.fly*3-k*.25));if(f<.02)return;x.globalAlpha=f;x.font=`italic 600 ${Math.min(52,22*F/zz/300*3)}px "Cormorant Garamond",Georgia,serif`;x.shadowColor='rgba(198,244,50,.55)';x.shadowBlur=14*dpr0;x.fillStyle='#F4FFD9';x.fillText(w,W/2+x1*F/zz,H/2-y1*F/zz);x.shadowBlur=0});
+    const f=fog(zz)*cl((S.fly*3-k*.25));if(f<.02)return;x.globalAlpha=f;x.font=`500 ${Math.min(52,22*F/zz/300*3)}px "Unbounded",sans-serif`;x.shadowColor='rgba(198,244,50,.55)';x.shadowBlur=14*dpr0;x.fillStyle='#F4FFD9';x.fillText(w,W/2+x1*F/zz,H/2-y1*F/zz);x.shadowBlur=0});
   x.globalAlpha=1;x.textAlign='start';
 }
 
 /* ================= 3–5. КАБИНА (по компоновке кабины узкофюзеляжного лайнера) ================= */
-const AV='"Golos Text",system-ui,sans-serif';
+const AV='"Unbounded"';
 const bl=(Q,u,v)=>{const a0=mix(Q[0][0],Q[1][0],u),a1=mix(Q[0][1],Q[1][1],u),b0=mix(Q[3][0],Q[2][0],u),b1=mix(Q[3][1],Q[2][1],u);return[mix(a0,b0,v),mix(a1,b1,v)]};
 function rpoly(x,pts,r){const n=pts.length;if(x.beginPath)x.beginPath();for(let i=0;i<n;i++){const p0=pts[(i+n-1)%n],p1=pts[i],p2=pts[(i+1)%n];
   if(!i)x.moveTo((p0[0]+p1[0])/2,(p0[1]+p1[1])/2);x.arcTo(p1[0],p1[1],(p1[0]+p2[0])/2,(p1[1]+p2[1])/2,r)}x.closePath()}
