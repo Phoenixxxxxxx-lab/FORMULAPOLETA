@@ -42,7 +42,7 @@ html,body{overflow-x:clip}
 .hero h1{font-family:var(--f-serif);font-weight:500;font-size:clamp(3.2rem,7.4vw,6.6rem);line-height:.98;letter-spacing:-.02em}
 .hero h1 em{color:var(--lime-ink);font-style:italic}
 .hero h1 .w{display:inline-block}
-@media (prefers-reduced-motion:no-preference){.hero h1 .w{animation:wIn 1.1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(.15s + var(--i)*110ms)}@keyframes wIn{from{opacity:0;transform:translateY(.35em);filter:blur(10px)}}
+@media (prefers-reduced-motion:no-preference){.hero h1 .w{animation:wIn 1.1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(1.1s + var(--i)*110ms)}@keyframes wIn{from{opacity:0;transform:translateY(.35em);filter:blur(10px)}}
  .hero .fade{animation:fUp 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,.8s)}@keyframes fUp{from{opacity:0;transform:translateY(16px);filter:blur(6px)}}}
 .sub{font-family:var(--f-mono);font-size:.9rem;color:var(--ink);opacity:.86;max-width:58ch;margin:24px auto 28px;line-height:1.7}
 .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
@@ -171,7 +171,7 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
 
 /* ====== единый шрифт Unbounded: размеры под более широкий шрифт ====== */
 .nav-top{height:118px;padding:0}
-.hero h1{font-weight:600;font-size:clamp(2.4rem,5.2vw,4.7rem);line-height:1.02;letter-spacing:-.035em}
+.hero h1{font-weight:600;font-size:clamp(1.9rem,3.7vw,3.5rem);line-height:1.08;letter-spacing:-.035em}
 .hero h1 em,.sec h2 em,.scene h2 em,.cap h2 em,.finale h2 em,.sf h3 em{font-style:normal;color:var(--lime-ink)}
 .cap h2 em{color:#C6F432}
 .stat b{font-weight:500;font-size:clamp(1.8rem,2.6vw,2.5rem);letter-spacing:-.03em}
@@ -191,6 +191,38 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
 .ccard .lbl{font-size:.64rem}
 .brandline{font-size:.74rem}
 .st-stage{transition:none}
+
+/* ====== шапка героя: логотип, направления, параметры атмосферы ====== */
+.hero-logo{width:132px;height:132px;margin:0 auto 18px}
+.hero-logo svg{width:100%;height:100%;display:block;filter:drop-shadow(0 0 26px rgba(198,244,50,.28))}
+.dirline{font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;color:#fff;opacity:.72;margin-bottom:10px}
+.hero h1 em.risk,.hero h1 em.dec{text-shadow:none!important}
+.hero h1 em.risk{color:transparent;background:linear-gradient(100deg,#FFB547,#FF7A45);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 22px rgba(255,140,60,.35))}
+.hero h1 em.dec{color:transparent;background:linear-gradient(100deg,#9fd61c,#C6F432 60%,#e6ff8a);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 24px rgba(198,244,50,.45))}
+.stats{gap:30px}
+.stat{position:relative;min-height:74px}
+.stat .it{position:absolute;inset:0 auto auto 0;width:100%;transition:opacity .9s ease,transform 1.1s cubic-bezier(.2,.7,.2,1),filter .9s ease}
+.stats.r .stat .it{left:auto;right:0}
+.stat .it.out{opacity:0;transform:translateY(-14px);filter:blur(8px)}
+.stat .it.pre{opacity:0;transform:translateY(16px);filter:blur(8px);transition:none}
+.stat b{color:#fff;text-shadow:0 0 18px rgba(198,244,50,.55),0 0 42px rgba(198,244,50,.28),0 2px 10px rgba(0,0,0,.9)!important}
+.stat b small{font-size:.5em;font-weight:500;margin-left:4px;color:#C6F432}
+.stat span{color:#E9FFB0!important;opacity:1!important;text-shadow:0 0 12px rgba(198,244,50,.35),0 1px 4px rgba(0,0,0,.95)!important}
+.stat::before{content:"";position:absolute;top:10px;width:6px;height:6px;border-radius:50%;background:#C6F432;box-shadow:0 0 12px #C6F432;left:-16px}
+.stats.r .stat::before{left:auto;right:-16px}
+.credits{gap:16px;margin-top:34px}
+.credit{padding:16px 20px;border-radius:22px;max-width:330px;text-align:left}
+.credit b{font-size:.98rem}
+.credit i{display:block;font-style:normal;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--lime-ink);margin:8px 0 6px}
+.credit span{display:block;font-size:.72rem!important;line-height:1.55;opacity:.8!important}
+/* финал */
+.finale{text-align:center;padding:56px 32px}
+.finale .fin-logo{width:150px;height:150px;margin:0 auto 18px}
+.finale .fin-logo svg{width:100%;height:100%;display:block;filter:drop-shadow(0 0 30px rgba(198,244,50,.3))}
+.finale .dirline{color:var(--ink)}
+.finale h2{margin:10px auto 0;max-width:none}
+.finale .fin-sub{font-size:1.05rem;font-weight:600;color:var(--lime-ink);margin:12px 0 0}
+.finale p.fin-p{margin:22px auto 26px;max-width:60ch}
 </style>
 </head>
 <body>
@@ -199,15 +231,20 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
   <div class="gut"><div class="wrap">
     <div class="nav-top" aria-hidden="true"></div>
     <div class="hero-in">
-      <div class="stats fade" style="--d:1s"><div class="stat"><b>11 000 м</b><span>тропопауза СА</span></div><div class="stat"><b>8,3 м</b><span>на 1 гПа у земли</span></div></div>
+      <div class="stats fade" style="--d:1s" id="statL"><div class="stat"></div><div class="stat"></div><div class="stat"></div></div>
       <div class="hero-c">
-        <div class="brandline fade" style="--d:.05s">Авиационная метеорология</div>
-        <h1 aria-label="Атмосфера, которую видит пилот"><span class="w" style="--i:0">Атмосфера,</span> <em class="w" style="--i:1">которую</em><br><span class="w" style="--i:2">видит</span> <span class="w" style="--i:3">пилот.</span></h1>
-        <p class="sub fade" style="--d:.7s">Компьютерный тренажёр по дисциплине «Авиационная метеорология». Выводы формул по шагам, интерактивные модели и примеры в полёте на DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p>
-        <div class="cta fade" style="--d:.85s"><a class="btn lime" href="t1.html" data-intro>Начать с раздела 1</a><a class="btn" href="#topics" data-intro>Темы дисциплины</a><button class="btn" type="button" onclick="FP.intro()"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>Предисловие</button></div>
-        <div class="credits fade" style="--d:1.05s"><div class="credit"><b>Назаркин<br>Максим Дмитриевич</b><span>руководитель проекта</span></div><div class="credit"><b>Тимофеев<br>Вадим Иванович</b><span>научное содержание</span></div></div>
+        <div class="hero-logo fade" style="--d:0s">LOGO</div>
+        <div class="dirline fade" style="--d:.9s">Формула полёта – направления</div>
+        <div class="brandline fade" style="--d:1.05s">Авиационная метеорология</div>
+        <h1 aria-label="Знание метеорологии превращает полёт из риска в решение."><span class="w" style="--i:0">Знание</span> <span class="w" style="--i:1">метеорологии</span> <span class="w" style="--i:2">превращает</span><br><span class="w" style="--i:3">полёт</span> <span class="w" style="--i:4">из</span> <em class="w risk" style="--i:5">риска</em> <span class="w" style="--i:6">в</span> <em class="w dec" style="--i:7">решение.</em></h1>
+        <p class="sub fade" style="--d:1.5s">Компьютерный тренажёр по дисциплине «Авиационная метеорология» для профиля ЛЭГВС (25.03.03 «Аэронавигация», СПбГУ ГА). Выводы формул по шагам, интерактивные модели и примеры в полёте на DA&nbsp;40&nbsp;NG и SSJ&nbsp;100.</p>
+        <div class="cta fade" style="--d:1.65s"><a class="btn lime" href="t1.html" data-intro>Начать с раздела 1</a><a class="btn" href="#topics" data-intro>Темы дисциплины</a><button class="btn" type="button" onclick="FP.intro()"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>Предисловие</button></div>
+        <div class="credits fade" style="--d:1.85s">
+          <div class="credit glass"><b>Назаркин<br>Максим Дмитриевич</b><i>автор идеи и руководитель проекта</i><span>концепция и методика, программная реализация, интерактивные модели, дизайн и анимация</span></div>
+          <div class="credit glass"><b>Тимофеев<br>Вадим Иванович</b><i>научный руководитель содержания</i><span>научное и учебно-методическое содержание, научная редакция и экспертиза учебного материала</span></div>
+        </div>
       </div>
-      <div class="stats r fade" style="--d:1.1s"><div class="stat"><b>1013,25</b><span>гПа на уровне моря</span></div><div class="stat"><b>−56,5°</b><span>над тропопаузой</span></div></div>
+      <div class="stats r fade" style="--d:1.1s" id="statR"><div class="stat"></div><div class="stat"></div><div class="stat"></div></div>
     </div>
   </div></div>
 </div>
@@ -263,15 +300,18 @@ html.fp-lite .roam,html.fp-lite .planes{display:none}
     <section class="sec" id="topics" style="padding-top:0">
       <div class="kick">Темы дисциплины</div>
       <h2>Девять разделов – <em>два семестра</em></h2>
-      <p class="lead">Разделы следуют рабочей программе дисциплины «Авиационная метеорология»: разделы 1–5 изучаются во 2 семестре, разделы 6–9 – в 3 семестре.</p>
+      <p class="lead">Разделы и их распределение по семестрам взяты из рабочей программы дисциплины «Авиационная метеорология» для профиля «Лётная эксплуатация гражданских воздушных судов» (ЛЭГВС, 25.03.03 «Аэронавигация»), СПбГУ ГА: разделы 1–5 изучаются во 2 семестре, разделы 6–9 – в 3 семестре. Это семестры именно программы ЛЭГВС.</p>
+      <p class="note" style="margin-top:10px">Наименование университета и программы приводится только для соотнесения материала с учебным планом. Тренажёр – инициативная разработка и не является официальным ресурсом СПбГУ ГА; подробнее – в правовой информации.</p>
       <div class="topics" id="tcards"></div>
     </section>
 
-    <section class="finale glass">
+    <section class="finale glass" id="finale">
+      <div class="fin-logo">LOGO2</div>
       <div class="kick">Добро пожаловать в проект</div>
-      <h2 style="margin-top:14px">Погода – это <em>язык,</em><br>на котором говорит небо.</h2>
-      <p>Давайте учиться его понимать. Первый раздел: состав и строение атмосферы, стандартная атмосфера.</p>
-      <a class="btn lime" href="t1.html" data-intro>Приступить к занятиям →</a>
+      <h2>Формула полёта – <em>направления</em></h2>
+      <div class="fin-sub">Авиационная метеорология</div>
+      <p class="fin-p">Погода – это язык, на котором говорит небо. Давайте учиться его понимать. Первый раздел – состав и строение атмосферы и стандартная атмосфера.</p>
+      <a class="btn lime" href="t1.html" data-intro>Перейти к разделу 1 →</a>
     </section>
     <div id="foot"></div>
   </div></div>
@@ -286,8 +326,27 @@ FP.head();
 document.getElementById('foot').innerHTML=FP.footer();
 document.body.insertAdjacentHTML('afterbegin','<div class="roam" aria-hidden="true"><i></i><i></i><i></i></div>');
 
+
+/* логотипы с анимацией: в шапке сразу, в финале – когда блок появится на экране */
+document.querySelector('.hero-logo').innerHTML=FP.logoAnim();FP.playLogo(document.querySelector('.hero-logo svg'),150);
+document.querySelector('.fin-logo').innerHTML=FP.logoAnim();
+{const fs=document.querySelector('.fin-logo svg');const io=new IntersectionObserver(es=>{if(es[0].isIntersecting){FP.playLogo(fs,250);io.disconnect()}},{threshold:.5});io.observe(fs)}
+/* параметры атмосферы по бокам: плавно сменяют друг друга */
+{const P=[['11 000','м','тропопауза в СА'],['−56,5','°C','на тропопаузе в СА'],['1013,25','гПа','давление у моря в СА'],['15','°C','температура у моря в СА'],
+ ['1,225','кг/м³','плотность воздуха у земли'],['6,5','°C/км','градиент T в тропосфере'],['8,3','м','на 1 гПа у земли'],['226,3','гПа','давление на 11 км'],
+ ['0,364','кг/м³','плотность на 11 км'],['340,3','м/с','скорость звука у земли'],['295,1','м/с','скорость звука на 11 км'],['760','мм рт. ст.','давление у моря в СА'],
+ ['29,92','inHg','стандартное давление'],['78','%','азота в сухом воздухе'],['21','%','кислорода в сухом воздухе'],['0,93','%','аргона в сухом воздухе'],
+ ['5,5','км','ниже – половина массы атмосферы'],['50','км','стратопауза'],['287','Дж/(кг·К)','газовая постоянная воздуха'],['9,80665','м/с²','стандартное g'],
+ ['122','м','на 1 °C между T и Td – нижняя граница облаков'],['3048','м','FL 100 при 1013,25 гПа']];
+ const slots=[...document.querySelectorAll('#statL .stat,#statR .stat')];let k=0;
+ const html=p=>`<div class="it"><b>${p[0]}<small>${p[1]}</small></b><span>${p[2]}</span></div>`;
+ slots.forEach(s=>{s.innerHTML=html(P[k++%P.length])});
+ if(!RED){let n=0;setInterval(()=>{if(document.hidden)return;const s=slots[n++%slots.length],old=s.querySelector('.it');
+   s.insertAdjacentHTML('beforeend',html(P[k++%P.length]));const nw=s.lastElementChild;nw.classList.add('pre');
+   requestAnimationFrame(()=>requestAnimationFrame(()=>{nw.classList.remove('pre');old.classList.add('out')}));setTimeout(()=>old.remove(),1200)},2600)}}
+
 /* темы по рабочей программе дисциплины */
-document.getElementById('tcards').innerHTML=FP.TOPICS.map(g=>`<div class="sem-row"><span class="kick">${g.sem}</span></div>`+g.items.map(t=>`<div class="tcard glass ${t.href?'on':'off'}"><div class="tn">${t.n}</div><h3>${t.t}</h3><ul>${t.href?t.secs.map(x=>`<li><a href="${t.href}#${x[2]}" data-intro>${x[0]} ${x[1]}</a></li>`).join(''):t.plan.map(x=>`<li><span>${x}</span></li>`).join('')}</ul>${t.href?`<a class="btn lime go" href="${t.href}" data-intro>Открыть раздел ${t.n}</a>`:'<span class="soon">в разработке</span>'}</div>`).join('')).join('');
+document.getElementById('tcards').innerHTML=FP.TOPICS.map(g=>`<div class="sem-row"><span class="kick">${g.sem} ЛЭГВС</span></div>`+g.items.map(t=>`<div class="tcard glass ${t.href?'on':'off'}"><div class="tn">${t.n}</div><h3>${t.t}</h3><ul>${t.href?t.secs.map(x=>`<li><a href="${t.href}#${x[2]}" data-intro>${x[0]} ${x[1]}</a></li>`).join(''):t.plan.map(x=>`<li><span>${x}</span></li>`).join('')}</ul>${t.href?`<a class="btn lime go" href="${t.href}" data-intro>Открыть раздел ${t.n}</a>`:'<span class="soon">в разработке</span>'}</div>`).join('')).join('');
 
 /* объёмные облака WebGL; если WebGL нет – рисованные облака в шапке */
 let webgl=null;
