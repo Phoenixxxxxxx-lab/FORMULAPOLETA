@@ -43,6 +43,18 @@ FP.typeset = el=>{ if (window.MathJax && MathJax.typesetPromise) MathJax.typeset
 /* ---------- логотип «Формула полёта» (лаймово-белый вариант) ---------- */
 let logoN=0;
 FP.logo = ()=>{const id='lg'+(++logoN);return `<svg role="img" aria-label="Логотип «Формула полёта»" xmlns="http://www.w3.org/2000/svg" viewBox="36 70 536 536"><defs><linearGradient id="${id}" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="currentColor" stop-opacity="0"/><stop offset=".3" stop-color="currentColor"/><stop offset="1" stop-color="currentColor"/></linearGradient></defs><path d="M 495.5 225.0 A 214 214 0 0 1 141.0 455.2" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round"/><path d="M 96.5 378.1 A 214 214 0 0 1 407.0 126.7" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round"/><g transform="translate(300 312) scale(.8) translate(-305 -326)"><path d="M 70 500 C 118 352, 250 252, 540 150 C 504 214, 466 256, 378 280 C 244 316, 128 380, 70 500 Z" fill="currentColor"/><path d="M 80 504 C 150 404, 268 330, 474 268 C 440 332, 396 368, 306 386 C 206 406, 124 444, 80 504 Z" fill="var(--lime-line)"/></g><path d="M 60 566 C 150 520, 250 430, 330 346 C 400 272, 470 210, 526 152" fill="none" stroke="url(#${id})" stroke-width="7" stroke-linecap="round"/><path d="M 52 0 C 48 -4, 40 -6, 30 -6 L 6 -6 L -14 -42 L -25 -42 L -12 -6 L -36 -6 L -46 -21 L -54 -21 L -48 -4 L -51 0 L -48 4 L -54 21 L -46 21 L -36 6 L -12 6 L -25 42 L -14 42 L 6 6 L 30 6 C 40 6, 48 4, 52 0 Z" fill="var(--lime-line)" transform="translate(532 146) rotate(-46) scale(0.55)"/></svg>`};
+
+/* логотип с анимацией, как на сайте по аэродинамике: дуги прорисовываются, крыло поднимается, самолётик летит по следу */
+FP.logoAnim=()=>{const id='la'+(++logoN);const TR='M 60 566 C 150 520, 250 430, 330 346 C 400 272, 470 210, 526 152';
+  return `<svg class="logo-anim" role="img" aria-label="Логотип «Формула полёта»" xmlns="http://www.w3.org/2000/svg" viewBox="36 70 536 536"><defs><linearGradient id="${id}" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="currentColor" stop-opacity="0"/><stop offset=".3" stop-color="currentColor"/><stop offset="1" stop-color="currentColor"/></linearGradient><radialGradient id="${id}h"><stop offset="0" stop-color="#C6F432" stop-opacity=".32"/><stop offset="1" stop-color="#C6F432" stop-opacity="0"/></radialGradient></defs>
+  <circle class="lg-halo" cx="304" cy="338" r="300" fill="url(#${id}h)"/>
+  <path class="lg-arc" pathLength="1" d="M 495.5 225.0 A 214 214 0 0 1 141.0 455.2" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round"/>
+  <path class="lg-arc" pathLength="1" d="M 96.5 378.1 A 214 214 0 0 1 407.0 126.7" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round"/>
+  <g class="lg-wing"><g transform="translate(300 312) scale(.8) translate(-305 -326)"><path d="M 70 500 C 118 352, 250 252, 540 150 C 504 214, 466 256, 378 280 C 244 316, 128 380, 70 500 Z" fill="currentColor"/><path d="M 80 504 C 150 404, 268 330, 474 268 C 440 332, 396 368, 306 386 C 206 406, 124 444, 80 504 Z" fill="#C6F432"/></g></g>
+  <path class="lg-trail" pathLength="1" d="${TR}" fill="none" stroke="url(#${id})" stroke-width="7" stroke-linecap="round"/>
+  <g class="lg-plane"><path d="M 52 0 C 48 -4, 40 -6, 30 -6 L 6 -6 L -14 -42 L -25 -42 L -12 -6 L -36 -6 L -46 -21 L -54 -21 L -48 -4 L -51 0 L -48 4 L -54 21 L -46 21 L -36 6 L -12 6 L -25 42 L -14 42 L 6 6 L 30 6 C 40 6, 48 4, 52 0 Z" fill="#C6F432" transform="scale(0.55)"/><animateMotion dur="1.5s" begin="indefinite" fill="freeze" rotate="auto" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines="0.45 0 0.2 1" path="${TR}"/></g></svg>`};
+FP.playLogo=(svg,delay=0)=>{if(!svg||svg.classList.contains('go'))return;setTimeout(()=>{svg.classList.add('go');
+  setTimeout(()=>{svg.classList.add('fly');const m=svg.querySelector('animateMotion');try{m.beginElement()}catch(e){}},1250)},delay)};
 FP.brand = (href)=>`<a class="logo" href="${href}">${FP.logo()}<span><b>Формула полёта</b><small>Авиационная метеорология</small></span></a>`;
 
 /* ---------- темы по рабочей программе дисциплины (2 и 3 семестры) ---------- */
@@ -92,7 +104,7 @@ FP.head = ()=>{
                        :tp.plan.map(x=>`<li><span class="later"><b></b><span>${x}</span></span></li>`).join('');
     const go=tp.href?`<a class="fh-open" href="${tp.href}" data-intro>Открыть раздел ${tp.n} →</a>`:'<p class="fh-wip">Раздел в разработке</p>';
     return `<div class="fh-item"><button class="fh-link${tp.href?'':' wip'}" type="button" aria-haspopup="true"><span>Раздел ${tp.n}</span><i class="car" aria-hidden="true"></i></button>
-      <div class="fh-menu${tp.n>6?' right':''}"><p class="fh-mt"><small>Раздел ${tp.n}</small>${tp.t}</p><ul>${items}</ul>${go}</div></div>`;
+      <div class="fh-menu${tp.n>6?' right':''}"><p class="fh-mt"><small>Раздел ${tp.n}, ${tp.n<=5?2:3} семестр ЛЭГВС</small>${tp.t}</p><ul>${items}</ul>${go}</div></div>`;
   };
   document.body.insertAdjacentHTML('afterbegin',`<header class="fp-head" id="fpHead">
   <div class="fh-row">
@@ -212,7 +224,7 @@ FP.LEGAL = `
 <h3><span>02</span>Ограничение ответственности</h3>
 <p>Примеры из лётной практики, включая сведения о самолёте DA&nbsp;40&nbsp;NG и воздушных судах с высокой степенью автоматизации, приведены в иллюстративных целях и <b>не являются эксплуатационной документацией</b>. Модели и расчёты учебные и содержат упрощения. При подготовке и выполнении полётов используются только руководство по лётной эксплуатации (AFM), сборники аэронавигационной информации, метеорологическая информация уполномоченных органов и действующие нормативные документы. Авторы не несут ответственности за использование материалов тренажёра в практической лётной работе.</p>
 <h3><span>03</span>Авторы и исключительное право</h3>
-<p><b>Авторы:</b> Назаркин Максим Дмитриевич – руководитель проекта, программный код, интерактивные модели и оформление; Тимофеев Вадим Иванович – научное содержание.</p>
+<p><b>Авторы.</b> Назаркин Максим Дмитриевич – автор идеи и руководитель проекта: концепция и методическая архитектура тренажёра, сценарии разделов, программная реализация, интерактивные модели, визуальный дизайн и анимация. Тимофеев Вадим Иванович – научное и учебно-методическое содержание: отбор и научная редакция учебного материала, экспертиза формулировок, расчётов и примеров, соответствие содержания рабочей программе дисциплины.</p>
 <p>© 2026 М.&nbsp;Д.&nbsp;Назаркин. Тексты, интерактивные модели, программный код и оформление тренажёра являются объектами авторских прав (ст.&nbsp;1259 ГК РФ). Программа для ЭВМ охраняется как литературное произведение (ст.&nbsp;1261 ГК РФ); правовая охрана возникает в силу создания и не требует регистрации. Произведение создано в соавторстве (ст.&nbsp;1258 ГК РФ); исключительное право принадлежит Назаркину М.&nbsp;Д. (ст.&nbsp;1270 ГК РФ) на основании соглашения соавторов. Знак охраны авторского права – ст.&nbsp;1271 ГК РФ.</p>
 <p>Цитирование в учебных и научных целях допускается с указанием авторов и источника (ст.&nbsp;1274 ГК РФ). Копирование, изменение и распространение программного кода, моделей и оформления без письменного согласия правообладателя не допускаются.</p>
 <h3><span>04</span>Наименования воздушных судов и оборудования</h3>
@@ -221,10 +233,11 @@ FP.LEGAL = `
 <p>Тренажёр не собирает и не передаёт персональные данные, не использует файлы cookie и счётчики посещений. Выбранная тема оформления, положения ползунков и ответы самопроверки хранятся только в браузере на Вашем устройстве и не покидают его; удалить их можно очисткой данных сайта в браузере. Сайт размещён на GitHub Pages: при обращении к странице хостинг может обрабатывать технические данные (например, IP-адрес) по своим правилам.</p>
 <h3><span>06</span>Шрифты и сторонние компоненты</h3>
 <p>Шрифты Unbounded, Cormorant Garamond, Golos Text и JetBrains Mono – лицензия SIL Open Font License 1.1. Формулы набраны с помощью MathJax (лицензия Apache 2.0). Анимации интерфейса – библиотеки Motion (лицензия MIT) и GSAP с модулями ScrollTrigger и SplitText (стандартная бесплатная лицензия GreenSock). Объёмные облака, графика истории «от парты до кабины», модель высотомера и остальные модели – собственный программный код и графика.</p>
-<h3><span>07</span>Рабочая программа дисциплины</h3>
-<p>Содержание тренажёра соотнесено с рабочей программой дисциплины «Авиационная метеорология» образовательной программы 25.03.03 «Аэронавигация», направленность «Лётная эксплуатация гражданских воздушных судов», и курсом лекций.</p>
+<h3><span>07</span>Рабочая программа дисциплины и упоминание университета</h3>
+<p>Содержание тренажёра соотнесено с рабочей программой дисциплины «Авиационная метеорология» образовательной программы 25.03.03 «Аэронавигация», направленность «Лётная эксплуатация гражданских воздушных судов» (ЛЭГВС), Санкт-Петербургского государственного университета гражданской авиации имени Главного маршала авиации А.&nbsp;А.&nbsp;Новикова (СПбГУ ГА). Распределение разделов по семестрам (разделы 1–5 – 2 семестр, разделы 6–9 – 3 семестр) приведено так, как оно установлено этой программой для обучающихся по профилю ЛЭГВС.</p>
+<p>Наименование университета, шифр и профиль образовательной программы, названия разделов и их распределение по семестрам приводятся <b>исключительно в информационных целях</b> – чтобы обучающийся понимал, к какой учебной программе относится материал. Это общедоступные сведения: рабочие программы дисциплин размещаются университетами в открытом доступе. Текст рабочей программы на сайте не воспроизводится и не распространяется, приводятся только названия разделов. Символика, логотипы и иные средства индивидуализации университета не используются, а тренажёр не выдаётся за ресурс университета и не утверждает, что одобрен им. Автор проекта является обучающимся СПбГУ ГА и указывает программу, по которой учится, как сведения о себе и о назначении своей работы.</p>
 <h3><span>08</span>Статус тренажёра</h3>
-<p>«Формула полёта» – инициативная разработка авторов. Тренажёр не является официальным ресурсом университета и не размещается университетом. Альфа-версия: возможны неточности, сообщения о них принимаются по почте.</p>
+<p>«Формула полёта» – инициативная разработка авторов. Тренажёр не является официальным ресурсом СПбГУ ГА, не размещается университетом и не выражает его официальную позицию. Альфа-версия: возможны неточности, сообщения о них принимаются по почте.</p>
 <h3><span>09</span>Связь с авторами</h3>
 <p>Назаркин Максим Дмитриевич, Milleinelium@yandex.ru.</p>`;
 FP.legal = ()=>{let m=document.getElementById('fpLegal');
@@ -233,7 +246,8 @@ FP.legal = ()=>{let m=document.getElementById('fpLegal');
     m.querySelector('.legal-x').onclick=close;m.addEventListener('click',e=>{if(e.target===m)close()});addEventListener('keydown',e=>{if(e.key==='Escape'&&!m.hidden)close()})}
   m.hidden=false;document.body.style.overflow='hidden';m.querySelector('.legal-x').focus()};
 FP.footer = ()=>`<footer class="foot">
-  <div class="row"><b style="color:var(--ink);font-family:var(--f-brand);font-size:.85rem">Формула полёта</b><span>Авиационная метеорология</span><button class="back" type="button" onclick="FP.legal()">Правовая информация</button><span style="margin-left:auto">© 2026 М.&nbsp;Д.&nbsp;Назаркин</span></div></footer>`;
+  <div class="row"><b style="color:var(--ink);font-family:var(--f-brand);font-size:.85rem">Формула полёта</b><span>Авиационная метеорология</span><button class="back" type="button" onclick="FP.legal()">Правовая информация</button><span style="margin-left:auto">© 2026 М.&nbsp;Д.&nbsp;Назаркин</span></div>
+  <p class="foot-note">Разделы и семестры – по рабочей программе дисциплины для профиля ЛЭГВС (25.03.03 «Аэронавигация»), СПбГУ ГА. Тренажёр – инициативная разработка и не является официальным ресурсом университета.</p></footer>`;
 
 /* ---------- графики ---------- */
 FP.plot = (svg,o)=>{
@@ -306,7 +320,7 @@ FP.topic = cfg=>{
     if(!views[sec.id])views[sec.id]=build(sec);
     views[sec.id].hidden=false;
     FP.$('#sKick').textContent=`${sec.n} ${sec.short||sec.title}`;FP.$('#sTitle').innerHTML=sec.h1||sec.title;
-    FP.$('#sRpd').textContent='По рабочей программе дисциплины: '+sec.rpd;
+    FP.$('#sRpd').textContent='По рабочей программе дисциплины (ЛЭГВС, СПбГУ ГА, '+(cfg.n<=5?'2':'3')+' семестр): '+sec.rpd;
     const f=FP.$('#sF');f.hidden=!sec.f;f.innerHTML=sec.f||'';FP.typeset(f);
     nav(sec.id);
     const i=secs.indexOf(sec),pr=secs[i-1],nx=secs[i+1];

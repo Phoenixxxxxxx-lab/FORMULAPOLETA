@@ -378,3 +378,21 @@ html.lecture .fp-head{display:none}
 /* ====== плавный вход в историю «от парты до кабины» ====== */
 .bridge{height:34vh;margin-top:-26vh;position:relative;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(5,6,5,0) 0%,rgba(5,6,5,.55) 45%,#050605 100%)}
 .story::before{content:"";position:absolute;left:0;right:0;top:0;height:38vh;z-index:4;pointer-events:none;background:linear-gradient(180deg,#050605 0%,rgba(5,6,5,.7) 40%,rgba(5,6,5,0) 100%)}
+
+/* ====== анимированный логотип ====== */
+.logo-anim{color:#fff;overflow:visible}
+:root[data-theme="light"] .logo-anim{color:var(--ink)}
+.logo-anim .lg-arc{stroke-dasharray:1;stroke-dashoffset:1}
+.logo-anim .lg-wing{opacity:0}
+.logo-anim .lg-trail{stroke-dasharray:1;stroke-dashoffset:1}
+.logo-anim .lg-plane{opacity:0;transition:opacity .2s}
+.logo-anim .lg-halo{opacity:0;transition:opacity 1.6s ease 1.8s}
+.logo-anim.go .lg-wing{animation:lgWing 1.1s cubic-bezier(.2,.7,.2,1) both}
+.logo-anim.go .lg-arc{animation:lgDraw 1.2s cubic-bezier(.4,0,.2,1) .15s both}
+.logo-anim.fly .lg-trail{animation:lgDraw 1.5s cubic-bezier(.45,0,.2,1) both}
+.logo-anim.fly .lg-plane{opacity:1}
+.logo-anim.go .lg-halo{opacity:1}
+@keyframes lgWing{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:none}}
+@keyframes lgDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.logo-anim .lg-arc,.logo-anim .lg-trail{stroke-dashoffset:0}.logo-anim .lg-wing,.logo-anim .lg-plane,.logo-anim .lg-halo{opacity:1}}
+.foot-note{margin:12px 0 0;font-size:.68rem;line-height:1.6;color:var(--ink-2);opacity:.85;max-width:110ch}

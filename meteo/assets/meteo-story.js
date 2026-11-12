@@ -95,101 +95,95 @@ function tube(p0,c,p1,w0,w1){const N=18,L=[],R=[];let n0,n1;
   const p=new Path2D();p.moveTo(...L[0]);L.forEach(q=>p.lineTo(...q));const a1=Math.atan2(n1[1],n1[0]);p.arc(p1[0],p1[1],w1/2,a1,a1-Math.PI,true);
   R.reverse().forEach(q=>p.lineTo(...q));const a0=Math.atan2(n0[1],n0[0]);p.arc(p0[0],p0[1],w0/2,a0+Math.PI,a0,true);p.closePath();return p}
 let dpr0=1;
-/* ================= 1. ПАРТА ================= */
-const LAMP=[505,470];
-const HEADP='M960 415 C975 400 990 365 985 330 C985 280 950 248 905 250 C870 252 850 272 848 300 L842 318 C838 330 826 342 826 352 L838 361 C834 366 842 372 840 382 C836 392 845 404 858 405 C875 410 890 414 900 412 C905 420 903 432 905 440 C880 452 840 466 812 488 C790 505 770 540 765 572 L1095 572 C1092 520 1078 478 1048 462 C1012 446 978 432 960 415 Z';
-const BODYM=()=>new DOMMatrix().translate(905,440).rotate(-9).translate(-905,-440).translate(-55,38);
-const BODY=(()=>{const p=new Path2D();p.addPath(new Path2D(HEADP),BODYM());return p})();
-const HEADC=(()=>{const m=BODYM();const q=m.transformPoint(new DOMPoint(900,335));return[q.x,q.y]})();
-const SHO=(()=>{const m=BODYM(),a=m.transformPoint(new DOMPoint(800,500)),b=m.transformPoint(new DOMPoint(880,470));return[[a.x,a.y],[b.x,b.y]]})();
-const PAGE={o:[520,604],ex:[318,-6],ey:[-26,58]};
-const pageP=(u,v)=>[PAGE.o[0]+PAGE.ex[0]*u+PAGE.ey[0]*v,PAGE.o[1]+PAGE.ex[1]*u+PAGE.ey[1]*v];
-const dust=Array.from({length:90},()=>({u:rnd(),v:rnd(),s:.5+rnd()*1.6,ph:rnd()*6.3,sp:.2+rnd()*.6}));
-const lampLight=(x,r,a)=>{const g=x.createRadialGradient(LAMP[0],LAMP[1],0,LAMP[0],LAMP[1],r);g.addColorStop(0,`rgba(232,255,170,${a})`);g.addColorStop(.35,`rgba(${LIME},${a*.45})`);g.addColorStop(1,`rgba(${LIME},0)`);return g};
-/* мягкий контровой свет по краю силуэта: размытая обводка внутри формы */
-function softRim(x,path,r,a,Q){x.save();x.clip(path);x.shadowColor=`rgba(225,255,160,${a})`;x.shadowBlur=r*Q;x.lineWidth=1.1;x.strokeStyle=lampLight(x,640,a);x.stroke(path);x.shadowBlur=r*Q*.35;x.stroke(path);x.restore()}
+/* ================= 1. ТЕТРАДЬ: камера над конспектом, ручка пишет из-за кадра ================= */
+const NB={x:800,y:470,a:-.035},NBc=Math.cos(NB.a),NBs=Math.sin(NB.a);
+const L2W=(u,v)=>[NB.x+u*NBc-v*NBs,NB.y+u*NBs+v*NBc];
+/* строки, которые пишутся на правой странице (координаты в системе тетради) */
+const LIVE=[
+  {u:40,v:-250,t:'Стандартная атмосфера:',w:330},
+  {u:40,v:-184,t:'T = T₀ − 0,0065 · H',w:300},
+  {u:40,v:-118,t:'p = p₀ (1 − 0,0065 · H / T₀)',w:420,sup:'5,256'},
+  {u:40,v:-52,t:'у земли 1 гПа ≈ 8,3 м высоты',w:410},
+  {u:40,v:14,t:'мороз → высотомер завышает!',w:400,mark:1}];
+const HEADC=L2W(250,-125);
+const dust=Array.from({length:70},()=>({u:rnd(),v:rnd(),s:.5+rnd()*1.4,ph:rnd()*6.3,sp:.2+rnd()*.6}));
 function deskLayer(){const Q=2,c=document.createElement('canvas');c.width=W*Q;c.height=H*Q;const x=c.getContext('2d');x.scale(Q,Q);
-  let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#080a07');g.addColorStop(.6,'#0c0f0a');g.addColorStop(1,'#040504');x.fillStyle=g;x.fillRect(0,0,W,H);
-  seed=11;for(let X=-20;X<W;X+=18+rnd()*34){const w=30+rnd()*80,a=.018+rnd()*.03;const f=x.createLinearGradient(X,0,X+w,0);
-    f.addColorStop(0,'rgba(255,255,255,0)');f.addColorStop(.5,`rgba(240,255,220,${a})`);f.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=f;x.fillRect(X,0,w,620)}
-  x.globalCompositeOperation='lighter';x.fillStyle=lampLight(x,820,.16);x.fillRect(0,0,W,H);x.globalCompositeOperation='source-over';
-  g=x.createLinearGradient(0,350,0,600);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.55)');x.fillStyle=g;x.fillRect(0,350,W,250);
-  /* тень курсанта на шторе */
-  x.save();x.filter='blur(26px)';x.globalAlpha=.55;x.translate(150,-40);x.scale(1.12,1.12);x.fillStyle='#000';x.fill(BODY);x.restore();
-  /* книги */
-  [[1150,508,200,30,'#18200f'],[1165,478,170,30,'#251a12'],[1142,454,185,24,'#121619']].forEach(([X,Y,w,h,col])=>{x.fillStyle=col;x.fillRect(X,Y,w,h);x.fillStyle='rgba(255,255,255,.05)';x.fillRect(X,Y,w,2);x.fillStyle='rgba(0,0,0,.35)';x.fillRect(X+w-30,Y,30,h)});
-  /* курсант */
-  g=x.createLinearGradient(700,250,1050,580);g.addColorStop(0,'#1a2216');g.addColorStop(.5,'#0c100b');g.addColorStop(1,'#060708');x.fillStyle=g;x.fill(BODY);
-  x.save();x.clip(BODY);x.globalCompositeOperation='lighter';x.fillStyle=lampLight(x,430,.22);x.fillRect(600,200,520,420);x.restore();
-  softRim(x,BODY,24,.75,Q);
-  /* стол */
-  poly(x,[60,560,1540,560,1600,720,0,720]);g=x.createLinearGradient(0,560,0,720);g.addColorStop(0,'#17140d');g.addColorStop(1,'#0b0907');x.fillStyle=g;x.fill();
-  x.save();x.clip();seed=3;x.strokeStyle='rgba(255,230,180,.03)';x.lineWidth=1.3;
-  for(let i=0;i<26;i++){const y=563+i*6+rnd()*4;x.beginPath();x.moveTo(0,y);x.bezierCurveTo(500,y+rnd()*6-3,1000,y+rnd()*6-3,W,y);x.stroke()}
-  x.globalCompositeOperation='lighter';g=x.createRadialGradient(560,615,0,560,615,460);g.addColorStop(0,'rgba(225,245,160,.45)');g.addColorStop(.45,'rgba(150,185,70,.10)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,540,W,200);x.restore();
-  x.fillStyle='#050404';x.fillRect(0,720,W,180);g=x.createLinearGradient(0,720,0,760);g.addColorStop(0,'rgba(255,240,200,.08)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,720,W,40);
-  /* тетрадь с тенью */
-  const P=[pageP(0,0),pageP(1,0),pageP(1,1),pageP(0,1)];
-  x.save();x.filter='blur(5px)';poly(x,P.map((p,i)=>[p[0]+(i>1?6:10),p[1]+5]).flat());x.fillStyle='rgba(0,0,0,.6)';x.fill();x.restore();
-  poly(x,P.flat());g=x.createLinearGradient(P[0][0],0,P[1][0],0);g.addColorStop(0,'#e7ecd6');g.addColorStop(.6,'#c3c8b2');g.addColorStop(1,'#8d917f');x.fillStyle=g;x.fill();
-  x.save();x.clip();x.strokeStyle='rgba(60,90,150,.26)';x.lineWidth=.8;for(let i=1;i<6;i++){const a=pageP(0,i/6),b=pageP(1,i/6);x.beginPath();x.moveTo(...a);x.lineTo(...b);x.stroke()}
-  x.strokeStyle='rgba(190,60,60,.25)';const r1=pageP(.04,0),r2=pageP(.04,1);x.beginPath();x.moveTo(...r1);x.lineTo(...r2);x.stroke();
-  g=x.createLinearGradient(pageP(.5,0)[0]-14,0,pageP(.5,0)[0]+14,0);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.5,'rgba(0,0,0,.22)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(pageP(.5,0)[0]-20,590,40,80);x.restore();
-  /* лампа: латунь и зелёное стекло */
-  x.save();x.filter='blur(6px)';x.fillStyle='rgba(0,0,0,.6)';x.beginPath();x.ellipse(520,612,90,14,0,0,6.3);x.fill();x.restore();
-  const brass=x.createLinearGradient(430,0,585,0);brass.addColorStop(0,'#2c240e');brass.addColorStop(.3,'#b49a4a');brass.addColorStop(.42,'#f1dc94');brass.addColorStop(.6,'#7a6528');brass.addColorStop(1,'#231d0b');
-  x.beginPath();x.ellipse(505,604,76,14,0,0,6.3);x.fillStyle=brass;x.fill();x.beginPath();x.ellipse(505,598,52,9,0,0,6.3);x.fill();
-  x.lineCap='round';x.lineWidth=8;x.strokeStyle=brass;x.beginPath();x.moveTo(505,596);x.bezierCurveTo(505,560,470,520,496,486);x.stroke();
-  x.beginPath();x.moveTo(372,474);x.lineTo(396,428);x.quadraticCurveTo(505,396,614,428);x.lineTo(638,474);x.quadraticCurveTo(505,494,372,474);x.closePath();
-  g=x.createLinearGradient(0,400,0,480);g.addColorStop(0,'#0e3a10');g.addColorStop(.35,'#1f6a17');g.addColorStop(.7,'#2f8d1e');g.addColorStop(1,'#123d0b');x.fillStyle=g;x.fill();
-  x.save();x.clip();g=x.createLinearGradient(380,0,630,0);g.addColorStop(0,'rgba(0,0,0,.45)');g.addColorStop(.3,'rgba(0,0,0,0)');g.addColorStop(.7,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.5)');x.fillStyle=g;x.fillRect(370,390,280,110);
-  x.globalCompositeOperation='lighter';x.fillStyle='rgba(220,255,170,.5)';x.filter='blur(3px)';x.beginPath();x.moveTo(420,432);x.quadraticCurveTo(505,410,590,432);x.lineTo(588,440);x.quadraticCurveTo(505,420,422,440);x.fill();x.restore();
-  x.strokeStyle=brass;x.lineWidth=3;x.beginPath();x.moveTo(372,474);x.quadraticCurveTo(505,494,638,474);x.stroke();
+  /* стол в полумраке, свет лампы из-за кадра сверху слева */
+  let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0b0d09');g.addColorStop(1,'#050604');x.fillStyle=g;x.fillRect(0,0,W,H);
+  g=x.createRadialGradient(560,250,0,560,250,1100);g.addColorStop(0,'rgba(236,255,190,.30)');g.addColorStop(.45,'rgba(198,244,50,.07)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
+  x.save();x.translate(NB.x,NB.y);x.rotate(NB.a);
+  /* тень тетради */
+  x.save();x.filter='blur(22px)';x.fillStyle='rgba(0,0,0,.7)';x.fillRect(-600,-372,1210,760);x.restore();
+  /* обложка, выступающая из-под листов */
+  rr(x,-606,-384,1212,768,14);x.fillStyle='#1b2416';x.fill();
+  /* две страницы */
+  [[-596,0],[2,1]].forEach(([X,side])=>{
+    rr(x,X,-374,594,748,side?[0,8,8,0]:[8,0,0,8]);
+    g=x.createLinearGradient(X,0,X+594,0);
+    if(side){g.addColorStop(0,'#cfd1c8');g.addColorStop(.06,'#f1f2ec');g.addColorStop(1,'#f6f6f1')}else{g.addColorStop(0,'#f3f4ee');g.addColorStop(.94,'#eeefe9');g.addColorStop(1,'#cbcdc4')}
+    x.fillStyle=g;x.fill();
+    /* клетка */
+    x.save();x.clip();x.strokeStyle='rgba(70,110,170,.22)';x.lineWidth=.8;
+    for(let gx=X+12;gx<X+594;gx+=22){x.beginPath();x.moveTo(gx,-374);x.lineTo(gx,374);x.stroke()}
+    for(let gy=-362;gy<374;gy+=22){x.beginPath();x.moveTo(X,gy);x.lineTo(X+594,gy);x.stroke()}
+    /* поля */
+    x.strokeStyle='rgba(200,70,70,.35)';x.lineWidth=1;const m=side?X+550:X+44;x.beginPath();x.moveTo(m,-374);x.lineTo(m,374);x.stroke();
+    x.restore()});
+  /* корешок со скрепками */
+  g=x.createLinearGradient(-26,0,26,0);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.5,'rgba(0,0,0,.28)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(-30,-374,60,748);
+  [-220,220].forEach(y=>{x.fillStyle='#9aa0a6';x.fillRect(-3,y-24,6,48);x.fillStyle='rgba(255,255,255,.5)';x.fillRect(-1,y-24,1.4,48)});
+  /* конспект на левой странице – уже написан, чёрными чернилами */
+  const ink='#15171c';x.fillStyle=ink;x.textBaseline='alphabetic';
+  let d='';try{d=new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'})}catch(e){d=String(new Date().getFullYear())}
+  x.font='400 17px "Unbounded",sans-serif';x.textAlign='right';x.fillText(d,-70,-318);x.textAlign='left';
+  x.font='600 21px "Unbounded",sans-serif';x.fillText('Авиационная метеорология',-530,-262);
+  x.font='500 16px "Unbounded",sans-serif';x.fillText('Тема 1. Состав и строение атмосферы',-530,-218);
+  x.strokeStyle=ink;x.lineWidth=1.6;x.beginPath();x.moveTo(-530,-206);x.lineTo(-150,-208);x.stroke();
+  x.font='400 15px "Unbounded",sans-serif';
+  ['• азот 78 %, кислород 21 %, аргон 0,93 %','• тропосфера: до 8–18 км, в среднем 11 км','• в тропосфере T падает на 6,5 °C/км','• тропопауза СА: 11 км, −56,5 °C','• стратосфера – выше, T почти постоянна',
+   'СА у уровня моря:','   p₀ = 1013,25 гПа','   T₀ = 15 °C (288,15 K)','   ρ₀ = 1,225 кг/м³'].forEach((l,i)=>x.fillText(l,-530,-152+i*44));
+  /* схема-набросок: профиль температуры */
+  x.lineWidth=1.4;x.beginPath();x.moveTo(-250,290);x.lineTo(-250,140);x.moveTo(-250,290);x.lineTo(-90,290);x.stroke();
+  x.beginPath();x.moveTo(-110,288);x.lineTo(-200,190);x.lineTo(-200,150);x.stroke();
+  x.font='400 12px "Unbounded",sans-serif';x.fillText('H',-266,150);x.fillText('T',-96,310);x.fillText('11 км',-196,196);
+  x.restore();
+  /* мягкий свет и виньетка */
+  g=x.createRadialGradient(800,470,300,800,470,1000);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.6)');x.fillStyle=g;x.fillRect(0,0,W,H);
   return c}
 
 function drawDesk(x,t,S,layer){
-  const fl=1+.03*Math.sin(t*7.3)*Math.sin(t*2.1);
   x.drawImage(layer,0,0,W,H);
+  /* пылинки в луче лампы */
   x.globalCompositeOperation='lighter';
-  /* световой конус и пыль */
-  poly(x,[400,480,610,480,830,650,200,650]);let g=x.createLinearGradient(0,480,0,650);g.addColorStop(0,`rgba(215,250,150,${.13*fl})`);g.addColorStop(1,'rgba(215,250,150,0)');x.fillStyle=g;x.fill();
-  dust.forEach(d=>{const v=(d.v+t*d.sp*.02)%1,u=d.u+Math.sin(t*.3+d.ph)*.03,y=482+v*165,hw=105+v*210,X=505+(u-.5)*2*hw;
-    x.fillStyle=`rgba(235,255,180,${(.2+.4*Math.sin(t*1.7+d.ph)**2)*(1-v)})`;x.fillRect(X,y,d.s,d.s)});
-  g=x.createRadialGradient(505,482,0,505,482,120);g.addColorStop(0,`rgba(250,255,225,${.9*fl})`);g.addColorStop(.25,'rgba(205,245,110,.32)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(380,400,250,200);
+  dust.forEach(d=>{const v=(d.v+t*d.sp*.015)%1,X=200+d.u*1200+Math.sin(t*.3+d.ph)*20,Y=60+v*800;
+    x.fillStyle=`rgba(235,255,190,${(.12+.3*Math.sin(t*1.7+d.ph)**2)*(1-v)*.8})`;x.fillRect(X,Y,d.s,d.s)});
   x.globalCompositeOperation='source-over';
-  /* формула пишется */
-  const w=S.write,p1=cl(w*2),p2=cl(w*2-1);
-  x.save();x.transform(PAGE.ex[0]/300,PAGE.ex[1]/300,PAGE.ey[0]/60,PAGE.ey[1]/60,PAGE.o[0],PAGE.o[1]);
-  x.fillStyle='#1b2852';x.font='500 15px "Unbounded",sans-serif';
-  x.save();x.beginPath();x.rect(16,4,p1*130,22);x.clip();x.fillText('T = T₀ − 0,0065 H',20,20);x.restore();
-  x.save();x.beginPath();x.rect(16,28,p2*168,26);x.clip();x.fillText('p = p₀ (1 − 0,0065 H / T₀)',20,46);x.font='500 10px "Unbounded",sans-serif';x.fillText('5,256',175,38);x.restore();
+  /* строки пишутся по очереди */
+  const n=LIVE.length,w=cl(S.write)*n;let tip=null;
+  x.save();x.translate(NB.x,NB.y);x.rotate(NB.a);x.fillStyle='#15171c';x.textBaseline='alphabetic';
+  LIVE.forEach((L,i)=>{const p=cl(w-i);if(p<=0)return;
+    x.font=`${L.mark?600:500} 19px "Unbounded",sans-serif`;const tw=x.measureText(L.t).width;let sw=0;
+    if(L.sup){x.font='500 12px "Unbounded",sans-serif';sw=x.measureText(L.sup).width+4;x.font='500 19px "Unbounded",sans-serif'}
+    L.w=tw+sw;
+    x.save();x.beginPath();x.rect(L.u-6,L.v-30,L.w*p+8,44);x.clip();x.fillText(L.t,L.u,L.v);
+    if(L.sup){x.font='500 12px "Unbounded",sans-serif';x.fillText(L.sup,L.u+tw+3,L.v-12)}
+    if(L.mark){x.strokeStyle='#15171c';x.lineWidth=1.6;x.beginPath();x.moveTo(L.u,L.v+9);x.lineTo(L.u+L.w*p-10,L.v+8);x.stroke()}
+    x.restore();
+    if(p>0&&p<1)tip=[L.u+L.w*p,L.v-6+Math.sin(t*38)*1.5]});
   x.restore();
-  /* рука: предплечье лежит на столе, кисть с ручкой идёт вдоль строки */
-  const fu=p2>0?20+p2*164:20+p1*126,fv=p2>0?44:18,pen=pageP(fu/300,fv/60);
-  const PD=[.74,-.67],wr=[pen[0]+44,pen[1]+2],el=[806,648],sh=[846,516];
-  x.save();x.filter='blur(8px)';x.fillStyle='rgba(0,0,0,.55)';x.fill(tube([el[0]+6,el[1]+8],[(el[0]+wr[0])/2+6,(el[1]+wr[1])/2+14],[wr[0]-6,wr[1]+10],34,26));x.restore();
-  const UA=tube(sh,[852,596],el,44,38),FA=tube(el,[(el[0]+wr[0])/2,(el[1]+wr[1])/2+6],wr,40,27);
-  [UA,FA].forEach((p,i)=>{x.fillStyle=lin(x,[700,520],[900,660],'#141b14','#090b0a');x.fill(p);
-    x.save();x.clip(p);x.globalCompositeOperation='lighter';x.fillStyle=lampLight(x,520,.13);x.fillRect(600,480,320,220);
-    if(i){x.shadowColor='rgba(220,255,160,.6)';x.shadowBlur=10*dpr0;x.lineWidth=1.2;x.strokeStyle=lampLight(x,520,.5);x.stroke(p)}x.restore()});
-  /* манжета */
-  x.save();x.clip(FA);x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=2;x.beginPath();x.moveTo(wr[0]+16,wr[1]-16);x.lineTo(wr[0]+12,wr[1]+14);x.stroke();x.restore();
-  /* кисть */
-  const ang=Math.atan2(pen[1]-wr[1],pen[0]-wr[0]);
-  const skin=lin(x,[pen[0]-10,pen[1]-24],[wr[0]+8,wr[1]+12],'#d2b08c','#4a3426');
-  x.save();x.translate((wr[0]+pen[0])/2+6,(wr[1]+pen[1])/2-5);x.rotate(ang);
-  x.beginPath();x.ellipse(0,0,24,14,0,0,6.3);x.fillStyle=skin;x.fill();
-  x.beginPath();x.ellipse(-6,10,14,6,.1,0,6.3);x.fillStyle='#3c2a1f';x.fill();x.restore();
-  /* ручка */
-  const pe=[pen[0]+PD[0]*74,pen[1]+PD[1]*74];x.lineCap='round';
-  x.lineWidth=5.5;x.strokeStyle=lin(x,pen,pe,'#1b1d27','#0b0c12');x.beginPath();x.moveTo(pen[0]+PD[0]*7,pen[1]+PD[1]*7);x.lineTo(...pe);x.stroke();
-  x.lineWidth=1.1;x.strokeStyle='rgba(255,255,255,.55)';x.beginPath();x.moveTo(pen[0]+PD[0]*12-1.5,pen[1]+PD[1]*12-1.5);x.lineTo(pe[0]-1.5,pe[1]-1.5);x.stroke();
-  x.lineWidth=3;x.strokeStyle='#c9ccd0';x.beginPath();x.moveTo(...pen);x.lineTo(pen[0]+PD[0]*8,pen[1]+PD[1]*8);x.stroke();
-  /* пальцы поверх ручки */
-  x.lineWidth=8.5;x.strokeStyle=skin;x.beginPath();x.moveTo(pen[0]+PD[0]*34+4,pen[1]+PD[1]*34+8);x.quadraticCurveTo(pen[0]+8,pen[1]-4,pen[0]+PD[0]*12+2,pen[1]+PD[1]*12+2);x.stroke();
-  x.lineWidth=7;x.strokeStyle='#b8946f';x.beginPath();x.moveTo(pen[0]+PD[0]*38-8,pen[1]+PD[1]*38-2);x.quadraticCurveTo(pen[0]+PD[0]*22-8,pen[1]+PD[1]*22-6,pen[0]+PD[0]*16-2,pen[1]+PD[1]*16-3);x.stroke();
-  if(w>0&&w<1){x.globalCompositeOperation='lighter';x.drawImage(SPR.lime,pen[0]-7,pen[1]-7,14,14);x.globalCompositeOperation='source-over'}
-  if(S.think>0){x.globalCompositeOperation='lighter';g=x.createRadialGradient(HEADC[0],HEADC[1],0,HEADC[0],HEADC[1],140);g.addColorStop(0,`rgba(${LIME},${.55*S.think})`);g.addColorStop(1,`rgba(${LIME},0)`);x.fillStyle=g;x.fillRect(HEADC[0]-150,HEADC[1]-150,300,300);x.globalCompositeOperation='source-over'}
+  /* ручка приходит из-за кадра: видны только кончик и корпус */
+  if(!tip&&w>0&&w<n){const L=LIVE[Math.min(n-1,Math.floor(w))];tip=[L.u,L.v-6]}
+  if(!tip)tip=w>=n?[LIVE[n-1].u+LIVE[n-1].w+20,LIVE[n-1].v+40]:[LIVE[0].u-10,LIVE[0].v-4];
+  const P=L2W(tip[0],tip[1]),ang=.62,dx=Math.cos(ang),dy=Math.sin(ang),Lp=900;
+  const E=[P[0]+dx*Lp,P[1]+dy*Lp];
+  x.save();x.filter='blur(10px)';x.strokeStyle='rgba(0,0,0,.45)';x.lineWidth=20;x.lineCap='round';x.beginPath();x.moveTo(P[0]+30,P[1]+34);x.lineTo(E[0]+30,E[1]+34);x.stroke();x.restore();
+  x.lineCap='round';
+  x.lineWidth=17;x.strokeStyle=lin(x,[P[0]-6,P[1]+6],[P[0]+6,P[1]-6],'#0d0f14','#262a33');x.beginPath();x.moveTo(P[0]+dx*34,P[1]+dy*34);x.lineTo(...E);x.stroke();
+  x.lineWidth=2;x.strokeStyle='rgba(230,255,190,.55)';x.beginPath();x.moveTo(P[0]+dx*38-5,P[1]+dy*38-6);x.lineTo(E[0]-5,E[1]-6);x.stroke();
+  x.lineWidth=9;x.strokeStyle=lin(x,P,[P[0]+dx*34,P[1]+dy*34],'#aeb3ba','#e9ecef');x.beginPath();x.moveTo(P[0]+dx*6,P[1]+dy*6);x.lineTo(P[0]+dx*34,P[1]+dy*34);x.stroke();
+  x.lineWidth=3;x.strokeStyle='#2a2d33';x.beginPath();x.moveTo(...P);x.lineTo(P[0]+dx*7,P[1]+dy*7);x.stroke();
+  if(S.write>0&&S.write<1){x.globalCompositeOperation='lighter';x.drawImage(SPR.lime,P[0]-8,P[1]-8,16,16);x.globalCompositeOperation='source-over'}
+  if(S.think>0){x.globalCompositeOperation='lighter';const g=x.createRadialGradient(HEADC[0],HEADC[1],0,HEADC[0],HEADC[1],160);g.addColorStop(0,`rgba(${LIME},${.55*S.think})`);g.addColorStop(1,`rgba(${LIME},0)`);x.fillStyle=g;x.fillRect(HEADC[0]-170,HEADC[1]-170,340,340);x.globalCompositeOperation='source-over'}
 }
 
 /* ================= 2. МОЗГ: нейронная сеть в 3D ================= */
@@ -377,7 +371,9 @@ window.FPStory=function(root){
   const x=c2.getContext('2d');let GL=null;try{GL=makeGL(cg)}catch(e){}
   SPR.lime=glowSprite(LIME);SPR.white=glowSprite('235,255,200');
   let desk=null,cock=null;
-  const S={dx:660,dy:560,ds:1.9,write:0,think:0,desk:1,brain:0,fly:0,cock:0,kx:548,ky:534,ks:4.4,storm:.12,dim:0,rain:0};
+  /* слой с тетрадью перерисовывается, когда загрузятся начертания Unbounded */
+  if(document.fonts&&document.fonts.load)Promise.all(['400 15px "Unbounded"','500 15px "Unbounded"','600 15px "Unbounded"'].map(f=>document.fonts.load(f))).then(()=>{desk=null}).catch(()=>{});
+  const S={dx:1030,dy:400,ds:1.75,write:0,think:0,desk:1,brain:0,fly:0,cock:0,kx:548,ky:534,ks:4.4,storm:.12,dim:0,rain:0};
   let cw=1,ch=1,dpr=1,k=1,glq=.5;
   const resize=()=>{const r=stage.getBoundingClientRect();cw=r.width;ch=r.height;dpr=Math.min(devicePixelRatio||1,1.6)*(document.documentElement.classList.contains('fp-lite')?.7:1);
     c2.width=Math.round(cw*dpr);c2.height=Math.round(ch*dpr);cg.width=Math.max(2,Math.round(cw*glq));cg.height=Math.max(2,Math.round(ch*glq));k=Math.max(cw/W,ch/H);dpr0=dpr*k};
@@ -423,7 +419,7 @@ window.FPStory=function(root){
   const capIn=(i,at,len)=>{const c=caps[i];tl.fromTo(c.el,{autoAlpha:0},{autoAlpha:1,duration:.4},at)
     .from(c.w,{opacity:0,y:28,duration:2.4,stagger:.12},at).to(c.el,{autoAlpha:0,y:-30,duration:2.2},at+len)};
   /* 1. парта: от тетради – общий план */
-  tl.to(S,{write:1,duration:12,ease:'none'},0).to(S,{dx:800,dy:505,ds:1.02,duration:14,ease:'power2.inOut'},2);
+  tl.to(S,{write:1,duration:13,ease:'none'},0).to(S,{dx:800,dy:470,ds:1.08,duration:14,ease:'power2.inOut'},2);
   capIn(0,1,15);
   /* 2. камера в голову – внутрь мысли */
   tl.to(S,{dx:HEADC[0],dy:HEADC[1],ds:9,duration:12,ease:'power3.in'},18).to(S,{think:1,duration:6},20)
