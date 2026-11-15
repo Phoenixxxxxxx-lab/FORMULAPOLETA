@@ -3,9 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>Формула полёта – Тема 1</title>
 <meta name="author" content="И. Я. Пуминов, М. Д. Назаркин">
 <meta name="copyright" content="© 2026 М. Д. Назаркин">
@@ -1480,7 +1477,8 @@ html:not(.is-home) .home-dark, html.fh-dark .home-dark { display: none; }
 html.is-home .video-hero .vh-inner { padding-top: 128px; }
 .hw-go { box-shadow: inset 0 1px 0 rgba(255,255,255,.65), 0 16px 40px rgba(150,50,160,.35) !important; }
 /* шапка на больших экранах чуть крупнее, но мягче, чем материал */
-.fp-head { zoom: var(--mzh, 1); padding-right: calc(250px / var(--mzh, 1)); }
+/* шапка не масштабируется: одинаковый размер на любом экране, как у сайта метеорологии */
+.fp-head { zoom: 1; }
 /* на широких экранах блоки главной держатся по центру, а не прижимаются к левому краю */
 html.is-home .hp-in.hs-feat, html.is-home .hp-in.hs-why, html.is-home .hp-in.hs-topics, html.is-home .hp-in.hs-intro, html.is-home .hp-in.hs-state, html.is-home .hs-chain {
   padding-left: max(0px, calc((100% - 1360px) / 2)) !important; padding-right: max(0px, calc((100% - 1360px) / 2)) !important; }
