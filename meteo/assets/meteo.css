@@ -396,3 +396,85 @@ html.lecture .fp-head{display:none}
 @keyframes lgDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion:reduce){.logo-anim .lg-arc,.logo-anim .lg-trail{stroke-dashoffset:0}.logo-anim .lg-wing,.logo-anim .lg-plane,.logo-anim .lg-halo{opacity:1}}
 .foot-note{margin:12px 0 0;font-size:.68rem;line-height:1.6;color:var(--ink-2);opacity:.85;max-width:110ch}
+
+/* ====== 16.11.2026: единый стиль с АиДП ====== */
+/* плавные переключатели с бегунком (вкладки, оформление, режимы моделей) */
+.sl{position:relative;isolation:isolate}
+.sl>.sl-ind{position:absolute;left:0;top:0;z-index:0;border-radius:999px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(214,255,90,.5),rgba(198,244,50,.22));box-shadow:inset 0 0 0 1px rgba(198,244,50,.75),inset 0 1px 0 rgba(255,255,255,.4),0 8px 22px -10px rgba(198,244,50,.7);
+  transition:transform .6s cubic-bezier(.32,.72,0,1),width .6s cubic-bezier(.32,.72,0,1),height .6s cubic-bezier(.32,.72,0,1)}
+:root[data-theme="light"] .sl>.sl-ind{background:linear-gradient(180deg,rgba(198,244,50,.85),rgba(198,244,50,.5))}
+.sl.drag>.sl-ind{transition:width .25s ease,height .25s ease;box-shadow:inset 0 0 0 1px var(--lime),0 0 0 5px rgba(198,244,50,.14),0 10px 26px -8px rgba(198,244,50,.8)}
+.sl>button,.sl>.tab{position:relative;z-index:1;transition:color .35s ease}
+.sl{cursor:grab;touch-action:pan-y}.sl.drag{cursor:grabbing;user-select:none}
+.sl .tab[aria-selected="true"],.sl .tab[aria-selected="true"]:hover{background:none!important;box-shadow:none!important;color:var(--ink)}
+.seg.sl button[aria-pressed="true"]{background:none!important;box-shadow:none!important;color:var(--ink)!important}
+
+/* оформление: белое солнце и тёмная тучка */
+.theme-sw,.pill.theme-sw{display:inline-flex;align-items:center;gap:2px;width:auto;height:44px;padding:4px;border-radius:999px;overflow:visible;
+  background:color-mix(in srgb,var(--bg) 34%,transparent);-webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.14),0 8px 26px rgba(0,0,0,.35)}
+:root[data-theme="light"] .theme-sw{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 0 0 1px rgba(11,11,12,.08),0 8px 26px rgba(20,30,10,.14)}
+.theme-sw::before,.theme-sw::after{content:none!important}
+.theme-sw>button{width:36px;height:36px;border:0;padding:0;border-radius:50%;background:none;cursor:pointer;display:grid;place-items:center;color:var(--ink-2)}
+.theme-sw svg{width:20px;height:20px;overflow:visible;transition:transform .7s cubic-bezier(.32,.72,0,1),filter .4s}
+.ts-sun{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:1.8;stroke-linecap:round}
+:root[data-theme="light"] .ts-sun{fill:#FFFFFF;stroke:#6B7480}
+:root[data-theme="light"] .theme-sw>button[aria-checked="true"] .ts-sun{stroke:#2E9BDA}
+:root[data-theme="light"] .theme-sw>.sl-ind{background:rgba(120,200,245,.22)!important;box-shadow:inset 0 0 0 1px rgba(60,160,220,.45),0 0 16px -2px rgba(80,180,235,.55)!important}
+.ts-sun .rays{transform-origin:12px 12px;transition:transform .9s cubic-bezier(.32,.72,0,1)}
+.ts-cloud{fill:#2B313A;stroke:#5C6673;stroke-width:1.4;stroke-linejoin:round}
+:root[data-theme="light"] .ts-cloud{fill:#3A424D;stroke:#3A424D}
+.theme-sw>.sl-ind{background:rgba(143,216,255,.16)!important;box-shadow:inset 0 0 0 1px rgba(143,216,255,.55),0 0 18px -2px rgba(143,216,255,.5)!important}
+.theme-sw>button[aria-checked="true"] svg{filter:drop-shadow(0 0 6px rgba(143,216,255,.85))}
+.theme-sw>button[aria-checked="true"] .ts-sun{stroke:#BFE9FF}
+.theme-sw>button[aria-checked="true"] .ts-cloud{stroke:#8FD8FF}
+.theme-sw>button:hover .ts-sun .rays{transform:rotate(90deg)}
+.theme-sw>button:hover .ts-sun{transform:scale(1.1)}
+.theme-sw>button:hover .ts-cloud{transform:translateX(3px) scale(1.08)}
+.theme-sw>button:focus-visible{outline:2px solid #8FD8FF;outline-offset:1px}
+
+/* боковая панель: отдельная плотная плашка с тенью, логотип и подпись как в АиДП */
+.app>.side.glass{background:color-mix(in srgb,var(--bg) 82%,#1a1c17);box-shadow:10px 0 44px -14px rgba(0,0,0,.75),1px 0 0 rgba(255,255,255,.07);border-right:0}
+:root[data-theme="light"] .app>.side.glass{background:rgba(255,255,255,.9);box-shadow:10px 0 44px -14px rgba(30,40,10,.22),1px 0 0 rgba(11,11,12,.07)}
+.side-head{padding:26px 22px 18px}
+.sbrand{display:flex;align-items:center;gap:14px;color:var(--ink);text-decoration:none}
+.sbrand svg{width:64px;height:64px;flex:none;color:var(--ink)}
+.sbrand b{font-family:var(--f-brand);font-weight:700;font-size:1.35rem;line-height:1.12;letter-spacing:-.01em}
+.sbrand-sub{margin:14px 0 0;font-size:.8rem;line-height:1.5;color:var(--ink-2);font-weight:500}
+.side-body{gap:10px;padding-top:12px}
+.side-home{padding:7px 10px;font-size:.84rem}
+.side-intro{background:linear-gradient(120deg,rgba(198,244,50,.36),rgba(198,244,50,.06) 30%,rgba(143,216,255,.16) 55%,rgba(198,244,50,.32) 80%,rgba(198,244,50,.08));background-size:320% 320%;animation:introSh 9s ease-in-out infinite}
+@keyframes introSh{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.sem{gap:4px}
+/* разделы раскрываются в темы плавно */
+.tp-h{width:100%;border:0;background:none;text-align:left;cursor:pointer;font:inherit;font-size:.84rem;font-weight:600;grid-template-columns:30px 1fr 12px;align-items:start;transition:background-color .25s}
+.tp-h:hover{background:var(--glass-2)}
+.tp-h .car{width:7px;height:7px;margin-top:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg);opacity:.5;transition:transform .55s cubic-bezier(.32,.72,0,1)}
+.tp.open>.tp-h .car{transform:translateY(3px) rotate(225deg)}
+.tp-b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s cubic-bezier(.32,.72,0,1)}
+.tp-b>div{min-height:0;overflow:hidden;opacity:0;transition:opacity .45s ease}
+.tp.open>.tp-b{grid-template-rows:1fr}
+.tp.open>.tp-b>div{opacity:1;transition:opacity .5s ease .12s}
+.tp .snav{margin:4px 0 8px 12px}
+.snav.plan{list-style:none;padding:0;display:grid;gap:2px}
+.snav.plan .pl-i{display:block;padding:5px 10px 5px 22px;font-size:.76rem;color:var(--ink-2);position:relative;line-height:1.35}
+.snav.plan .pl-i::before{content:"";position:absolute;left:10px;top:12px;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.6}
+.soon-tag{margin:0 0 8px 44px}
+.tp.cur>.tp-h{background:var(--lime-soft);box-shadow:inset 0 0 0 1px rgba(198,244,50,.35)}
+
+/* заголовок раздела: сначала строка РПД мелко, затем крупное название с переливом */
+.whead{align-items:end;padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--line)}
+.whead .kick{text-transform:none;letter-spacing:0;font-size:.9rem;font-weight:500}
+.whead .kick::before{display:none}
+.whead .rpd{margin:8px 0 14px;padding:0;border:0;font-size:.76rem;line-height:1.5;color:var(--ink-2);opacity:.75;max-width:110ch}
+.whead h1{margin-top:0;font-weight:700;font-size:clamp(1.8rem,2.8vw,2.7rem);max-width:24ch}
+.shine{background:linear-gradient(100deg,var(--ink) 0%,var(--ink) 28%,var(--lime-ink) 42%,#F1FFC4 50%,var(--lime-ink) 58%,var(--ink) 72%,var(--ink) 100%);background-size:260% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:shine 8s linear infinite}
+:root[data-theme="light"] .shine{background-image:linear-gradient(100deg,var(--ink) 0%,var(--ink) 28%,#4B6800 42%,#8DB51C 50%,#4B6800 58%,var(--ink) 72%,var(--ink) 100%)}
+@keyframes shine{from{background-position:130% 0}to{background-position:-130% 0}}
+@media (prefers-reduced-motion:reduce){.shine{animation:none;background-position:50% 0}}
+.fbox{background:#0D0F0B;color:#FFFFFF;border-radius:18px;padding:16px 28px;box-shadow:0 18px 44px -18px rgba(0,0,0,.6),inset 0 0 0 1px rgba(198,244,50,.18)}
+.fbox mjx-container{color:#FFFFFF}
+/* модель внутри теории */
+.inmodel{display:flex;flex-direction:column;gap:20px;margin-top:10px;padding-top:22px;border-top:1px dashed var(--line)}
