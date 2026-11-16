@@ -478,3 +478,18 @@ html.lecture .fp-head{display:none}
 .fbox mjx-container{color:#FFFFFF}
 /* модель внутри теории */
 .inmodel{display:flex;flex-direction:column;gap:20px;margin-top:10px;padding-top:22px;border-top:1px dashed var(--line)}
+
+/* ====== 16.11.2026: светлая тема главной – читаемость надписей поверх облаков ====== */
+:root[data-theme="light"] :is(.hero h1,.brandline,.dirline,.sub,.credit,.sec h2,.sec .lead,.sec .kick,.scene .kick,.scene h2,.scene .lead,.finale h2,.finale p,.alt-read){
+  text-shadow:0 0 1px rgba(255,255,255,1),0 0 3px rgba(255,255,255,.95),0 0 14px rgba(255,255,255,.9),0 2px 28px rgba(255,255,255,.85)}
+:root[data-theme="light"] .dirline{color:#1E2410!important;opacity:.85!important}
+:root[data-theme="light"] .brandline{color:#3E5600}
+:root[data-theme="light"] .sub{opacity:1}
+:root[data-theme="light"] .stat b{color:#0B0B0C!important;text-shadow:0 0 1px #fff,0 0 4px rgba(255,255,255,.95),0 0 16px rgba(255,255,255,.95),0 0 34px rgba(255,255,255,.8)!important}
+:root[data-theme="light"] .stat b small{color:#4B6800!important}
+:root[data-theme="light"] .stat span{color:#26300F!important;text-shadow:0 0 1px #fff,0 0 4px rgba(255,255,255,.95),0 0 12px rgba(255,255,255,.9)!important}
+:root[data-theme="light"] .stat::before{background:#7FA600;box-shadow:0 0 10px rgba(127,166,0,.7)}
+:root[data-theme="light"] .hero h1 em.dec{background:linear-gradient(100deg,#3E5600,#6E9400 55%,#8DB51C);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 1px #fff) drop-shadow(0 0 10px rgba(255,255,255,.95))}
+:root[data-theme="light"] .hero h1 em.risk{background:linear-gradient(100deg,#E07A10,#C8400C);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 1px #fff) drop-shadow(0 0 10px rgba(255,255,255,.95))}
+.fh-dir[aria-current="page"] span{text-shadow:0 1px 6px rgba(0,0,0,.55)}
+:root[data-theme="light"] .fh-dir[aria-current="page"]{color:#fff}

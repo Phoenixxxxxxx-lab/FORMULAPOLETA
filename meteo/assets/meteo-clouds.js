@@ -7,7 +7,7 @@
 const VS='attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
 const FS=`precision highp float;
 uniform vec2 uRes;uniform float uTime,uScroll,uIntro,uLightTh;
-uniform vec3 uL1;uniform vec3 uL2;uniform vec4 uT[24];
+uniform vec3 uL1;uniform vec3 uL2;
 float hash(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
 float noise(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
  return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
@@ -30,27 +30,9 @@ float dens(vec3 q,float m){
  float d=b*m-abs(q.z-.5)*.7;
  return clamp((d-.27)*5.,0.,1.);
 }
-/* разрез облаков курсором: след из 24 точек, разрез сначала тонкий, затем куски расходятся и облако затягивается */
-float cutAt(vec2 p,out vec2 push){
- float c=1.;push=vec2(0.);
- for(int i=0;i<23;i++){
-  vec4 A=uT[i],B=uT[i+1];
-  if(A.w<.5||B.w<.5)continue;
-  vec2 ab=B.xy-A.xy;float l2=max(dot(ab,ab),1e-6);float h=clamp(dot(p-A.xy,ab)/l2,0.,1.);
-  vec2 cp=A.xy+ab*h;vec2 dv=p-cp;float d=length(dv);
-  float age=mix(A.z,B.z,h);float k=1.-smoothstep(.62,1.,age);
-  float j=(noise(vec3(p*38.,float(i)))-.5)*.012*(.4+age);
-  float wd=mix(.012,.045,smoothstep(0.,.6,age));
-  float m=smoothstep(wd*.3,wd*1.35,d+j);
-  c=min(c,mix(1.,m,k));
-  vec2 nrm=d>1e-4?dv/d:vec2(0.);
-  push+=nrm*k*.09*smoothstep(0.,.4,age)*exp(-d/.09);
- }
- return c;
-}
 void main(){
  vec2 s=gl_FragCoord.xy/uRes;float asp=uRes.x/uRes.y;
- vec2 sp0=vec2(s.x*asp,1.-s.y);vec2 push;float cut=cutAt(sp0,push);
+ vec2 push=vec2(0.);float cut=1.;
  float py=(1.-s.y)+uScroll*.65;
  /* туман, стелющийся по низу экрана */
  float fogK=(1.-smoothstep(.35,1.,uScroll))*smoothstep(.46,.0,s.y);
@@ -94,8 +76,6 @@ void main(){
   }
   z+=dz;
  }
- float rim=smoothstep(.12,.5,cut)*(1.-smoothstep(.55,.97,cut));
- col+=lime*rim*acc*mix(.9,.45,uLightTh);
  col+=(1.-acc)*fogC*fogA;acc+=(1.-acc)*fogA;
  gl_FragColor=vec4(col,acc);
 }`;
@@ -113,13 +93,7 @@ window.FPClouds = function(opts){
   gl.useProgram(pr);
   const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
   const al=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
-  const U={};['uRes','uTime','uScroll','uIntro','uLightTh','uL1','uL2'].forEach(n=>U[n]=gl.getUniformLocation(pr,n));U.uT=gl.getUniformLocation(pr,'uT[0]');
-  /* след курсора для разреза облаков */
-  const TR=[],TA=new Float32Array(96);let LIFE=3.4;let lastP=null;
-  addEventListener('pointermove',e=>{const a=innerWidth/innerHeight,p={x:e.clientX/innerWidth*a,y:e.clientY/innerHeight,t:performance.now()};
-    if(lastP&&Math.hypot(p.x-lastP.x,p.y-lastP.y)<.006)return;
-    if(lastP&&performance.now()-lastP.t>450)TR.push({gap:1});
-    TR.push(p);lastP=p;while(TR.length>24)TR.shift()},{passive:true});
+  const U={};['uRes','uTime','uScroll','uIntro','uLightTh','uL1','uL2'].forEach(n=>U[n]=gl.getUniformLocation(pr,n));
   (opts.before?opts.before.parentNode:document.body).insertBefore(cv,opts.before||document.body.firstChild);
 
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -135,8 +109,6 @@ window.FPClouds = function(opts){
     const t=(now-t0)/1000, intro=reduce?1:Math.min(1,t/2.4), L=opts.light?opts.light(t):[[.5,.7,1],[.5,1.15,.6]];
     gl.uniform2f(U.uRes,cv.width,cv.height);gl.uniform1f(U.uTime,reduce?20:t);gl.uniform1f(U.uScroll,scrollY/innerHeight);
     gl.uniform1f(U.uIntro,intro);gl.uniform1f(U.uLightTh,document.documentElement.dataset.theme==='light'?1:0);
-    TA.fill(0);let j=0;const nowT=performance.now();for(let i=Math.max(0,TR.length-24);i<TR.length;i++,j++){const p=TR[i];if(p.gap)continue;const ag=(nowT-p.t)/1000/LIFE;if(ag>=1)continue;TA[j*4]=p.x;TA[j*4+1]=p.y;TA[j*4+2]=ag;TA[j*4+3]=1}
-    gl.uniform4fv(U.uT,TA);
     gl.uniform3f(U.uL1,L[0][0],L[0][1],L[0][2]);gl.uniform3f(U.uL2,L[1][0],L[1][1],L[1][2]);
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,3);
     if(!reduce&&!document.hidden)raf=requestAnimationFrame(frame);
